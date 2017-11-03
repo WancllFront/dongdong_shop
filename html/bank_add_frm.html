@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {height: 100%;background-color: #f4f4f4;padding-top: 0.5rem;}
+        i{font-style: normal;}
+    </style>
+</head>
+
+<body>
+    <div class="area" style="margin-top:0rem;">
+        <div class="mix">
+            <i class="aui-iconfont">开卡银行</i>
+            <select style="padding-left:3.5rem;width:100%;color:#999;border-color:#fff;" type="text" class="input" >
+                <option value="">请选择</option>
+                <option>中国农业银行</option>
+                <option>中国建设银行</option>
+                <option>中国工商银行</option>
+                <option>中国银行</option>
+                <option>招商银行</option>
+                <option>光大银行</option>
+                <option>中国邮政储蓄银行</option>
+                <option>中国兴业银行</option>
+            </select>
+        </div>
+        <div class="mix">
+            <i class="aui-iconfont">持卡人</i>
+            <input style="padding-left:3.5rem;width:100%;color:#999;" type="text" class="input" id="telephone-novaricode" placeholder="">
+        </div>
+
+        <div class="mix">
+            <i class="aui-iconfont">卡号</i>
+            <input style="padding-left:3.5rem;width:100%;`color:#999;" type="tel" class="input" id="password" placeholder="">
+        </div>
+        <div class="submit" tapmode onclick="" style="height:3rem;line-height:3rem;border-radius:0.3rem;">添加</div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+
+    };
+</script>
+
+</html>

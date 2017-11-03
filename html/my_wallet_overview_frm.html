@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body{padding-top: 1rem;background-color: #fff;}
+        .bg{margin: 1rem 5%;width: 90%;background-color: #ffc640;border-radius: 2rem;text-align: center;color: #333;padding: 2rem 0rem 0rem 0rem; border: 5px solid #fedc8b;}
+        .bg p{color:#333;}
+        .bg .price{letter-spacing: 0.05rem;font-size:2.5rem;}
+        .bg .rest{font-size: 0.8rem;}
+        .bg .float{height:4rem;width: 110%;background-color: #fed26b;margin-top: 1.5rem;left: -5%;position: relative;}
+        .bg .float .div{width:50%;text-align:center;display: inline-block;position:absolute;}
+        .bg .float .div div{color:#333;line-height: 2rem;}
+        .bg .button{width: 100%;padding: 0rem 2rem 2rem 2rem;box-sizing: border-box;margin: 1.5rem 0rem 0rem 0rem;;}
+        .bg .button:after{display:block;content:"";clear:both;}
+        .bg .button .pay{float: left;height:2.5rem;line-height: 2.5rem;text-align: center;border-radius: 2.5rem;background-color: #2883e1;color:#fff;width: 47%}
+        .bg .button .pay:active{background-color: #0766c9}
+        .bg .button .pick{float: right;height:2.5rem;line-height: 2.5rem;text-align: center;border-radius: 2.5rem;background-color: #fff;color:#000;width: 47%}
+        .bg .button .pick:active{background-color: #e1dddd}
+
+
+        .detail{height: 2.2rem;line-height: 2.2rem;margin: 0.5rem 5%;;text-align: center;width: 90%;background-color: #ffc640;border-radius: 2.2rem;;}
+        .detail:active{background-color: #edc15a;}
+    </style>
+</head>
+
+<body>
+    <div class="bg">
+        <p>昨日收益(元)</p>
+        <p class="price">1.66</p>
+        <p class="rest">总金额 22,188,188 元</p>
+
+        <div class="float">
+            <div style="left:0rem;" class="div">
+                <div>累计收益</div>
+                <div style="line-height:1.5rem;">618.36 </div>
+            </div>
+            <div style="right:0rem;" class="div">
+                <div>收益利率</div>
+                <div style="line-height:1.5rem;">3.901%</div>
+            </div>
+        </div>
+        <div class="button">
+            <div class="pay" tapmode onclick="$api.goWindow('my_wallet_pay_win')">充值</div>
+            <div class="pick" tapmode onclick="$api.goWindow('my_wallet_pick_win')">提现</div>
+        </div>
+    </div>
+    <div class="detail" tapmode onclick="$api.goWindow('my_wallet_detail_win')">查看明细</div>
+    <div class="detail" tapmode onclick="$api.goWindow('bank_win')">提现银行卡</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+
+    };
+</script>
+
+</html>

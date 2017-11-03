@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {}
+        .aui-list .aui-list-item-label, .aui-list .aui-list-item-label-icon{line-height: 2.7rem;}
+        .save{width:96%;margin-left:2%;line-height:2.2rem;height:2.2rem;border-radius:0.2rem;background-color:#267df0;color:#fff;text-align:center;}
+        .save:active{background-color: #0f6ae2}
+        .aui-switch:checked{background-color:#267df0;border-color: #267df0;}
+    </style>
+</head>
+
+<body>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        收货人
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="" id="fullname">
+                    </div>
+                    <div class="aui-list-item-label-icon">
+
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        联系电话
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="tel" placeholder="" id="tel">
+                    </div>
+                    <div class="aui-list-item-label-icon"  tapmode onclick="selectContacts()">
+                        <i class="aui-iconfont aui-icon-right"></i>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmode onclick="selectCity()">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        所在地区
+                    </div>
+                    <div class="aui-list-item-input">
+                        <span id="address"></span>
+                    </div>
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-right"></i>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        详细地址
+                    </div>
+                    <div class="aui-list-item-input">
+                        <textarea placeholder=""></textarea>
+                    </div>
+                    <div class="aui-list-item-label-icon">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        设为默认
+                    </div>
+                    <div class="aui-list-item-input">
+                    </div>
+                    <div class="aui-list-item-label">
+                        <input type="checkbox" class="aui-switch" checked>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="save" tapmode onclick="">保存</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var contacts;
+    var citySelector;
+    apiready = function() {
+        api.parseTapmode();
+        contacts = api.require("contacts");
+        citySelector = api.require("citySelector");
+    };
+
+    selectContacts = function(){
+        contacts.select(function( ret, err ){
+            if( ret ){
+                if(ret.status){
+                    $api.val($api.byId('tel'), ret.phones[0]['手机']);
+                    $api.val($api.byId('fullname'), ret.fullName);
+                }
+            }else{
+                if(err.code == -1){
+                    api.toast({
+                        msg: '拒绝访问通讯录',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            }
+        });
+    }
+    var address={}
+
+    selectCity = function(){
+        citySelector.open({
+            y: api.frameHeight / 1.6,
+            fixedOn: api.frameName,
+            anim:true,
+            bgImg:'../image/shadow.jpg',
+            titleImg:'#000',
+            cancelImg:'../image/cancel.png',
+            enterImg:'../image/confirm.png',
+            selectedColor:'#1e1d1d',
+            fontColor:'#7e7979'
+        }, function(ret, err){
+            if( ret ){
+                address = ret;
+                $api.text($api.byId('address'), address.province + ' ' + address.city + ' ' + address.county);
+
+            }else{
+                alert( JSON.stringify( err ) );
+            }
+        });
+
+    }
+</script>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        body {}
+        .container{margin: 0rem 0.6rem;}
+        .container .title{font-weight: bold;font-size: 1.2rem;margin-top: 1.2rem;}
+        .container .describe{display: flex; color: #777777;font-size: 0.8rem;margin-top: 0.4rem;}
+        .container .content{width: 100%; overflow: hidden;margin-top: 1.5rem;}
+        .container .content img{max-width: 100%;}
+
+        .container .award{width: 100%;height: 4rem;bottom: 1rem;text-align: center;margin-bottom: 2rem;}
+        .container .award img{width: 5rem;transition: .3s width;}
+        .container .award img:active {width: 6rem;transition: .1s width;}
+
+        .shadow{background-color: rgba(0,0,0,0.25);position: fixed;z-index: -9;top: 0px;bottom: 0px;left:0px;right:0px;opacity: 0;}
+        .shadow .shadow-modal{position: fixed;background-color: #fff;border-radius: 0.5rem;top:7rem; left:2.5rem;right:2.5rem;padding: 1rem 1rem;opacity: 0;transition: .5s opacity;}
+        .shadow .shadow-modal .title{}
+        .shadow .shadow-modal .title .embed{display:inline-block;padding-right:2rem;padding-bottom:2rem; position: absolute;}
+        .shadow .shadow-modal .title p{text-align: center; font-size: 1.5rem;}
+        .shadow .shadow-modal .title .line{background:linear-gradient(to right,#eeeeee,#7e7e7e,#eeeeee);width: 100%;height: 1px;margin-top: 0.5rem;}
+        .shadow .shadow-modal .money{margin-top: 0.9rem;color: #777}
+        .shadow .shadow-modal .money .line{background:linear-gradient(to right,#eeeeee,#7e7e7e,#eeeeee);width: 100%;height: 1px;margin-top: 0.5rem;}
+        .shadow .shadow-modal .money input{margin-left:0.35rem;color:#777;margin-top:0.3rem;letter-spacing: 0.5rem;}
+        .shadow .shadow-modal .pwd{margin-top: 1rem;color: #777;}
+        .shadow .shadow-modal .pwd .blank{width:100%;height:2.8rem;margin-top:.8rem;position:absolute;z-index:-10}
+        .shadow .shadow-modal .pwd input{letter-spacing:2.1rem;width:100%;margin-top:1.5rem;padding-left:1.2rem;}
+        .shadow .shadow-modal .submit{margin-top: 2.2rem;color: #fff;background-color: #257df0;height: 2.5rem;line-height: 2.5rem;text-align: center;border-radius: 0.5rem;}
+        .shadow .shadow-modal .submit:active{background-color: #3d8cf3}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p class="title">什么是孩子幸福的根本发生</p>
+        <div class="describe">
+            <span style="width:40%; text-align:left;">2017-06-10 19:12:20</span>
+            <span style="width:20%; text-align:center;">小顽童</span>
+            <span style="width:40%; text-align:right;">阅读量:10000000000</span>
+        </div>
+        <div class="content" id="content">
+
+        </div>
+        <div class="award">
+            <img src="../image/award.png" tapmode onclick="goAward();">
+        </div>
+    </div>
+    <div class="shadow" id="shadow">
+        <div class="shadow-modal" id="modal">
+            <div class="title" >
+                <div tapmode onclick="cancelAward()" class="embed">
+                    <!-- <embed src="../svg/cha.svg" type="image/svg+xml"style="width:1rem;" /> -->
+                    <img src="../image/cha.png" style="width:1rem;">
+                </div>
+
+                <p>文章打赏</p>
+                <div class="line"></div>
+            </div>
+            <div class="money">
+                <p>打赏金额</p>
+                <p style="margin-top:1rem;">￥</p>
+                <input type="text" id="money" onkeyup="value=value.replace(/[^\d]/g,'')">
+                <div class="line"></div>
+            </div>
+            <div class="pwd">
+                <p>输入支付密码</p>
+                <table class="blank" border="1" bordercolor="#cccccc">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <input type="password" id="password" onkeyup="passwordCallback(value)">
+            </div>
+            <div class="submit" id="submit" tapmode onclick="">
+                <p>打赏</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        loadArticle()
+
+    };
+
+    loadArticle = function(articleId){
+        api.ajax({
+            url: 'http://192.168.0.108/index.php/v2/articles/read',
+            method: 'post',
+            data: {
+                values: {
+                    article_id: 7
+                },
+            },
+            headers:{
+                auth: 'Basic_Ivj6eZRx40+MTx2ZvnG8R65',
+                'Accept': '*/*'
+            }
+        },function(ret, err){
+            if (ret) {
+                //$api.html($api.byId('content'), ret.data.content);
+            } else {
+                //alert( JSON.stringify( err ) );
+            }
+        });
+
+    }
+    goAward = function(){
+        $api.css($api.byId('shadow'), 'opacity:1;z-index:9');
+        $api.css($api.byId('modal'), 'opacity:1;');
+        $api.val($api.byId('password'), '');
+        $api.val($api.byId('money'), '');
+    }
+    cancelAward = function(){
+        $api.css($api.byId('shadow'), 'opacity:0;z-index:-9');
+        $api.css($api.byId('modal'), 'opacity:0;');
+    }
+    passwordCallback = function(value){
+        if(value.length == 6){
+            $api.val($api.byId('password'), value.substr(0,6));
+            document.getElementById('password').blur();
+        }
+    }
+
+</script>
+
+</html>

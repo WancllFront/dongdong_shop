@@ -75,7 +75,29 @@ td,th {
 	background: url(../image/loading_more.gif) no-repeat center;
 	-webkit-background-size: contain;
 	background-size: contain;
-} 
-.loading_more:after {
-	content: '加载更多';	
 }
+.loading_more:after {
+	content: '加载更多';
+}
+
+.container{margin-left: 0.35rem;margin-right: 0.35rem;}
+.single-paragraph{width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+
+
+
+/* form */
+.area .tips{margin-bottom: 0.8rem;color:#696969;}
+.area{margin: 0.5rem 0.5rem;}
+.area .input{height: 2.5rem;background-color: #fff;margin-bottom: 0.5rem; padding-left: 1.3rem;border-radius: 0.15rem;letter-spacing: 0.05rem;}
+.area .submit{height: 2.5rem;background-color: #358cff;text-align: center;line-height: 2.5rem;color:#fff;letter-spacing: 0.2rem;border-radius: 0.15rem;}
+.area .submit:active{background-color: #5a9ffa}
+
+.area .mix{position:relative;display:flex;}
+.area .mix i{position:absolute;margin-top:-0.5rem;top:50%;left:0.3rem;margin-top: -0.8rem;}
+.area .mix #telephone{width:65%;display:inline-block;margin-right:0.5rem;}
+.area .mix .get-varicode{display:inline-block;background-color:#358cff;text-align:center;height:2.5rem;color:#fff;line-height:2.5rem;border-radius: 0.15rem;width:35%;}
+.area .mix .get-varicode:active{background-color: #5a9ffa;}
+
+.third{color:#999999;margin-top:2rem;text-align:center;}
+.icon{text-align:center;margin-top:1.2rem;}
+.icon img{width:1.5rem;display:inline-block;margin:0rem 1rem;}

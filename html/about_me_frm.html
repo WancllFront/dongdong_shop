@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {height: 100%;background-color: #f4f4f4;}
+        .logout{border-radius: 0.15rem;border:2px solid #358cff; background-color:#f4f4f4;margin-top:1.5rem;line-height:2.5rem;height:2.5rem;color:#358cff; text-align:center;width:40%;margin-left:30%;}
+        .logout:active{background-color: #e8e8e8}
+    </style>
+</head>
+
+<body>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item" tapmode onclick="modify('avatar')">
+                <div class="aui-list-item-media">
+                    <img src="../image/avatar.png" class="aui-img-round aui-list-img-sm" id="avatar">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"></div>
+                    <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;">修改头像</div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmode onclick="$api.goWindow('nickname_modify_win')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">昵称</div>
+                    <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;">大魔王</div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmode onclick="modify('gendar')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">性别</div>
+                    <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;" id="gendar">女</div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmode onclick="modify('telephone')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">我的手机号码</div>
+                    <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;">18390911268</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item" tapmode onclick="$api.goWindow('bind_setting_win')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">第三方账号绑定</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item" tapmode onclick="$api.goWindow('option_win')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">帮助与反馈</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">东东商城</div>
+                    <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;" id="version"></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div style="width:100%; text-align:center;">
+        <div class="logout" tapmode onclick="">退出登录</div>
+    </div>
+    <!-- <div class="area" style="margin-top:1.5rem;">
+        <div style="width:100%;background-color:#358fff;line-height:2.5rem;height:2.5rem;text-align:center;border-radius: 0.15rem;color:#fff;">退出登录</div>
+    </div> -->
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+
+    apiready = function() {
+        $api.text($api.byId('version'), 'v ' + api.version);
+        fixAvatar();
+    };
+
+    fixAvatar = function(){
+        $api.css($api.byId('avatar'), 'height:'+ $api.offset($api.byId('avatar')).w +'px');
+    }
+
+    modify = function(type){
+        if(type == 'telephone'){
+            api.toast({
+                msg: '手机号码作为登录号码不能更改~',
+                duration: 2000,
+                location: 'middle'
+            });
+        }else if(type == 'gendar'){
+            api.actionSheet({
+                title: '请选择',
+                cancelTitle: '取消',
+                buttons: ['男','女']
+            }, function(ret, err){
+                if( ret.buttonIndex == 1 ){
+                     $api.text($api.byId('gendar'), '男');
+                }else if(ret.buttonIndex == 2){
+                     $api.text($api.byId('gendar'), '女');
+                }
+            });
+        }else if(type == 'avatar'){
+            api.actionSheet({
+                title: '请选择',
+                cancelTitle: '取消',
+                buttons: ['拍照','图库']
+            }, function(ret, err){
+                if( ret.buttonIndex == 1 ){
+                     alert('拍照')
+                }else if(ret.buttonIndex == 2){
+                     alert('图库')
+                }
+            });
+        }
+    }
+</script>
+
+</html>

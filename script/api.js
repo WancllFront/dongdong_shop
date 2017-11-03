@@ -213,7 +213,7 @@
 
             return mark;
         }
-        
+
     };
     u.remove = function(el){
         if(el && el.parentNode){
@@ -331,7 +331,7 @@
                     break;
             }
         }
-        
+
     };
     u.prepend = function(el, html){
         if(!u.isElement(el)){
@@ -580,12 +580,38 @@
             }
         );
     };
+    u.closeWin = function(){
+        api.closeWin();
+    }
+
+    u.goWindow = function(winName,params,animation){
+        var url ;
+        if(winName == 'index'){
+            url = '../index.html'
+        }else{
+            url = './' + winName + '.html'
+        }
+        if(animation){
+            api.openWin({
+                name: winName,
+                url: url,
+                pageParam: params,
+                animation:{type:animation},
+                slidBackEnabled:false
+            });
+        }else{
+            api.openWin({
+                name: winName,
+                url: url,
+                pageParam: params,
+                slidBackEnabled:false
+            });
+        }
+    }
 
 /*end*/
-    
+
 
     window.$api = u;
 
 })(window);
-
-

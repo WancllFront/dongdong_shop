@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {}
+        .goods{display: flex;align-items: center;background-color: #fff;}
+        .goods .thum{width: 25%;padding: 0.5rem 0.5rem;}
+        .goods .thum img{width: 100%;border: 1px solid #f4f4f4;}
+
+        .goods .content{width: 75%;padding:0.5rem 0.5rem 0rem 0rem;}
+        .goods .content textarea{height:5rem;font-size: 0.7rem;}
+
+        .comment{padding: 1rem 0.7rem;background-color: #fff;}
+        .comment .imgs{width: 100%;}
+        .comment .imgs img{max-width: 24%;display: inline-block;}
+        .comment .imgs .photo{border: 1px solid #f4f4f4;}
+
+        .comment .star{margin-top: 1rem;align-items: center;}
+        .comment .star .text{color:#999999;padding-right: 1.5rem;display: inline-block;line-height: 1.5rem;height: 1.5rem;vertical-align: top;}
+        .comment .star .stars{display: inline-block;}
+        .comment .star .stars img{display: inline-block;width: 1.5rem;margin-right: 0.3rem;}
+
+        .button{width: 96%;margin-left: 2%;height:2.2rem;line-height: 2.2rem;text-align: center;background-color: #2e76d7;color: #fff;border-radius: 0.2rem;margin-top: 1rem;}
+        .button:active{background-color: #125ec3;}
+
+    </style>
+</head>
+
+<body>
+    <div class="goods">
+        <div class="thum">
+            <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+        </div>
+        <div class="content">
+            <textarea name="name" rows="8" cols="80" placeholder="商品满足您的期待吗？说说你的体验，分享给 想买的TA们吧"></textarea>
+        </div>
+    </div>
+    <div class="comment">
+        <div class="imgs" id="imgs">
+            <!-- <img class="photo" src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+            <img class="photo" src="http://api.wancll.wygoo.com/data/upload/file/20171009/59db41df41579.png">
+            <img class="photo" src="http://api.wancll.wygoo.com/data/upload/file/20170911/59b6898fc1d6f.png">
+            <img class="photo" src="http://api.wancll.wygoo.com/data/upload/file/20171009/59db67dd8509d.png">
+            <img class="photo" src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png"> -->
+            <img src="../image/add_photo.png" tapmode onclick="addPhoto()">
+        </div>
+        <div class="star">
+            <div class="text">发表评价</div>
+            <div class="stars">
+                <img src="../image/star_pray.png" tapmode onclick="gostar(1);" id="star1">
+                <img src="../image/star_pray.png" tapmode onclick="gostar(2);" id="star2">
+                <img src="../image/star_pray.png" tapmode onclick="gostar(3);" id="star3">
+                <img src="../image/star_pray.png" tapmode onclick="gostar(4);" id="star4">
+                <img src="../image/star_pray.png" tapmode onclick="gostar(5);" id="star5">
+            </div>
+        </div>
+    </div>
+    <div class="button" tapmode onclick="">提交评价</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var imgsDom = $api.byId('imgs');
+
+    apiready = function() {
+        api.parseTapmode();
+
+    };
+    addPhoto = function(){
+        api.actionSheet({
+            title: '请选择',
+            cancelTitle: '取消',
+            buttons: ['拍照','图库']
+        }, function(ret, err){
+            if(ret.buttonIndex != 3){
+                api.getPicture({
+                    sourceType: ret.buttonIndex == 1 ? 'camera':'library',
+                    encodingType: 'jpg',
+                    destinationType: 'base64',
+                    allowEdit: true,
+                    quality: 50,
+                    saveToPhotoAlbum: false
+                }, function(ret, err){
+                    if(ret){
+                        var ihtml = '<img class="photo" src="' + ret.base64Data + '">'
+                        $api.html(imgsDom, ihtml + $api.html(imgsDom));
+                    }else{
+                         //alert(JSON.stringify(err));
+                    }
+                });
+            }
+        });
+    }
+    gostar = function(level){
+        for(var i = 1; i <= 5; i ++){
+            if(i <= level){
+                $api.attr($api.byId('star' + i), 'src', '../image/star_light.png');
+            }else{
+                $api.attr($api.byId('star' + i), 'src', '../image/star_pray.png');
+            }
+        }
+    }
+</script>
+
+</html>

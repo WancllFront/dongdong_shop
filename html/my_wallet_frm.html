@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {background-color: #f4f4f4;height: 100%;}
+        .wallet-button{height:1.5rem;line-height:1.5rem;width:4rem;background-color:#358cff;border-radius:0.15rem;color:#fff;text-align:center;}
+        .wallet-button:active{background-color: #549cfa}
+        /*.aui-list .aui-list-item:active{background-color: #fff;}*/
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div style="height:0.5rem;background-color:#f4f4f4;width:100%;"></div>
+        <div class="aui-content aui-margin-b-10">
+            <ul class="aui-list aui-media-list" style="background-image:none;">
+                <li class="aui-list-item aui-list-item-middle" style="background-image:none;">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 3rem;">
+                            <img src="../image/pro1.png" class="aui-img-round aui-list-img-sm" id="avatar">
+                        </div>
+                        <div class="aui-list-item-inner" style="width:40%;">
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title aui-font-size-16">大魔王</div>
+                            </div>
+                            <div class="aui-list-item-text aui-font-size-12">
+                                东东钱包账户
+                            </div>
+                        </div>
+                        <div class="aui-list-item-right aui-font-size-14" style="color:#0056c8;">账户安全险保障中</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="aui-content aui-margin-b-10">
+            <ul class="aui-list aui-media-list" style="background-image:none;">
+                <li class="aui-list-item aui-list-item-middle" style="background-image:none;padding:0.5rem 0rem;">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 1rem;"></div>
+                        <div class="aui-list-item-inner" style="width:55%;">
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
+                                总资产(元)
+                            </div>
+                            <div class="aui-list-item-text" style="color:#000;font-size:1.5rem;">
+                                21,999,999
+                            </div>
+                        </div>
+                        <div class="aui-list-item-right">
+                            <div class="aui-list-item-text  aui-font-size-12" style="color:#55555">
+                                <div style="display:inline-block;width:0.2rem;height:0.2rem;background-color:#358cff"></div>
+                                <span style="margin-left:0.2rem;">会员卡</span>
+                                <span style="margin-left:0.6rem;">9999999</span>
+                            </div>
+                            <div class="aui-list-item-text  aui-font-size-12" style="color:#55555">
+                                <div style="display:inline-block;width:0.2rem;height:0.2rem;background-color:#ffc640"></div>
+                                <span style="margin-left:0.2rem;">东东钱包</span>
+                                <span style="margin-left:0.6rem;">9999999</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="aui-content aui-margin-b-10" tapmode onclick="$api.goWindow('my_wallet_vip_list_win')">
+            <ul class="aui-list aui-media-list" style="background-image:none;">
+                <li class="aui-list-item aui-list-item-middle" style="background-image:none;padding:0.7rem 0rem;">
+                    <div class="aui-media-list-item-inner  ">
+                        <div class="aui-list-item-media" style="width: 1rem;"></div>
+                        <div class="aui-list-item-inner" style="width:65%;">
+                            <div class="aui-list-item-title aui-font-size-20" style="color:#000;">
+                                <img src="../image/vip.png" style="width:1rem;display:inline-block;margin-right:0.5rem;font-weight:bold;">尊享会员卡
+                            </div>
+                            <div class="aui-list-item-title aui-font-size-14" style="color:#2e76d7;">
+                                拥有<span>4</span>张会员卡
+                            </div>
+                        </div>
+                        <div class="aui-list-item-right">
+                            <div class="wallet-button"  tapmode onclick="$api.goWindow('my_wallet_vip_buy_win')">申请开卡</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="aui-content aui-margin-b-10" tapmode onclick="$api.goWindow('my_wallet_overview_win')">
+            <ul class="aui-list aui-media-list" style="background-image:none;">
+                <li class="aui-list-item aui-list-item-middle" style="background-image:none;padding:0.7rem 0rem;">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 1rem;"></div>
+                        <div class="aui-list-item-inner" style="width:65%;">
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
+                                咚咚钱包
+                            </div>
+                            <div class="aui-list-item-text" style="color:#000;font-size:1.5rem;">
+                                1,999,999
+                            </div>
+                            <div class="aui-list-item-title aui-font-size-14" style="color:#555555;">
+                                总收益<span style="padding-left:0.3rem;">507,77</span>
+                            </div>
+                        </div>
+                        <div class="aui-list-item-right">
+                            <div class="wallet-button"  tapmode onclick="$api.goWindow('my_wallet_pay_win')">充值</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="aui-content">
+            <ul class="aui-list aui-media-list" style="background-image:none;">
+                <li class="aui-list-item aui-list-item-middle" style="background-image:none;padding:0.7rem 0rem;">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 1rem;"></div>
+                        <div class="aui-list-item-inner" style="width:65%;">
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
+                                奖金收入
+                            </div>
+                            <div class="aui-list-item-text" style="color:#000;font-size:1.5rem;">
+                                1,822
+                            </div>
+                        </div>
+                        <div class="aui-list-item-right">
+                            <div class="wallet-button" tapmode onclick="$api.goWindow('my_bonus_win')">明细</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="height:0.5rem;background-color:#f4f4f4;width:100%;"></div>
+
+        <div class="aui-content">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle" style="padding:0.1rem 0rem;">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 1rem;"></div>
+                        <div class="aui-list-item-inner" style="width:65%;">
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
+                                我的总账单
+                            </div>
+                        </div>
+                        <div class="aui-list-item-right">
+                            <div class="wallet-button" tapmode onclick="">查看全部</div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-list-item-middle" style="padding:0.1rem 0rem;" tapmode onclick="$api.goWindow('bill_detail_win')">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 1rem;"></div>
+                        <div class="aui-list-item-inner" style="width:70%;">
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
+                                钱包转账到银行卡
+                            </div>
+                            <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
+                                2014-12-32 12:12:12
+                            </div>
+                        </div>
+                        <div class="aui-list-item-right">
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
+                                -1944
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="height:0.5rem;background-color:#f4f4f4;width:100%;"></div>
+    </div>
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript">
+    var app = new Vue({
+        el:'#app',
+        data:{
+
+        },
+        methods:{
+
+        }
+    })
+    apiready = function() {
+        api.parseTapmode();
+
+        setRefresh();
+        fixAvatar();
+    };
+
+    fixAvatar = function(){
+        $api.css($api.byId('avatar'), 'height:'+ $api.offset($api.byId('avatar')).w +'px');
+    }
+
+    setRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#f4f4f4',
+            textColor: '#fff',
+        }, function(ret, err){
+            setTimeout(function(){
+                api.refreshHeaderLoadDone();
+            },2000)
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {}
+        .order{border-bottom: 0.5rem solid #f4f4f4;padding: 0rem 0.4rem;background-color: #fff;}
+        .order .title{padding: 0.5rem 0rem;font-size: 0.75rem;}
+        .order .title:after{display:block;content:"";clear:both;}
+        .order .title .time{float: left;}
+        .order .title .status{float: right;}
+
+        .order .goodslist{background-color: #f4f4f4;display: flex;margin-bottom: 0.5rem;}
+        .order .goodslist .thum{width: 20%;height: 100%;padding: 0.4rem 0.3rem;}
+        .order .goodslist .thum img{max-width: 100%;vertical-align: middle;}
+        .order .goodslist .text{width: 55%;padding-top: 0.5rem;padding-bottom: 0.5rem;}
+        .order .goodslist .text .name{font-size: 0.75rem;color:#333;}
+        .order .goodslist .other{padding-top: 0.5rem;width: 23%;padding-bottom: 0.5rem;}
+        .order .goodslist .other .price{color:#df0303;text-align: right;}
+        .order .goodslist .other .num{color:#555;text-align: right;}
+        .order .goodslist .other .after{font-size: 0.75rem;height:1.5rem;line-height: 1.5rem;border-radius: 1.5rem;background-color: #fff;text-align: center;border: 1px solid #c3c3c3; max-width: 100%;width: 5rem;color:#555;display: inline-block;}
+
+        .order .total-price{font-size: 0.75rem;text-align: right;color: #999;padding-bottom: 0.5rem;border-bottom: 1px solid #f4f4f4;}
+        .order .button{text-align: right;margin-top: 0.5rem;padding-bottom: 0.5rem;}
+        .order .button div{font-size: 0.75rem;height:1.5rem;line-height: 1.5rem;border-radius: 1.5rem;text-align: center;border: 1px solid #c3c3c3; color:#555;max-width: 26%;width:5rem;display: inline-block;}
+    </style>
+</head>
+
+<body>
+    <div style="background-color:#f4f4f4;height:0.5rem;width:100%;"></div>
+    <section  class="aui-content">
+        <div class="order" tapmode onclick="$api.goWindow('order_detail_win')">
+            <div class="title">
+                <span class="time">2017-12-31 12:12:12</span>
+                <span class="status">等待付款</span>
+            </div>
+            <div class="goodslist">
+                <div class="thum">
+                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+                </div>
+                <div class="text">
+                    <div class="name">网络智能平板液晶电视机65</div>
+                </div>
+                <div class="other">
+                    <div class="price">￥1000.28</div>
+                    <div class="num">x1</div>
+                    <div class="after">申请售后</div>
+                </div>
+            </div>
+            <div class="goodslist">
+                <div class="thum">
+                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+                </div>
+                <div class="text">
+                    <div class="name">Sharp/夏普 LCD-70MY5100A 70英寸4K网络智能平板液晶电视机65</div>
+                </div>
+                <div class="other">
+                    <div class="price">￥10000.28</div>
+                    <div class="num">x1</div>
+                </div>
+            </div>
+            <div class="total-price">共1件商品&nbsp;合计:<span style="color:#df0303">￥35.9</span>&nbsp;(含运费:￥10.00)</div>
+            <div class="button">
+                <!-- <div>取消订单</div> -->
+                <!-- <div style="color:#358cff;border-color:#358cff">立即付款</div> -->
+                <!-- <div>提醒发货</div> -->
+                <div tapmode onclick="$api.goWindow('logistics_win')">查看物流</div>
+                <!-- <div style="color:#358cff;border-color:#358cff">确认收货</div> -->
+                <!-- <div style="color:#358cff;border-color:#358cff">评价</div> -->
+            </div>
+        </div>
+
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var orderStatus;
+    apiready = function() {
+        api.parseTapmode();
+
+        orderStatus = api.pageParam.status;
+        setRefresh();
+    };
+    setRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#f4f4f4',
+            textColor: '#fff',
+        }, function(ret, err){
+            api.refreshHeaderLoadDone();
+        });
+    }
+</script>
+
+</html>

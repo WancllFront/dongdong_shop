@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {}
+        .order{padding: 0.5rem;background-color: #fff;}
+        .order .goods{display: flex;align-items: center;background-color: #f7f7f7;}
+        .order .goods .thum{width: 30%;padding: 0.5rem 0.5rem;;}
+        .order .goods .thum img{width: 100%;}
+        .order .goods .other{width: 70%;padding: 0.5rem 0.5rem 0.5rem 0.3rem;;}
+        .order .goods .other .title{margin-bottom: 1rem;}
+        .order .goods .other .price{color:#fe4545}
+        .order .goods .other .price:after{display:block;content:"";clear:both;}
+
+        .order .line:after{display:block;content:"";clear:both;}
+        .order .line .left{float: left;display: inline-block;color: #777;font-size: 0.75rem;height: 2rem;line-height: 2rem;}
+        .order .line .right{float: right;color: #777;font-size: 0.75rem;height: 2rem;line-height: 2rem;}
+        .community-dispat-way .way{height: 2.5rem;display: flex;}
+        .community-dispat-way .way div{display: inline-block;width: 50%;background-color: #c6c4c4;color: #fff;text-align: center;line-height: 2.5rem;}
+        .community-dispat-way .way .active{background:linear-gradient(to bottom,#41c4da,#34a3e4,#2680ef);}
+        .community-dispat-way .hidden{display: none;}
+
+        .aui-tips{background-color: #fffebe;color:#333}
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="community-dispat-way" v-if="type == 'community'">
+            <div class="way">
+                <div v-bind:class="{active:(!isSelfPick)}" tapmode @click="changePick(false)" >骑手派送</div>
+                <div v-bind:class="{active:(isSelfPick)}" tapmode @click="changePick(true)" >到店自提</div>
+            </div>
+            <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
+            <div class="aui-content" v-show="!isSelfPick" >
+                <div class="aui-tips">
+                    <i class="aui-iconfont aui-icon-info" style="width:10%;"></i>
+                    <div class="aui-tips-title aui-ellipsis-1" style="width:90%;">该地址未经过认证，请重新选择地址</div>
+                </div>
+                <ul class="aui-list aui-media-list" style="background-image:none;">
+                    <li class="aui-list-item aui-list-item-middle" tapmode @click="selectAddress('community')">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media" style="width: 2rem;">
+                                <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
+                            </div>
+                            <div class="aui-list-item-inner aui-list-item-arrow">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">湖南长沙开源鑫茂大楼902</div>
+                                </div>
+                                <div class="aui-list-item-text" style="margin-top:0.5rem;">
+                                    韩梅梅
+                                    <div class="aui-list-item-text">18390911268</div>
+                                    <div class="aui-list-item-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="aui-content " v-show="isSelfPick" >
+                <ul class="aui-list aui-media-list">
+                    <li class="aui-list-item aui-list-item-middle" >
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media" style="width: 2rem;">
+                                <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
+                            </div>
+                            <div class="aui-list-item-inner aui-list-item-arrow">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">湖南省长沙市 芙蓉区金茂小区8栋5号</div>
+                                </div>
+                                <div class="aui-list-item-text" style="margin-top:0.5rem;">
+                                    <div class="aui-list-item-title aui-font-size-16">良食益油（金茂店）</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media" style="width: 2rem;">
+                                <img src="../image/tel_blue.png" class="aui-img-round aui-list-img-sm">
+                            </div>
+                            <div class="aui-list-item-inner aui-list-item-arrow">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">商家电话:<span>18390911258</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
+        </div>
+
+        <div v-if="type == 'business'">
+            <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list" style="background-image:none;">
+                    <li class="aui-list-item aui-list-item-middle" tapmode @click="selectAddress('business')">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media" style="width: 2rem;">
+                                <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
+                            </div>
+                            <div class="aui-list-item-inner aui-list-item-arrow">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">湖南长沙开源鑫茂大楼902</div>
+                                </div>
+                                <div class="aui-list-item-text" style="margin-top:0.5rem;">
+                                    韩梅梅
+                                    <div class="aui-list-item-text">18390911268</div>
+                                    <div class="aui-list-item-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
+        </div>
+
+        <div class="order">
+            <div class="goodslist">
+                <div class="goods">
+                    <div class="thum">
+                        <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+                    </div>
+                    <div class="other">
+                        <div class="title">
+                            美国红提发生
+                        </div>
+                        <div class="price">
+                            <span>￥39.00</span><span style="float:right;color:#555;">x1</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="height:0.5rem;background-color:#fff;width:100%;"></div>
+            </div>
+
+            <!-- <div class="line">
+                <div class="left">购买数量:</div>
+                <div class="right" style="display:flex;padding:0.5rem 0rem;">
+                    <img src="../image/jian_blue.png" style="width:1rem;display:inline-block;">
+                    <span style="line-height:1rem;padding:0rem 0.5rem;">1</span>
+                    <img src="../image/jia_blue.png" style="width:1rem;display:inline-block;">
+                </div>
+            </div> -->
+            <div class="line">
+                <div  class="left">配送费用:</div>
+                <div class="right">3.00</div>
+            </div>
+            <div class="line">
+                <div  class="left">新品优惠:</div>
+                <div class="right">-3.00</div>
+            </div>
+            <div class="line">
+                <div  class="left">买家留言:</div>
+                <div class="right">
+                    <textarea name="name" rows="18" cols="80" style="border:1px solid #f7f7f7;height:5rem;"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data:{
+            type:'',
+            isSelfPick:false
+        },
+        methods:{
+            changePick : function(isSelfPick){
+                this.isSelfPick = isSelfPick;
+            },
+            selectAddress: function(type){
+                $api.goWindow('address_win',{type:type})
+            }
+        }
+    })
+    apiready = function() {
+        api.parseTapmode();
+        app.type = api.pageParam.type;
+        handlerEvent()
+    };
+    handlerEvent = function(){
+        api.addEventListener({
+            name: 'selectAddress'
+        }, function(ret, err){
+            if( ret ){
+                 alert( JSON.stringify( ret ) );
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+
+    }
+
+</script>
+
+</html>

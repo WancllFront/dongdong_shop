@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        body { padding-top: 0.5rem;}
+            .goodslist{}
+            .goodslist .comment{border-bottom: 0.5rem solid #f4f4f4;margin-bottom: 0.5rem;}
+            .goodslist .comment .goods{display:flex;padding:0.8rem 0rem;background-color: #f4f4f4;margin: 0rem 0.5rem;}
+            .goodslist .comment .goods .left{width:26%;margin-left: 2%;}
+            .goodslist .comment .goods .left img{max-width: 100%;}
+            .goodslist .comment .goods .right{display:inline-block;width:72%;margin-left:0.5rem;position:relative;}
+            .goodslist .comment .goods .right .title{padding-bottom: 1.5rem;color: #333;}
+            .goodslist .comment .goods .right .describe{color:#737373;font-size:0.8rem;}
+            .goodslist .comment .goods .right .price{}
+            .goodslist .comment .goods .right .price span{display:inline-block;}
+
+            .goodslist .comment .content{padding: 0rem 1rem;}
+            .goodslist .comment .content .star{padding: 1rem 0rem;}
+            .goodslist .comment .content .star img{width: 10%;}
+            .goodslist .comment .content .text{color: #333;padding-bottom: 1rem;}
+            .goodslist .comment .content .img {width: 100%;padding-bottom: 1rem;}
+            .goodslist .comment .content .img img{max-width: 23%;border: 1px solid #f4f4f4;}
+    </style>
+</head>
+
+<body>
+    <div class="goodslist" id="app">
+        <div class="comment" v-for="(comment,key) in comments" :key="key">
+            <div class="goods">
+                <div class="left">
+                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+                </div>
+
+                <div class="right">
+                    <div class="title">Sharp/夏普 LCD-70MY5100A 70英寸4K网络智能平板液晶电视机65</div>
+                    <div class="price">
+                        <span style="color:#ff2c2c">￥39.00</span>
+                        <span style="color:#737373">/份</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="star">
+                    <img src="../image/star_light.png" >
+                    <img src="../image/star_light.png" >
+                    <img src="../image/star_light.png" >
+                    <img src="../image/star_light.png" >
+                    <img src="../image/star_light.png" >
+                </div>
+                <div class="text">公司发的发生的立法精神多了房价多少积分发发牢骚 浪费大家商量的附件是快递放假了睡觉少了进了房间空手道解放了数据分类时间</div>
+                <div class="img">
+                    <img v-for="(img,index) in comment.imgs" :key="index" :src="img" @click="preview(comment.imgs,index)">
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data:{
+            comments:[{
+                id:1,
+                imgs:[
+                    'http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png',
+                    'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png',
+                    'http://api.wancll.wygoo.com/data/upload/file/20171021/59eb0ba218d6e.png'
+                ]
+            },{
+                id:2,
+                imgs:[
+                    'http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png',
+                    'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png',
+                    'http://api.wancll.wygoo.com/data/upload/file/20171021/59eb0ba218d6e.png'
+                ]
+            }],
+            page:1
+        },
+        methods:{
+            preview: function(imgs,index){
+                photoBrowser.open({
+                    images:imgs,
+                    bgColor: '#000',
+                    activeIndex: index
+                }, function(ret, err) {
+                    if (ret) {
+                        if(ret.eventType == 'click'){
+                            photoBrowser.close();
+                        }
+                    } else {
+                        alert(err.msg || '错误');
+                    }
+                });
+            }
+        }
+    })
+    var photoBrowser;
+    apiready = function() {
+        photoBrowser = api.require("photoBrowser");
+    };
+
+
+</script>
+
+</html>

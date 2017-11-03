@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../css/api.css" /> -->
+    <style>
+        body {background-color: #fff;}
+        .content{margin-top: 220px;}
+        .aui-label-info{background-color: #358cff !important;}
+        .content .goods {padding:0.3rem 0.6rem;}
+        .content .goods .other:after{display:block;content:"";clear:both;}
+        .content .goods .other{padding: 0.4rem 0rem;}
+        .content .goods .other span{color:#bebebe;font-size: 0.7rem;}
+
+        .content .nav{padding: 0rem 0.6rem;display:flex;border-bottom: 1px solid #f4f4f4;}
+        .content .nav div{display: inline-block;width: 50%;text-align: center;color: #333;height:2rem;line-height: 2rem;}
+        .content .nav div .active{border-bottom: 1px solid #358cff;padding-bottom:0.5rem}
+
+        .content .detail{padding: 0rem 0.6rem;}
+
+        .content .comment{}
+        .content .comment .img {width: 100%;padding-bottom: 1rem;}
+        .content .comment .img img{max-width: 23%;border: 1px solid #f4f4f4;display: inline-block;}
+        input,button,textarea {
+        	border:0;
+        	margin:0;
+        	padding:0;
+        	font-size:1em;
+        	line-height:1em;
+        	/*-webkit-appearance:none;*/
+        	background-color:rgba(0, 0, 0, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content" id="content">
+        <div style="height:0.3rem;background-color:#f4f4f4;width:100%;margin-top:0.2rem;"></div>
+        <div class="goods">
+            <div class="price">
+                <span style="color:#f63030;font-size:0.8rem;">￥</span>
+                <span style="color:#f63030;font-size:1.5rem;">1391.00</span>
+                <span style="color:#a8a8a8;font-size:0.6rem;text-decoration:line-through">￥3333.00</span>
+            </div>
+            <div class="title">
+                <div class="aui-label aui-label-info">包邮</div>
+                <span>科沃斯扫地机器人吸尘器科沃斯扫地机器人吸尘器科沃斯扫地机器人吸尘器</span>
+            </div>
+            <div class="other">
+                <span style="float:left;">邮费:￥10.00</span>
+                <span style="float:right;">销量:12000</span>
+            </div>
+        </div>
+        <div style="height:0.3rem;background-color:#f4f4f4;width:100%;margin-top:0.2rem;"></div>
+        <div class="nav">
+            <div tapmode onclick="changeNav(0)"><span id="span0" class="active">详情</span></div>
+            <div tapmode onclick="changeNav(1)"><span id="span1" >评价</span></div>
+        </div>
+        <div class="detail" id="sub0" style="" >
+            详情
+        </div>
+        <div class="comment" id="sub1" style="display:none">
+            <div class="aui-content aui-margin-b-10" v-for="(comment,key) in comments" :key="key" style="border-bottom:1px solid #f4f4f4;">
+                <ul class="aui-list aui-media-list" style="background-image:none;">
+                    <li class="aui-list-item aui-list-item-middle" style="background-image:none;padding-right: 0.75rem;">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media" style="width:25%">
+                                <img src="../image/pro1.png" class="aui-img-round aui-list-img-sm" id="avatar">
+                            </div>
+                            <div class="aui-list-item-inner" style="width:40%;">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title aui-font-size-14">大魔王大魔王</div>
+                                </div>
+                                <div class="aui-list-item-text aui-font-size-12">
+                                    2017-12-32 12:12:12
+                                </div>
+                            </div>
+                            <div class="aui-list-item-right" style="width:35%" >
+                                <div class="aui-list-item-text">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="comment-content" style="padding:0rem 0.75rem;font-size:0.7rem;color#333;">
+                    水果超级甜超级好吃，老板人也很好，发货速度快。水果超级甜超级好吃，老板人也很好，发货速度快水果超级甜超级好吃，老板人也很好，发
+                </div>
+                <div class="img" style="padding:0.5rem 0.75rem; ">
+                    <img v-for="(img,index) in comment.imgs" :key="index" :src="img" @click="preview(comment.imgs,index)">
+                </div>
+            </div>
+            <button style="text-align:center;font-size:0.7rem;color:#333;padding-bottom:0.5rem;width:100%;margin-top:1rem;" tapmode onclick="loadMoreComment()" id="more">加载更多</button>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#content',
+        data:{
+            comments:[],
+            page:1
+        },
+        methods:{
+            preview: function(imgs,index){
+                photoBrowser.open({
+                    images:imgs,
+                    bgColor: '#000',
+                    activeIndex: index
+                }, function(ret, err) {
+                    if (ret) {
+                        if(ret.eventType == 'click'){
+                            photoBrowser.close();
+                        }
+                    } else {
+                        alert(err.msg || '错误');
+                    }
+                });
+            }
+        }
+    });
+
+    var uiScrollPictureModule;
+    var photoBrowser;
+
+    apiready = function(){
+        uiScrollPictureModule = api.require("UIScrollPicture");
+        photoBrowser = api.require("photoBrowser");
+
+        loadScrollPicture();
+    };
+
+
+
+    var scollPicture = [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png']
+
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 }, data: { paths: scollPicture, }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
+
+    changeNav = function(index){
+        $api.addCls($api.byId('span' + index), 'active');
+        $api.removeCls($api.byId('span' + (1-index)), 'active');
+
+        $api.css($api.byId('sub'+index), 'display:block');
+        $api.css($api.byId('sub'+(1-index)), 'display:none');
+
+    }
+    var ihtml = '加载中';
+    var moreDom = $api.byId('more');
+    loadMoreComment = function(){
+        $api.text($api.byId('more'), ihtml);
+        var intervalInt = setInterval(function(){
+            ihtml += '.';
+            if(ihtml == '加载中.....'){
+                ihtml = '加载中'
+            }
+            $api.text(moreDom, ihtml);
+            $api.attr(moreDom, 'disabled', true);
+        },1000)
+        setTimeout(function(){
+            clearInterval(intervalInt);
+            $api.text(moreDom, '加载更多');
+            $api.removeAttr(moreDom, 'disabled');
+        },10000)
+    }
+</script>
+
+</html>

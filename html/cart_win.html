@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style media="screen">
+        .aui-btn-info{background-color: #267df0 !important;}
+        .aui-btn-info:active{background-color: #1270ed !important;}
+
+        .aui-bar-tab{display: flex;height: 2.5rem;border-top: 1px solid #f4f4f4;}
+        .aui-bar-tab .selectall{display: inline-block;width: 25%;position: relative;text-align: left;}
+        .aui-bar-tab .selectall img{width: 1.25rem;position: absolute;top: 0.625rem;left:0.5rem;}
+        .aui-bar-tab .selectall span{line-height: 2.5rem;padding-left: 2rem;}
+        .aui-bar-tab .price{width: 50%;text-align: right;display: inline-block;line-height: 2.5rem;padding-right: 0.5rem;font-size: 0.7rem}
+        .aui-bar-tab .submit{display: inline-block;width: 25%;background:linear-gradient(to bottom,#41c4da,#34a3e4,#2680ef);color:#fff;text-align: center;line-height: 2.5rem;}
+        .aui-bar-tab .submit:active{background-color: #1273f2}
+    </style>
+</head>
+<body>
+    <header class="aui-bar aui-bar-nav aui-bar-light"  id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="$api.closeWin()" >
+            <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
+        </a>
+        <div class="aui-title" id="title"></div>
+        <a class="aui-btn aui-pull-right">
+            <span class="aui-iconfont aui-icon-trash" style="color:#000;"></span>
+        </a>
+    </header>
+
+    <footer class="aui-bar aui-bar-tab" id="footer">
+
+        <div class="selectall">
+            <!-- <img src="../image/circle.png"> -->
+            <img src="../image/select_blue.png">
+            <span>全选</span>
+        </div>
+        <div class="price">
+            合计: <span style="color:#f63030;font-size:1rem;">￥39.00</span>
+        </div>
+        <div class="submit" tapmode onclick="$api.goWindow('order_confirm_win',{type:type})">结算</div>
+    </footer>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var type;
+    apiready = function(){
+
+        type = api.pageParam.type;
+        api.parseTapmode();
+
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        var headerPos = $api.offset(header);
+        var body_h = $api.offset($api.dom('body')).h;
+        var footerH = $api.offset($api.byId('footer')).h;
+        api.openFrame({
+            name: 'cart_frm',
+            url: './cart_frm.html',
+            bounces: true,
+            bgColor: '#fff',
+            rect: {
+                x: 0,
+                y: headerPos.h,
+                w: 'auto',
+                h: api.winHeight-headerPos.h-footerH
+            },
+            pageParam:{
+                type : type
+            }
+        });
+
+        $api.text($api.byId('title'), type == 'business'? '商城购物车':'社区购物车');
+
+    };
+</script>
+</html>

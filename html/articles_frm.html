@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        body {}
+        .wrapper03 {position:relative;height: 1rem;width: 100%;overflow: hidden;margin:0 auto;margin-top: 0.25rem;margin-bottom: 0.5rem;}
+		.wrapper03 .scroller {position:absolute}
+		.wrapper03 .scroller li {height: 1rem;color:#333;float: left;line-height: 1rem;font-size: .4rem;text-align: center}
+		.wrapper03 .scroller li a{color:#333;display:block;margin-right: 0.85rem; margin-left: 0.05rem;}
+		.wrapper03 .scroller li.cur a{color:#267df0;height:.9rem;border-bottom:.1rem solid #267df0}
+
+        .article-list{margin-bottom: 0.3rem;}
+        .article-list .article-img img{width: 100%;}
+        .article-list p{white-space: nowrap;text-overflow: ellipsis;overflow: hidden;font-size: 0.35rem;margin-top: 0.1rem;}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="wrapper wrapper03" id="wrapper03">
+        	<div class="scroller" style="width: 1807px; transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
+        		<ul class="clearfix">
+        			<li style="margin-left: 0px; margin-right: 0px;" class="cur"><a tapmode>全部</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        		</ul>
+        	</div>
+        </div>
+        <div>
+            <div class="article-list" tapmode onclick="$api.goWindow('article_win')">
+                <div class="article-img">
+                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171024/59eea8da73d32.png">
+                </div>
+                <p>什么是孩子幸福的根本</p>
+            </div>
+            <div class="article-list">
+                <div class="article-img">
+                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171024/59eea8da73d32.png">
+                </div>
+                <p>什么是孩子幸福的根本</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type="text/javascript" src="../script/flexible.js"></script>
+<script type="text/javascript" src="../script/iscroll.js"></script>
+<script type="text/javascript" src="../script/navbarscroll.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        $('.wrapper03').navbarscroll();
+        api.parseTapmode();
+    };
+
+</script>
+
+</html>

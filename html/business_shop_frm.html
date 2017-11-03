@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-flex.css" />
+    <style>
+        body {}
+        .bg{margin-top: 220px;}
+        .aui-bar-tab{position: relative;padding-top: 0.6rem;padding-bottom: 0.6rem;}
+        .aui-bar-tab .aui-bar-tab-item img{width:2.5rem;display:inline-block;}
+        .goodslist{background-color: #fff;}
+        .goodslist .goods{width: 49%;text-align: center;display: inline-block;}
+        .goodslist .goods .thum{padding: 0.2rem 0.2rem;}
+        .goodslist .goods .thum img{display: inline-block;width: 95%;}
+        .goodslist .goods .title{text-align: left;padding-left: 0.5rem;padding-top: 0.5rem;font-size: 0.75rem;}
+        .goodslist .goods .price{text-align: left;padding-left: 0.5rem;color:#ff2c2c;font-size: 0.6rem}
+        .goodslist .goods .price span{font-size: 1rem;}
+    </style>
+</head>
+
+<body>
+    <div class="bg">
+        <div class="aui-bar aui-bar-tab">
+            <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_cate_list_win')">
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171030/59f6fe9ccd8f9.png">
+                <div class="aui-bar-tab-label">热销</div>
+            </div>
+            <div class="aui-bar-tab-item">
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171030/59f6fe9d434ae.png">
+                <div class="aui-bar-tab-label">新品</div>
+            </div>
+            <div class="aui-bar-tab-item">
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171030/59f6fe9d2341a.png">
+                <div class="aui-bar-tab-label">包邮</div>
+            </div>
+            <div class="aui-bar-tab-item" >
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171030/59f6fe9d08f6f.png">
+                <div class="aui-bar-tab-label">清仓</div>
+            </div>
+        </div>
+
+        <img src="http://api.wancll.wygoo.com/data/upload/file/20171102/59fad5cacfc64.png" style="width:100%;">
+        
+        <div class="goodslist">
+            <div class="goods" $api.goWindow('business_goods_detail_win')>
+                <div class="thum">
+                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+                </div>
+                <div class="title">考拉工厂店 </div>
+                <div class="price">￥<span>123.00</span></div>
+            </div>
+            <div class="goods">
+                <div class="thum">
+                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png">
+                </div>
+                <div class="title">水果水果</div>
+                <div class="price">￥<span>123.00</span></div>
+            </div>
+            <div class="goods">
+                <div class="thum">
+                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171030/59f6fe9ccd8f9.png">
+                </div>
+                <div class="title">水果水果</div>
+                <div class="price">￥<span>123.00</span></div>
+            </div>
+            <div class="goods">
+                <div class="thum">
+                    <img src="http://pic71.nipic.com/file/20150610/13549908_104823135000_2.jpg">
+                </div>
+                <div class="title">考拉工厂店 牛奶丝双宫茧桑 蚕丝春秋被 3斤</div>
+                <div class="price">￥<span>123.00</span></div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+var uiScrollPictureModule;
+    apiready = function(){
+        uiScrollPictureModule = api.require("UIScrollPicture");
+
+        init();
+    };
+    init = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#b6cbe6',
+            textColor: '#fff',
+        }, function(ret, err){
+            setTimeout(function(){
+                reloadScrollPicture();
+                api.refreshHeaderLoadDone();
+            },2000)
+        });
+
+        loadScrollPicture();
+    }
+
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 }, data: { paths: [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png'
+    ], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
+
+    reloadScrollPicture = function(){
+        uiScrollPictureModule.reloadData({
+            data: {
+                paths: ['http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f7725feb.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f77887b3.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f77c961d.png'],
+            }
+        });
+    }
+</script>
+
+</html>

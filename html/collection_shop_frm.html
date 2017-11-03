@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,aItemress=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        body {}
+        .goodslist{margin:0rem .5rem;}
+        .goodslist .goods{display:flex;padding:0.8rem 0rem;border-bottom:1px solid #f4f4f4;}
+        .goodslist .goods .left{width:28%;}
+        .goodslist .goods .left img{max-width: 100%;}
+        .goodslist .goods .right{display:inline-block;width:72%;margin-left:0.5rem;position:relative;padding-top: 0.5rem;}
+        .goodslist .goods .right .title{font-weight:bold;}
+        .goodslist .goods .right .describe{color:#737373;font-size:0.8rem;}
+        .goodslist .goods .right .price{position:absolute;bottom:0px;right:0px;left:0px;}
+        .goodslist .goods .right .price div{display:inline-block;float:left}
+        .goodslist .goods .right .price .jia{float:right;width:1.5rem;padding-right:0.5rem; transition: .1s opacity; opacity: 0.5}
+        .goodslist .goods .right .price .jia:active{opacity: 1;}
+    </style>
+</head>
+
+<body>
+    <div class="goodslist">
+        <div class="goods">
+            <div class="left">
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+            </div>
+
+            <div style="" class="right">
+                <p class="single-paragraph title">美国进口红提美国进口红提</p>
+                <p class="single-paragraph describe">新鲜可口</p>
+                <div class="price">
+                    <!-- <div>
+                        <span style="color:#ff2c2c">￥39.00</span>
+                        <span style="color:#737373">/份</span>
+                    </div> -->
+                    <img src="../image/delete.png" class="jia" tapmode onclick="">
+                </div>
+            </div>
+        </div>
+        <div class="goods">
+            <div class="left">
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+            </div>
+
+            <div style="" class="right">
+                <p class="single-paragraph title">美国进口红提美国进口红提</p>
+                <p class="single-paragraph describe">新鲜可口</p>
+                <div class="price">
+                    <!-- <div>
+                        <span style="color:#ff2c2c">￥39.00</span>
+                        <span style="color:#737373">/份</span>
+                    </div> -->
+                    <img src="../image/delete.png" class="jia" tapmode onclick="">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+
+    };
+</script>
+
+</html>

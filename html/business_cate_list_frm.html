@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {}
+        .cates{padding: 0.5rem 0.3rem;align-items: center;background-color: #fff;}
+        .cates .cate{width:48%;padding:0.2rem 0.2rem;display: inline-block;}
+        .cates .cate .img{border: 1px solid #f4f4f4;max-width: 100%;height:4rem;overflow: hidden;line-height: 4rem;text-align: center;}
+        .cates .cate .img img{max-width: 100%;display: inline-block;vertical-align: middle;width: 4rem}
+        .cates .cate .title{font-size: 0.7rem;color:#676767;text-align: center;width: 100%;padding-top: 0.3rem;}
+    </style>
+</head>
+
+<body>
+    <div class="cates">
+        <div class="cate" tapmode onclick="$api.goWindow('business_goods_list_win')">
+            <div class="img">
+                <img src="http://pic.qiantucdn.com/58pic/27/72/46/59B58PICjeG_1024.jpg!/fw/780/watermark/url/L3dhdGVybWFyay12MS4zLnBuZw==/align/center">
+            </div>
+            <div class="title">唇妆</div>
+        </div>
+        <div class="cate">
+            <div class="img">
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171030/59f6fe9ccd8f9.png">
+            </div>
+            <div class="title">唇妆</div>
+        </div>
+        <div class="cate">
+            <div class="img">
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+            </div>
+            <div class="title">唇妆</div>
+        </div>
+        <div class="cate">
+            <div class="img">
+                <img src="http://pic.qiantucdn.com/58pic/27/66/84/09T58PICvJG_1024.jpg!/fw/780/watermark/url/L3dhdGVybWFyay12MS4zLnBuZw==/align/center">
+            </div>
+            <div class="title">唇妆</div>
+        </div>
+        <div class="cate">
+            <div class="img">
+                <img src="http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png">
+            </div>
+            <div class="title">唇妆</div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+
+    };
+</script>
+
+</html>

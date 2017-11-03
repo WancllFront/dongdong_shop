@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {background-color: #f4f4f4;}
+        .top{width: 100%;background: linear-gradient(to bottom,#3de6ff,#39baff,#358eff);position: relative;}
+        .top .button{background-color:#fff;color:#358eff;height:2rem;line-height:2rem;text-align:center;margin:0rem 30%;border-radius: 2rem;}
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav top" id="header">
+        <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
+            <span class="aui-iconfont aui-icon-left" style="color:#fff;"></span>
+        </a>
+        <div class="aui-title">我的奖金</div>
+        <div class="" style="margin-top:3rem;font-size:3rem;">200000</div>
+        <div class="" style="font-size:0.8rem;">总收益(元)</div>
+        <div class="" style="font-size:0.8rem;">
+            <div class="button">分享得收益</div>
+        </div>
+    </header>
+
+
+    <div class="aui-content">
+        <ul class="aui-list aui-media-list">
+
+            <li class="aui-list-item aui-list-item-middle" style="padding:0.7rem 0rem;">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" style="width: 1rem;"></div>
+                    <div class="aui-list-item-inner" style="width:80%;">
+                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;font-weight:bold;">
+                            用户丁磊-订单完成
+                        </div>
+                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
+                            2014-12-32 12:12:12
+                        </div>
+                    </div>
+                    <div class="aui-list-item-right">
+                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
+                            -1944
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fixPage();
+        setRefresh();
+    };
+    setRefresh = function(){
+        api.setStatusBarStyle({ style: 'dark' });
+        api.setRefreshHeaderInfo({
+            bgColor: '#4be4fb',
+            textColor: '#fff',
+        }, function(ret, err){
+            setTimeout(function(){
+                api.refreshHeaderLoadDone();
+            },2000)
+        });
+    }
+
+    fixPage = function(){
+        $api.css($api.byId('header'),'height:'+ (api.frameHeight * 0.382) + 'px');
+        $api.fixStatusBar($api.byId('header'))
+    }
+</script>
+
+</html>

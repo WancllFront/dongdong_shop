@@ -7,60 +7,78 @@
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
 	<style>
-		#con{
-			margin: 10px;
-			font-size: 24px; 
-		}
-		ul{
-			margin-bottom: 10px;
-		}
-		ul li{ 
-			margin: 5px 10px;
-			padding: 5px;
-			color: #000;
-			word-wrap: break-word;
-		}
+        .advertise-list{margin-top: 220px; padding: 0px 4px;}
+        .advertise{display: flex;white-space: nowrap;}
+        .ad{}
+        .ad img{max-width: 100%; height:auto; border-radius: 5px; width: 100%;}
 	</style>
 </head>
 <body>
-    <label id="con">Hello APP</label>
-	<div id='sys-info'></div>
+    <div class="advertise-list">
+        <div class="advertise">
+            <div class="ad" style="margin-right:4px;" tapmode onclick="$api.goWindow('community_local_shop_list_win',{},'none');">
+                <img src="../image/ad4.png" >
+            </div>
+            <div class="ad" tapmode onclick="$api.goWindow('my_wallet_win',{},'none');">
+                <img src="../image/ad3.png" >
+            </div>
+        </div>
+        <div class="advertise">
+            <div class="ad">
+                <img src="../image/ad1.png" tapmode onclick="$api.goWindow('link_win',{link:'http://www.ctrip.com/',name:'携程旅行'})" >
+            </div>
+            <div class="ad">
+                <img src="../image/ad2.png" tapmode onclick="$api.goWindow('link_win',{link:'https://www.qunar.com/',name:'去哪儿网'})" >
+            </div>
+        </div>
+        <div class="advertise">
+            <div class="ad" style="margin-right:4px;"  tapmode onclick="$api.goWindow('link_win',{link:'http://www.xiaojukeji.com/',name:'滴滴出行'})">
+                <img src="../image/ad8.png" >
+            </div>
+            <div class="ad" style="margin-right:4px;" tapmode onclick="$api.goWindow('link_win',{link:'http://chs.meituan.com/',name:'美团'})">
+                <img src="../image/ad7.png" >
+            </div>
+            <div class="ad" style="margin-right:4px;" tapmode onclick="$api.goWindow('link_win',{link:'http://www.toutiao.com/',name:'今日头条'})">
+                <img src="../image/ad6.png" >
+            </div>
+            <div class="ad" tapmode onclick="$api.goWindow('articles_win')">
+                <img src="../image/ad5.png" >
+            </div>
+        </div>
+    </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var uiScrollPictureModule;
     apiready = function(){
-		var ver = api.version;
-		var sType = api.systemType;
-		var sVer = api.systemVersion;
-		var id = api.deviceId;
-		var model = api.deviceModel;
-		var name = api.deviceName;
-		var cType = api.connectionType;
-		var winName = api.winName;
-		var winWidth = api.winWidth;
-		var winHeight = api.winHeight;
-		var frameName = api.frameName || '';
-		var frameWidth = api.frameWidth || '';
-		var frameHeight = api.frameHeight || '';
+        uiScrollPictureModule = api.require("UIScrollPicture");
 
-		var str = '<ul>';
-		str += '<li>引擎版本信息: ' + ver + '</li>';
-		str += '<li>系统类型: ' + sType + '</li>';
-		str += '<li>系统版本: ' + sVer + '</li>';
-		str += '<li>设备标识: ' + id + '</li>';
-		str += '<li>设备型号: ' + model + '</li>';
-		str += '<li>设备名称: ' + name + '</li>';
-		str += '<li>网络状态: ' + cType + '</li>';
-		str += '<li>主窗口名字: ' + winName + '</li>';
-		str += '<li>主窗口宽度: ' + winWidth + '</li>';
-		str += '<li>主窗口高度: ' + winHeight + '</li>';
-		str += '<li>子窗口名字: ' + frameName + '</li>';
-		str += '<li>子窗口宽度: ' + frameWidth + '</li>';
-		str += '<li>子窗口高度: ' + frameHeight + '</li>';
-		str += '</ul>';
-
-		$api.byId('sys-info').innerHTML = str;
-
+        init();
     };
+    init = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#b6cbe6',
+            textColor: '#fff',
+        }, function(ret, err){
+            setTimeout(function(){
+                reloadScrollPicture();
+                api.refreshHeaderLoadDone();
+            },2000)
+        });
+
+        loadScrollPicture();
+    }
+
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 }, data: { paths: [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png'
+], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
+
+    reloadScrollPicture = function(){
+        uiScrollPictureModule.reloadData({
+            data: {
+                paths: ['http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f7725feb.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f77887b3.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f77c961d.png'],
+            }
+        });
+    }
+
 </script>
 </html>
