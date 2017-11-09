@@ -580,11 +580,25 @@
             }
         );
     };
+    u.tokenPage = ['home_win','about_me_win','address_win','address_add','banck_add_win','bill_detial_win','cart_win','chat_win','collection_win','comment_win','comment_add_win','idcard_auth_win','logistics_win','my_bonus_win','my_wallet_win',
+'wy_wallet_detail_win','my_wallet_overview_win','my_wallet_pay_win','my_wallet_pick_win','my_wallet_vip_buy_win','my_wallet_vip_detail_win','my_wallet_vip_list_win',
+'nickname_modify_win','order_confirm_win','order_detail_win','orders_win','pay_select_win','pay_success_win','sms_auth_win'];
+
     u.closeWin = function(){
         api.closeWin();
     }
 
+    u.variTelephone = function (telephone){
+    	return /^1\d{10}$/.test(telephone);
+    }
+    u.variPassword = function (password){
+    	return /^[A-Za-z0-9]{6,20}$/.test(password)
+    }
+
     u.goWindow = function(winName,params,animation){
+        if( ($api.tokenPage.indexOf(winName) != -1) && (!$api.getStorage('userinfo'))){
+            winName = 'login_win'
+        }
         var url ;
         if(winName == 'index'){
             url = '../index.html'
@@ -597,16 +611,82 @@
                 url: url,
                 pageParam: params,
                 animation:{type:animation},
-                slidBackEnabled:false
+                slidBackEnabled:false,
             });
         }else{
             api.openWin({
                 name: winName,
                 url: url,
                 pageParam: params,
-                slidBackEnabled:false
+                slidBackEnabled:false,
             });
         }
+    }
+    u.apiAjax = function(url,values,files,fun){
+        api.ajax({
+            url: url,
+            method: 'post',
+            data: {
+                values: values,
+                files:files
+            }
+        },function(ret, err){
+            fun(ret,err);
+        });
+    }
+    u.faceKey = {
+        api_key: 'Ubx28gOdHnyo6_YVpZ6-NDUMDgc8YfjJ',
+        api_secret: '08mDSQ4DIxEi5WTR_shfid2KDaNOqbNG'
+    }
+    u.detectUrl = 'https://api-cn.faceplusplus.com/facepp/v3/detect'
+    u.ocridcardUrl = 'https://api-cn.faceplusplus.com/cardpp/v1/ocridcard'
+
+    u.host = 'http://192.168.1.110/index.php/api/';
+    u.auth = '';
+
+    u.ajax = function(method,url,values,fun,token){
+
+        var uiLoading = api.require("UILoading");
+        var uiId = '';
+        uiLoading.flower({
+            size: 30,
+            fixed: true
+        }, function(ret){
+            uiId = ret.id;
+        });
+
+        api.ajax({
+            url: url,
+            method: method,
+            data: {
+                values: values,
+            },
+            headers:{
+                auth: 'Basic_Ivj6eZRxMTx2yiyunZvnG8R65',
+                token: token
+            },
+            timeout:10
+        },function(ret, err){
+            uiLoading.closeFlower ({id: uiId});
+
+            if (ret) {
+                if(ret.code != 1){
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'middle'
+                    })
+                }else{
+                    fun(ret)
+                }
+            } else {
+                api.toast({
+                    msg: '网络错误',
+                    duration: 2000,
+                    location: 'middle'
+                });
+            }
+        });
     }
 
 /*end*/

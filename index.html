@@ -66,6 +66,7 @@
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript">
+
     var fnScanner;
     apiready = function(){
         fnScanner = api.require("FNScanner");
@@ -97,14 +98,25 @@
     };
 
     goWindow = function(winName){
-        api.openWin({
-            name: winName,
-            url: './html/' + winName + '.html',
-            animation:{
-                type:"none"
-            },
-            slidBackEnabled:false
-        });
+        if((winName == 'home_win' || winName == 'my_wallet_win') && (!$api.getStorage('userinfo'))){
+            api.openWin({
+                name: 'login_win',
+                url: './html/' + 'login_win' + '.html',
+                animation:{
+                    type:"none"
+                },
+                slidBackEnabled:false,
+            });
+        }else{
+            api.openWin({
+                name: winName,
+                url: './html/' + winName + '.html',
+                animation:{
+                    type:"none"
+                },
+                slidBackEnabled:false,
+            });
+        }
     }
 
     //搜索处理
