@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         body {background-color: #f4f4f4;height:100%}
-        .other{margin-top: 0.5rem;}
+        .other{margin-top: 0.7rem;}
         .other:after{display:block;content:"";clear:both;}
     </style>
 </head>
@@ -33,9 +33,9 @@
             <i class="aui-iconfont aui-icon-lock"></i>
             <input type="password" class="input" id="password" placeholder="输入登录密码">
         </div>
-        <div class="submit" tapmode onclick="">登录</div>
+        <div class="submit" tapmode onclick="login()">登录</div>
         <div class="other" style="width:100%;">
-            <p style="float:left;color:#999" tapmode onclick="$api.goWindow('password_reset_win',{type:1})">忘记密码</p>
+            <p style="float:left;color:#999" tapmode onclick="$api.goWindow('password_reset_win',{type:1})">忘记密码?</p>
             <p style="float:right;color:#999" tapmode onclick="$api.goWindow('reg_win')">没有账号?立即注册</p>
         </div>
     </div>
@@ -49,7 +49,9 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var uiLoading;
     apiready = function() {
+        uiLoading = api.require("UILoading");
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
         var header = $api.byId('header');
@@ -64,7 +66,31 @@
             //$api.byId('telephone').blur();
             $api.byId('password').focus();
         }
-        $api.val($api.byId('telephone'), value);
+        $api.val($api.byId('telephone-novaricode'), value);
+    }
+    login = function(){
+        var telephone = $api.val($api.byId('telephone-novaricode'));
+        var password = $api.val($api.byId('password'));
+
+        if(!telephone || !password){
+            api.toast({
+                msg: '请填写完整的信息',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+
+        $api.ajax('POST',$api.host + 'accounts/login',{
+            guid: telephone,
+            password: password,
+            type: 1
+        },function(ret){
+            $api.setStorage('userinfo',ret.data);
+            setTimeout(function(){
+                $api.goWindow('home_win')
+            },500)
+        })
     }
 </script>
 

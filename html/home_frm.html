@@ -36,9 +36,9 @@
             <img  src="../image/comment_white.png">
         </div>
         <div class="thum" id="thum">
-            <img src="../image/avatar.png">
+            <img src="" id="avatar">
         </div>
-        <div class="username">小可爱</div>
+        <div class="username" id="username"></div>
     </div>
     <div class="aui-content aui-margin-b-15" style="margin-top:0.3rem;">
         <ul class="aui-list aui-list-in">
@@ -123,7 +123,7 @@
                     密码设置
                 </div>
             </li>
-            <li class="aui-list-item" tapmode onclick="$api.goWindow('idcard_auth_win')">
+            <li class="aui-list-item" tapmode onclick="authentication()">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/shiming.png" style="width:1rem;">
                 </div>
@@ -156,9 +156,16 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var uiLoading;
+    var userinfo = $api.getStorage('userinfo');
+
     apiready = function() {
+        uiLoading = api.require("UILoading");
+
         fixPage();
         setRefresh();
+        addEventListener()
+
     };
     setRefresh = function(){
         api.setStatusBarStyle({ style: 'dark' });
@@ -168,7 +175,11 @@
         }, function(ret, err){
             setTimeout(function(){
                 api.refreshHeaderLoadDone();
-            },2000)
+                api.sendEvent({
+                    name: 'updateUser',
+                });
+
+            },1000)
         });
     }
 
@@ -176,6 +187,152 @@
         $api.css($api.byId('top'),'height:'+ (api.frameHeight * 0.382) + 'px');
         var thumW = $api.offset($api.byId('thum')).w;
         $api.css($api.byId('thum'),'height:'+ thumW + 'px');
+    }
+
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'updateUser'
+        }, function(ret, err){
+            userinfo = $api.getStorage('userinfo');
+            $api.text($api.byId('username'), userinfo.user.nick_name || userinfo.user.mobile);
+            $api.attr($api.byId('avatar'), 'src', userinfo.user.avatar || '../image/avatar.png');
+        });
+
+        api.sendEvent({
+            name: 'updateUser',
+        });
+    }
+
+    authentication = function(){
+        var authState = getAuthState();
+        if(authState == 0){
+            getAuthInfo()
+        }else if(authState == 1){
+            api.toast({
+                msg: '信息审核中',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+        }else if(authState == 2){
+            api.toast({
+                msg: '恭喜您，您的实名认证审核已经通过!',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }else if(authState == 3){
+            api.alert({
+                title: '提示',
+                msg: '对不起，您没有通过审核，请重新提交审核信息',
+            }, function(ret, err){
+                if( ret ){
+                    getAuthInfo()
+                }else{
+                     alert( JSON.stringify( err ) );
+                }
+            });
+        }
+    }
+    getAuthState  = function(){
+        return 0;
+    }
+
+    getAuthInfo = function(){
+        var faceImgBase64Data = '';
+        var idCard = {};
+        detectFace();
+    }
+
+    ocridcard = function(){
+        alert('请将身份证置于相框内')
+        getPicture(function(ret){
+            uiLoading.flower({
+                fixed: true
+            }, function(ret){
+                uiLoading.id = ret.id;
+            });
+             $api.apiAjax($api.ocridcardUrl,$api.faceKey,{
+                 image_file:ret.data
+             },function(ret,err){
+                 uiLoading.closeFlower ({id: uiLoading.id});
+                 if(ret){
+                     if(ret.cards.length == 0){
+                         api.alert({
+                             title: '提示',
+                             msg: '未检测到身份证，请重新拍照',
+                         }, function(ret, err){
+                             if( ret ){
+                                 ocridcard()
+                             }else{
+                                 alert( JSON.stringify( err ) );
+                             }
+                         });
+                     }else{
+                         idCard = ret.cards[0];
+                        submitAuthInfo();
+                     }
+                 }else{
+                     alert(err.msg)
+                 }
+             })
+        })
+    }
+
+    detectFace = function(){
+        alert('请将自己置于相框内')
+        getPicture(function(ret){
+            uiLoading.flower({
+                fixed: true
+            }, function(ret){
+                uiLoading.id = ret.id;
+            });
+            faceImgBase64Data = ret.base64Data
+             $api.apiAjax($api.detectUrl,$api.faceKey,{
+                 image_file:ret.data
+             },function(ret,err){
+                 uiLoading.closeFlower ({id: uiLoading.id});
+                 if(ret){
+                     if(ret.faces.length == 0){
+                         api.alert({
+                             title: '提示',
+                             msg: '未检测到人脸，请重新拍照',
+                         }, function(ret, err){
+                             if( ret ){
+                                 detectFace()
+                             }else{
+                                 alert( JSON.stringify( err ) );
+                             }
+                         });
+                     }else{
+                         ocridcard();
+                     }
+                 }else{
+                     alert(err.msg)
+                 }
+             })
+        })
+    }
+
+    submitAuthInfo = function(){
+        console.log(JSON.stringify(idCard));
+    }
+
+    getPicture = function(fun){
+        api.getPicture({
+            sourceType: 'camera',
+            encodingType: 'jpg',
+            mediaValue: 'pic',
+            destinationType: 'base64',
+            allowEdit: true,
+            quality: 100,
+            saveToPhotoAlbum: false
+        }, function(ret, err){
+            if(ret){
+                fun(ret);
+            }else{
+
+            }
+        })
     }
 </script>
 

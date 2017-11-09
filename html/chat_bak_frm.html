@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<title>title</title>
+	<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/aui-slide.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/aui-iconfont.ttf"/>
+	<style media="screen">
+
+	</style>
+</head>
+<body>
+		<div id="app">
+			<section class="aui-chat" v-for="message in messages" v-bind:key="message.sentTime">
+            <div class="aui-chat-header"  v-if="message.sentTime">{{message.sentTime}}</div>
+            <div class="aui-chat-item aui-chat-left" v-if="message.messageDirection =='RECEIVE' " >
+                <div class="aui-chat-media">
+                    <img src="../image/demo2.png" />
+                </div>
+                <div class="aui-chat-inner">
+                    <div class="aui-chat-name">AUI <span class="aui-label aui-label-warning">2.0</span></div>
+                    <div class="aui-chat-content">
+                        <div class="aui-chat-arrow"></div>
+
+						<div v-if="message.tag=='TxtMsg' ">
+							<span  v-if="message.content.text" >{{message.content.text}}</span>
+							<span  v-if="message.content.message">{{message.content.message}}</span>
+						</div>
+						<div v-if="message.tag=='ImgMsg' " ><img tapmode @click= "lookPic(message.content.imageUrl)" v-bind:src="message.content.imageUrl" ></div>
+						<div v-if="message.tag=='VcMsg' "  tapmode @click="voicePlay(message.content.voicePath)">voice</div>
+						<div v-if="message.tag=='MixMsg' " v-html="message.content.text"></div>
+
+                    </div>
+                    <div class="aui-chat-status aui-chat-status-refresh">
+                        <i class="aui-iconfont aui-icon-correct aui-text-success"></i>
+                    </div>
+                </div>
+            </div>
+			<!-- <div class="aui-chat-header"  v-if="message.receivedTime">{{message.receivedTime}}</div> -->
+            <div class="aui-chat-item aui-chat-right" v-if="message.messageDirection =='SEND' " >
+				<div class="aui-chat-media">
+                    <img src="../image/demo2.png" />
+                </div>
+                <div class="aui-chat-inner">
+                    <div class="aui-chat-name"> 霸天虎</div>
+                    <div class="aui-chat-content">
+                        <div class="aui-chat-arrow"></div>
+						<div v-if="message.tag=='TxtMsg' " class="TxtMsg" ><span>{{message.content.text}}</span></div>
+						<div v-if="message.tag=='ImgMsg' "class="ImgMsg"><img tapmode @click= "lookPic(message.content.imageUrl)" v-bind:src="message.content.imageUrl" ></img></div>
+						<div v-if="message.tag=='VcMsg' " class="VcMsg" tapmode @click="voicePlay(message.content.voicePath)">[语音消息]</div>
+						<div v-if="message.tag=='MixMsg' " class="MixMsg"v-html="message.content.text"></div>
+                    </div>
+					<div class="aui-chat-status" v-if="message.content.code">
+						<i class="aui-iconfont aui-icon-info aui-text-danger"></i>
+					</div>
+                </div>
+            </div>
+        </section>
+	</div>
+</body>
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
+<script>
+	var trans;
+	var rong;
+	var UIChatBox;
+	var conversationType;
+	var targetId;
+	var flag;
+	var photoBrowser
+
+
+//说明 初始化方法里面我们需要拿到融云给我们的token，此处设置的为定值
+ 	var app = new Vue({
+ 		el:'#app',
+ 		data:{
+ 			messages:[],
+			html:'',
+ 		},
+		methods:{
+			voicePlay:function(path){
+				api.startPlay({
+				    path: path
+				}, function(ret, err){
+				    if( ret ){
+				         console.log( JSON.stringify( ret ) );
+
+						// alert("播放完成")
+				    }else{
+				         console.log( JSON.stringify( err ) );
+				    }
+				});
+
+
+			},
+			lookPic : function(path){
+				console.log(path)
+					photoBrowser.open({
+				    images: [path],
+				    placeholderImg: 'widget://img/add-img1.png',
+				    bgColor: '#FFF'
+				}, function(ret, err) {
+				    if (ret) {
+				        console.log(JSON.stringify(ret));
+						if(ret.eventType=='click'){
+							photoBrowser.close();
+						}
+						//下载图片
+						else if(ret.eventType=='longPress'){
+							api.confirm({
+								    title: '提示',
+								    msg: '保存图片',
+								    buttons: ['确定', '取消']
+								}, function(ret, err) {
+								    var index = ret.buttonIndex;
+									console.log(index)
+									if(index==1){
+										downloadPic(path)
+									}else {
+									}
+								})
+						}
+					}
+					else {
+				        console.log("打开图片失败")
+				    }
+				});
+
+			},
+			stopPlay: function(){
+				api.stopPlay();
+
+			}
+		}
+ 	});
+
+ apiready = function(){
+	photoBrowser = api.require('photoBrowser');
+	rong = api.require('rongCloud2');
+	UIChatBox = api.require('UIChatBox');
+	trans = api.require("trans");
+	//融云的初始化
+	init();
+	//接收消息监听
+	rong.setOnReceiveMessageListener(function (ret, err) {
+		   // alert(JSON.stringify(ret));
+		   var tag;
+		   var para;
+		   if (ret.result.message.objectName == "RC:TxtMsg") {
+			   tag = "TxtMsg";
+		   } else if (ret.result.message.objectName == "RC:ImgMsg") {
+			   tag = "ImgMsg";
+		   } else if (ret.result.message.objectName == "RC:VcMsg") {
+			   tag = "VcMsg";
+		   } else if (ret.result.message.objectName == "RC:LBSMsg") {
+			   tag = "LBSMsg";
+		   }
+
+		   para = {
+			   firstSendType: "aui-chat-receiver",
+			   secondSendType: "aui-chat-receiver-avatar",
+			   thirdSendType: "aui-chat-receiver-cont",
+			   fourthSendType: "aui-chat-left-triangle",
+			   content: ret.result.message.content,
+			   tag: tag,
+			//    receivedTime: getTrueTime(ret.result.message.receivedTime),
+			   messageDirection: "RECEIVE"
+		   };
+		//    if (!timeTag) {
+		// 	   para.receivedTime = "";
+		//    }
+		app.messages.push(para);
+		console.log('已得到客服的本次回复，渲染前:'+JSON.stringify(para))
+		//    msgObj.push(para);
+		//    //时间戳状态
+		//    timeTag = false;
+
+		});
+	$api.setStorage('currentToken',"8dL5QvlqMq/92UlKK3ugVBA7KHmpmWfhAeSJRuFkuN61KrWdka2bFYPZ1ojofkd5/ZpfX6WBDOX3k0LTeZX1Xg==")
+	console.log($api.getStorage("currentToken"))
+	if($api.getStorage("currentToken")){
+		rong.connect({
+			token: $api.getStorage("currentToken")},function(ret, err) {
+			if (ret.status == 'success')
+			if(ret.status == 'error'){
+				console.log(err.code)
+			}
+		});
+	}
+	//监听融云连接状态状态
+	rong.setConnectionStatusListener(function(ret, err) {
+	console.log('融云的连接状态'+ret.result.connectionStatus);
+	});
+
+	//历史消息
+	getRecentConverMsg()
+	//发送消息
+	myClient()
+	api.setRefreshHeaderInfo({
+	    visible: true,
+	    loadingImg: 'widget://image/refresh.png',
+	    bgColor: '#ccc',
+	    textColor: '#fff',
+	    textDown: '下拉刷新...',
+	    textUp: '松开刷新...',
+	    showTime: true
+		}, function(ret, err){
+		app.messages=[];
+		getRecentConverMsg()
+
+	});
+	//表情文字转化
+	var sourcePath = "widget://image/emotion";//表情存放目录
+   	getImgsPaths(sourcePath, function (emotion) {
+    	emotionData = emotion;
+	});
+ };
+
+</script>
+<script type="text/javascript">
+//融云初始化
+init = function(){
+	conversationType = 'CUSTOMER_SERVICE';
+	targetId = 'KEFU150770812165508'
+
+	rong.init(function(ret, err) {
+		if (ret.status == 'error')
+			api.toast({ msg: err.code });
+
+	});
+	api.ajax({
+		url: 'http://v3.wancllshop.wancll.wygoo.com/index.php/v2/system/rongcloudsign',
+		method: 'post',
+		data: {
+			values: {
+				name:'霸天虎',
+				avatar_uri:'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f7875dd0.png',
+			}
+		},
+		headers:{
+			token:'3ac875d4d165fc96369073b38e0d97c7'
+		}
+	},function(ret, err){
+		if (ret) {
+			console.log( JSON.stringify( ret ) );
+			if(ret.code==1){
+				 $api.setStorage('currentToken',ret.data.token);
+				 //$api.setStorage('currentToken','8dL5QvlqMq/92UlKK3ugVBA7KHmpmWfhAeSJRuFkuN61KrWdka2bFYPZ1ojofkd5/ZpfX6WBDOX3k0LTeZX1Xg==');
+			}
+		}
+		else {
+		console.log( JSON.stringify( err ) );
+		}
+	});
+
+}
+//发送消息
+myClient = function(){
+	UIChatBox.open({
+		placeholder: '',
+		maxRows: 4,
+		emotionPath: 'widget://image/emotion',
+		texts: {
+			recordBtn: {
+				normalTitle: '按住说话',
+				activeTitle: '松开结束'
+			},
+			sendBtn:{
+				title:'send'
+			}
+		},
+		styles: {
+			inputBar: {
+				borderColor: '#d9d9d9',
+				bgColor: '#f2f2f2'
+			},
+			inputBox: {
+				borderColor: '#B3B3B3',
+				bgColor: '#FFFFFF'
+			},
+			emotionBtn: {
+				normalImg: 'widget://image/face1.png'
+			},
+			extrasBtn: {
+				normalImg: 'widget://image/add1.png'
+			},
+			keyboardBtn: {
+				normalImg: 'widget://image/key1.png'
+			},
+			speechBtn: {
+				normalImg: 'widget://image/key1.png'
+			},
+			recordBtn: {
+				normalBg: '#c4c4c4',
+				activeBg: '#999999',
+				color: '#000',
+				size: 14
+			},
+			indicator: {
+				target: 'both',
+				color: '#c4c4c4',
+				activeColor: '#9e9e9e'
+			},
+			sendBtn: {
+				titleColor: '#4cc518',
+				bg: '#999999' ,
+				activeBg: '#46a91e',
+				titleSize: 14
+			}
+		},
+		extras: {
+			titleSize: 10,
+			titleColor: '#a3a3a3',
+			btns: [{
+				title: '图片',
+				normalImg: 'widget://image/album1.png',
+				activeImg: 'widget://image/album2.png'
+			},{
+				title: '拍照',
+				normalImg: 'widget://image/cam1.png',
+				activeImg: 'widget://image/cam2.png'
+			}]
+		}
+	}, function(ret, err){
+		if( ret ){
+			console.log( JSON.stringify( ret ) );
+			if(ret.eventType == "clickExtras"){
+				//图片
+				imageMessage(ret.index)
+				console.log("sendImageMessage")
+			}
+		    else if(ret.eventType == 'send'){
+				textMessage(ret.msg)
+				console.log("sendTxt")
+			}
+			else if(ret.eventType == 'show'){
+
+			}else{
+				console.log(ret)
+			}
+
+		}
+		else{
+			api.toast({
+				msg: '网络错误',
+				duration: 2000,
+				location: 'bottom'
+			});
+
+		}
+	});
+
+		UIChatBox.addEventListener({
+		    target: 'recordBtn',
+		    name: 'press'
+		}, function(ret, err) {
+		    if (ret) {
+				api.startRecord({
+				    path: 'fs://a.amr'
+				});
+
+		    } else {
+		        console.log('录音错误提示:'+JSON.stringify(err));
+		    }
+		});
+		UIChatBox.addEventListener({
+		   target: 'recordBtn',
+		   name: 'press_cancel'
+	   }, function(ret, err) {
+		   if (ret) {
+			  api.stopRecord(function(ret, err){
+			      if(ret){
+					   sendVoiceMsg(ret)
+			      }
+			  });
+		   } else {
+			   console.log('录音发送失败'+JSON.stringify(err));
+		   }
+	   });
+
+}
+
+//文本消息
+textMessage = function(text){
+	 var para;
+	rong.sendTextMessage({
+			   conversationType: conversationType,//'CUSTOMER_SERVICE',
+			   targetId: targetId,
+			   text: text,
+			   extra: ''
+		   }, function(ret, err) {
+				   //设定消息标签
+				   console.log(JSON.stringify(ret))
+					if (ret.status == 'prepare') {
+							  var tag;
+							  if (ret.result.message.objectName == "RC:TxtMsg") {
+								  tag = "TxtMsg";
+							  } else if (ret.result.message.objectName == "RC:ImgMsg") {
+								  tag = "ImgMsg";
+							  } else if (ret.result.message.objectName == "RC:VcMsg") {
+								  tag = "VcMsg";
+							  } else if (ret.result.message.objectName == "RC:LBSMsg") {
+								  tag = "LBSMsg";
+							  }
+							   flag = false;
+							   ret.result.message.content.text= transText(ret.result.message.content.text)
+
+							   console.log('距离当前时间为：'+ sj(ret.result.message.sentTime))
+							  //纯文本
+							  if(flag){
+								  para = {
+								 	 content: ret.result.message.content,
+								 	 tag: tag,
+								 	 messageDirection: "SEND",
+									//  time:ret.result.message.sentTime
+								  };
+
+							  }
+							  //包含表情的文本
+							  else{
+								 console.log("发送的是包含表情的消息")
+								// $api.append($api.byId('send'),app.html)
+								para = {
+								   content: ret.result.message.content,
+								   tag: 'MixMsg',
+								   messageDirection: "SEND",
+								//    time:ret.result.message.sentTime
+								};
+
+							  }
+
+				   }
+					else if (ret.status == 'success'){
+					   //console.log(ret.result.message.messageId);
+					   console.log('此次发送的消息为：'+JSON.stringify(para))
+					  app.messages.push(para)
+					  //console.log(JSON.stringify(app.messages))
+
+				   }
+				   else if (ret.status == 'error'){
+					 //发送事失败的处理
+					console.log(err.code);
+					para = {
+					   content: ret.result.message.content,
+					   tag: 'MixMsg',
+					   messageDirection: "SEND",
+					   code:'error',
+					   //time:ret.result.message.sentTime
+
+					};
+
+					//发送失败
+					app.messages.push(para)
+				   }
+
+
+
+		   });
+	   }
+//图片消息
+imageMessage = function(id){
+	var type;
+	if(id==0){
+		type='album'
+	}else if (id==1) {
+		type="camera"
+	}
+	getPicture(type)
+
+}
+//获得图片
+ getPicture = function(type) {
+	   var para;
+	   api.getPicture({
+		   sourceType: type,
+		   encodingType: 'jpg',
+		   mediaValue: 'pic',
+		   destinationType: 'url',
+		   allowEdit: false,
+		   quality: 80,
+		   saveToPhotoAlbum: false
+	   }, function (ret, err) {
+		   if (ret) {
+
+			   var para;
+			   var rong = api.require('rongCloud2');
+			   rong.sendImageMessage({
+						   conversationType: conversationType,
+						   targetId: targetId,
+						   imagePath: ret.data,
+						   extra: ''
+					   }, function (ret, err) {
+							//alert(JSON.stringify((ret)));
+						   if (ret.status == 'prepare') {
+							   var tag;
+							   if (ret.result.message.objectName == "RC:TxtMsg") {
+								   tag = "TxtMsg";
+							   } else if (ret.result.message.objectName == "RC:ImgMsg") {
+								   tag = "ImgMsg";
+							   } else if (ret.result.message.objectName == "RC:VcMsg") {
+								   tag = "VcMsg";
+							   } else if (ret.result.message.objectName == "RC:LBSMsg") {
+								   tag = "LBSMsg";
+							   }
+
+							   para = {
+								   firstSendType: "aui-chat-sender",
+								   secondSendType: "aui-chat-sender-avatar",
+								   thirdSendType: "aui-chat-sender-cont",
+								   fourthSendType: "aui-chat-right-triangle",
+								   content: ret.result.message.content,
+								   tag: tag,
+								   //时间戳
+								  // time:ret.result.message.sentTime,
+								   //发送类型
+								   messageDirection: "SEND"
+							   };
+							   //判断时间
+							//    if (!timeTag) {
+							// 	   para.sentTime = "";
+							//    }
+						   }
+
+						   else if (ret.status == 'progress') {
+
+						   }
+						   else if (ret.status == 'success') {
+
+							   //时间戳判断为false 不再发送
+							   //timeTag = false;
+							 //  msgObj.push(para);
+							 app.messages.push(para)
+							 console.log("图片发送成功")
+						   }
+
+						   else if (ret.status == 'error') {
+							   para = {
+								  firstSendType: "aui-chat-sender",
+								  secondSendType: "aui-chat-sender-avatar",
+								  thirdSendType: "aui-chat-sender-cont",
+								  fourthSendType: "aui-chat-right-triangle",
+								  content: ret.result.message.content,
+								  tag: tag,
+								  //时间戳
+								  //sentTime: getTrueTime(ret.result.message.sentTime),
+								  //发送类型
+								  messageDirection: "SEND",
+								  code :'error'
+							  };
+							    app.messages.push(para)
+							   api.toast({msg: "请检查当前网络状态"});
+						   }
+					   }
+			   );
+		   } else {
+			   //console.log(JSON.stringify(err));
+		   }
+	   });
+   }
+//历史消息记录
+getRecentConverMsg = function () {
+
+	   //alert(num);
+		var rong = api.require('rongCloud2');
+		//先获取之前的聊天记录
+		rong.getHistoryMessages({
+			conversationType: conversationType,
+			targetId: targetId,
+			oldestMessageId: -1,
+			count: 10
+		}, function (ret, err) {
+		   api.refreshHeaderLoadDone();
+			var arr = [];
+			arr = ret.result;
+		   //alert(JSON.stringify(arr));
+			//记录最早的时间戳
+			if(arr){
+				$api.setStorage('time', arr[arr.length - 1].receivedTime);
+				for (var i = arr.length - 1; i >= 0; i--) {
+					if (arr[i].messageDirection == "SEND") {
+						arr[i].firstSendType = "aui-chat-sender";
+						arr[i].secondSendType = "aui-chat-sender-avatar";
+						arr[i].thirdSendType = "aui-chat-sender-cont";
+						arr[i].fourthSendType = "aui-chat-right-triangle";
+					} else {
+						arr[i].firstSendType = "aui-chat-receiver";
+						arr[i].secondSendType = "aui-chat-receiver-avatar";
+						arr[i].thirdSendType = "aui-chat-receiver-cont";
+						arr[i].fourthSendType = "aui-chat-left-triangle";
+					}
+
+
+					if (arr[i].objectName == "RC:TxtMsg") {
+						flag = false;
+						arr[i].content.text=transText(arr[i].content.text)
+						console.log(flag)
+						if(flag){
+							arr[i].tag = "TxtMsg";
+						}else{
+							arr[i].tag = "MixMsg";
+						}
+					} else if (arr[i].objectName == "RC:ImgMsg") {
+						arr[i].tag = "ImgMsg";
+					} else if (arr[i].objectName == "RC:VcMsg") {
+						arr[i].tag = "VcMsg";
+					} else if (arr[i].objectName == "RC:LBSMsg") {
+
+					}
+
+					//如果时间间隔大于五分钟 加上时间戳
+					if (arr[i].receivedTime - $api.getStorage("time") >= 180000) {
+					  //alert("yes");
+						$api.setStorage('time', arr[i].receivedTime);
+						arr[i].receivedTime = sj(arr[i].receivedTime);
+						arr[i].sentTime = sj(arr[i].sentTime);
+					} else {
+						arr[i].receivedTime = "";
+						arr[i].sentTime = "";
+					}
+
+					// msgObj.push(arr[i]);
+					app.messages.push(arr[i]);
+					//console.log('历史消息'+i+'的内容是'+JSON.stringify(arr[i]))
+					//console.log('第'+i+'条记录'+JSON.stringify(app.messages[i]))
+				}
+			}
+
+		});
+
+	}
+
+//发送语音
+sendVoiceMsg = function(para) {
+	   var param;
+	   rong.sendVoiceMessage({
+				   conversationType: conversationType,
+				   targetId: targetId,
+				   voicePath: para.path,
+				   duration: para.duration,
+				   extra: ''
+			   }, function (ret, err) {
+                  //alert(JSON.stringify(ret));
+				   if (ret.status == 'prepare') {
+                     // api.toast({ msg: JSON.stringify(ret.result.message) });
+
+					   var tag;
+					   if (ret.result.message.objectName == "RC:TxtMsg") {
+						   tag = "TxtMsg";
+					   } else if (ret.result.message.objectName == "RC:ImgMsg") {
+						   tag = "ImgMsg";
+					   } else if (ret.result.message.objectName == "RC:VcMsg") {
+						   tag = "VcMsg";
+					   } else if (ret.result.message.objectName == "RC:LBSMsg") {
+						   tag = "LBSMsg";
+					   }
+
+					   param = {
+						   firstSendType: "aui-chat-sender",
+						   secondSendType: "aui-chat-sender-avatar",
+						   thirdSendType: "aui-chat-sender-cont",
+						   fourthSendType: "aui-chat-right-triangle",
+						   content: ret.result.message.content,
+						   tag: tag,
+						   //时间戳
+						//    sentTime: getTrueTime(ret.result.message.sentTime),
+						   //发送类型
+						   messageDirection: "SEND"
+					   };
+					   //判断时间
+					//    if (!timeTag) {
+					// 	   param.sentTime = "";
+					//    }
+
+				   }
+
+				   else if (ret.status == 'success') {
+					   //改变时间戳状态
+					//    timeTag = false;
+					app.messages.push(param)
+					console.log(JSON.stringify(param))
+					   //msgObj.push(param);
+                      // alert(JSON.stringify(msgObj));
+				   }
+				   else if (ret.status == 'error') {
+                      // api.toast({ msg: err.code });
+				   }
+			   }
+	   );
+   }
+//文字表情转换
+//表情文字转化
+
+function transText(text){
+
+    var imgWidth =  30;
+    var imgHeight =  30;
+    var regx = /\[(.*?)\]/gm;
+    var textTransed = text.replace(regx,function(match){
+        var imgSrc = emotionData[match];
+        if(!imgSrc){
+                //说明不对应任何表情，直接返回
+				flag=true;
+                return match;
+        }
+			var img = "<img style='width:30px;height:30px;' src="+imgSrc+">";
+			console.log(imgSrc)
+			return img;
+
+
+    });
+    return textTransed;
+}
+//
+function getImgsPaths(sourcePathOfChatBox, callback){
+    var jsonPath = "widget://image/emotion/emotion.json";//表情的JSON数组
+    api.readFile({
+            path: jsonPath
+    },function(ret,err){
+        if(ret.status){
+            var emotionArray = JSON.parse(ret.data);
+            var emotion = {};
+            for(var idx in emotionArray){
+                    var emotionItem = emotionArray[idx];
+                    var emotionText = emotionItem["text"];
+                    var emotionUrl = "../image/emotion/"+emotionItem["name"]+".png";
+                    emotion[emotionText] = emotionUrl;
+            }
+            /*把emotion对象 回调出去*/
+            if("function" === typeof(callback)){
+                    callback(emotion);
+            }
+        }
+    });
+}
+//图片保存
+downloadPic = function(url){
+	api.download({
+	    url: url,
+	    report: true,
+	    cache: true,
+	    allowResume: true
+	},function(ret, err){
+			//下载成
+			if(ret.state==0){
+				console.log("下载z")
+			}else if (ret.state==1) {
+				alert("下载完成")
+			}else{
+				alert("下载失败")
+			}
+	});
+
+}
+//时间戳
+function sj(sj) {
+        var nowt = new Date().getTime();
+        var a = new Date(parseInt(sj));
+        var b = new Date(parseInt(nowt));
+        var date1 = Date.parse(format(a, 4));
+        var date2 = Date.parse(format(b, 4));
+        var xxsj = Math.ceil((date2 - date1) / (60 * 1000))
+        if (xxsj <= 1 && xxsj >= 0) {
+                return "就刚才";
+        }
+        else if (xxsj <= 10 && xxsj > 1) {
+                return xxsj + "分钟前";
+        } else if (xxsj <= 60 && xxsj > 10) {
+                return format(a, 1);
+        } else if (xxsj <= 1440 && xxsj > 60) {
+                return format(a, 1);
+        } else if (xxsj <= 10080 && xxsj > 1440) {
+                return format(a, 2);
+        } else if (xxsj > 10080) {
+                return format(a, 3);
+        } else {
+                return format(a, 3);
+        }
+}
+function format(now, type) {
+        var show_day = new Array('星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六');
+        var year = now.getFullYear().toString();
+        var month = (now.getMonth() + 1).toString();
+        var day = (now.getDate()).toString();
+        var tian = now.getDay().toString();
+        var hour = (now.getHours()).toString();
+        var minute = (now.getMinutes()).toString();
+        var second = (now.getSeconds()).toString();
+        if (hour.length == 1) {
+                hour = "0" + hour;
+        }
+        if (minute.length == 1) {
+                minute = "0" + minute;
+        }
+        if (second.length == 1) {
+                second = "0" + second;
+        }
+        if (type == 1) {
+                var dateTime = hour + ":" + minute;
+        } else if (type == 2) {
+                var dateTime = show_day[tian] + " " + hour + ":" + minute
+        } else if (type == 3) {
+                var dateTime = year + "-" + month + "-" + day
+        } else if (type == 4) {
+                var dateTime = year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second;
+        } else if (type == 5) {
+                var dateTime = show_day[tian];
+        }
+        return dateTime;
+}
+
+</script>
+</html>

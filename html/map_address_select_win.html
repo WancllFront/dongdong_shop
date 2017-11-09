@@ -14,10 +14,10 @@
 
 <body>
     <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
-        <a class="aui-pull-left aui-btn" tapmode onclick="closeWin()">
+        <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
             <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
         </a>
-        <div class="aui-title">我的客服</div>
+        <div class="aui-title">地图</div>
     </header>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -28,12 +28,10 @@
         var header = $api.byId('header');
         $api.fixStatusBar(header);
         var headerH = $api.offset(header).h;
-        var frameH = api.winHeight - headerH - 40;
+        var frameH = api.winHeight - headerH;
         api.openFrame({
-            // name: 'chat_bak_frm',
-            // url: './chat_bak_frm.html',
-            name: 'chat_frm',
-            url: './chat_frm.html',
+            name: 'map_address_select_frm',
+            url: './map_address_select_frm.html',
             bounces: true,
             rect: {
                 x: 0,
@@ -44,12 +42,6 @@
             hScrollBarEnabled:false
         });
     };
-    closeWin = function(){
-        api.sendEvent({
-            name: 'disConnect',
-        });
-        $api.closeWin()
-    }
 </script>
 
 </html>

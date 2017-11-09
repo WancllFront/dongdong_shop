@@ -15,7 +15,7 @@
 
 <body>
     <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
-        <a class="aui-pull-left aui-btn" tapmode >
+        <a class="aui-pull-left aui-btn" tapmode onclick="getLocation()">
             <span class="aui-iconfont aui-icon-location" style="color:#3c80eb;font-weight:bold;"></span>
         </a>
         <div class="aui-title">社区购物</div>
@@ -45,7 +45,9 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var aMap;
     apiready = function() {
+        aMap = api.require("aMap");
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
         var header = $api.byId('header');
@@ -64,7 +66,47 @@
                 h: frameH
             }
         });
+
+        openAMap();
     };
+    openAMap = function(){
+        aMap.open({
+            rect: {
+                x: 0,
+                y: 0,
+                w: 320,
+                h: 300
+            },
+            showUserLocation: true,
+            zoomLevel: 11,
+            center: {
+                lon: 116.4021310000,
+                lat: 39.9994480000
+            },
+            fixedOn: api.frameName,
+            fixed: true
+        }, function(ret, err) {
+            if (ret.status) {
+                aMap.hide();
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+
+    }
+    getLocation = function(){
+        aMap.getLocation(function(ret, err) {
+            if (ret.status) {
+                alert(JSON.stringify(ret));
+            } else {
+                api.toast({
+                    msg: '定位失败',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
 </script>
 
 </html>

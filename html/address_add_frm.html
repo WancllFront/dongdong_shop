@@ -18,126 +18,164 @@
 </head>
 
 <body>
-    <div class="aui-content aui-margin-b-15">
-        <ul class="aui-list aui-form-list">
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-label">
-                        收货人
-                    </div>
-                    <div class="aui-list-item-input">
-                        <input type="text" placeholder="" id="fullname">
-                    </div>
-                    <div class="aui-list-item-label-icon">
+    <div id="app">
+        <div class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-form-list">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            收货人
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" placeholder="" v-model="consigneeName">
+                        </div>
+                        <div class="aui-list-item-label-icon">
 
+                        </div>
                     </div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-label">
-                        联系电话
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            联系电话
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="tel" placeholder="" v-model="telephone">
+                        </div>
+                        <div class="aui-list-item-label-icon"  tapmode onclick="selectContacts()">
+                            <i class="aui-iconfont aui-icon-right"></i>
+                        </div>
                     </div>
-                    <div class="aui-list-item-input">
-                        <input type="tel" placeholder="" id="tel">
+                </li>
+                <li class="aui-list-item" tapmode onclick="selectCity()">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            省市县
+                        </div>
+                        <div class="aui-list-item-input">
+                            <span id="address">{{proCityCounty}}</span>
+                        </div>
+                        <div class="aui-list-item-label-icon">
+                            <i class="aui-iconfont aui-icon-right"></i>
+                        </div>
                     </div>
-                    <div class="aui-list-item-label-icon"  tapmode onclick="selectContacts()">
-                        <i class="aui-iconfont aui-icon-right"></i>
+                </li>
+                <li class="aui-list-item" tapmode onclick="$api.goWindow('map_address_select_win')">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            小区/街道
+                        </div>
+                        <div class="aui-list-item-input">
+                            <span id="address">{{poi.name}}</span>
+                        </div>
+                        <div class="aui-list-item-label-icon">
+                            <i class="aui-iconfont aui-icon-right"></i>
+                        </div>
                     </div>
-                </div>
-            </li>
-            <li class="aui-list-item" tapmode onclick="selectCity()">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-label">
-                        所在地区
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            详细地址
+                        </div>
+                        <div class="aui-list-item-input">
+                            <textarea placeholder="" v-model="detail"></textarea>
+                        </div>
+                        <div class="aui-list-item-label-icon">
+                        </div>
                     </div>
-                    <div class="aui-list-item-input">
-                        <span id="address"></span>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            设为默认
+                        </div>
+                        <div class="aui-list-item-input">
+                        </div>
+                        <div class="aui-list-item-label">
+                            <input type="checkbox" class="aui-switch" v-model="isDefault">
+                        </div>
                     </div>
-                    <div class="aui-list-item-label-icon">
-                        <i class="aui-iconfont aui-icon-right"></i>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-label">
-                        详细地址
-                    </div>
-                    <div class="aui-list-item-input">
-                        <textarea placeholder=""></textarea>
-                    </div>
-                    <div class="aui-list-item-label-icon">
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-label">
-                        设为默认
-                    </div>
-                    <div class="aui-list-item-input">
-                    </div>
-                    <div class="aui-list-item-label">
-                        <input type="checkbox" class="aui-switch" checked>
-                    </div>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="save" tapmode onclick="">保存</div>
     </div>
-    <div class="save" tapmode onclick="">保存</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
-    var contacts;
-    var citySelector;
+    var addressView;
+    var app = new Vue({
+        el: '#app',
+        data:{
+            consigneeName:'', //收货人姓名
+            telephone: '', //收货人联系电话
+            cityInfo:[], //省市县信息
+            poi:{}, //poii信息，经纬度
+            detail:'',
+            isDefault: true
+        },
+        methods:{
+
+        },
+        computed:{
+            proCityCounty: function(){
+                var str = ''
+                this.cityInfo.forEach((item)=>{
+                    str += item.name+' '
+                });
+                return str;
+            }
+        }
+    })
     apiready = function() {
         api.parseTapmode();
-        contacts = api.require("contacts");
-        citySelector = api.require("citySelector");
-    };
+        addressView = api.require("addressView");
 
-    selectContacts = function(){
-        contacts.select(function( ret, err ){
+        openAddressView();
+        addEventListener();
+
+    };
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'selectPoi'
+        }, function(ret, err){
             if( ret ){
-                if(ret.status){
-                    $api.val($api.byId('tel'), ret.phones[0]['手机']);
-                    $api.val($api.byId('fullname'), ret.fullName);
-                }
+                app.poi = ret.value.poi;
             }else{
-                if(err.code == -1){
-                    api.toast({
-                        msg: '拒绝访问通讯录',
-                        duration: 2000,
-                        location: 'bottom'
-                    });
-                }
+                 alert( JSON.stringify( err ) );
             }
         });
     }
-    var address={}
 
-    selectCity = function(){
-        citySelector.open({
-            y: api.frameHeight / 1.6,
-            fixedOn: api.frameName,
-            anim:true,
-            bgImg:'../image/shadow.jpg',
-            titleImg:'#000',
-            cancelImg:'../image/cancel.png',
-            enterImg:'../image/confirm.png',
-            selectedColor:'#1e1d1d',
-            fontColor:'#7e7979'
-        }, function(ret, err){
-            if( ret ){
-                address = ret;
-                $api.text($api.byId('address'), address.province + ' ' + address.city + ' ' + address.county);
+    openAddressView = function(){
+        addressView.open({
+            file_addr: 'widget://res/city.txt', //数据源地址
+            selected_color: '#ff0000',
+            pro_id: 110000, //省id
+            city_id: 110100, //市id
+            dir_id: 110101 //区id
+        });
+    }
 
+    selectContacts = function(){
+        api.openContacts(function(ret, err){
+            if(ret.status){
+                 app.consigneeName = ret.name;
+                 app.telephone = ret.phone;
             }else{
-                alert( JSON.stringify( err ) );
+                alert(JSON.stringify(err))
             }
         });
+    }
 
+    selectCity = function(){
+        addressView.show({}, function(ret, err) {
+            if (ret.status) {
+                app.cityInfo = ret.data;
+            }
+        });
     }
 </script>
 

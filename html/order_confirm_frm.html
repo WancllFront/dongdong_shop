@@ -41,7 +41,7 @@
             <div class="aui-content" v-show="!isSelfPick" >
                 <div class="aui-tips">
                     <i class="aui-iconfont aui-icon-info" style="width:10%;"></i>
-                    <div class="aui-tips-title aui-ellipsis-1" style="width:90%;">该地址未经过认证，请重新选择地址</div>
+                    <div class="aui-tips-title aui-ellipsis-1" style="width:90%;">您第一次在此店购物，待商家确认地址</div>
                 </div>
                 <ul class="aui-list aui-media-list" style="background-image:none;">
                     <li class="aui-list-item aui-list-item-middle" tapmode @click="selectAddress('community')">
@@ -51,7 +51,7 @@
                             </div>
                             <div class="aui-list-item-inner aui-list-item-arrow">
                                 <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">湖南长沙开源鑫茂大楼902</div>
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;"><div class="aui-label aui-label-info">未认证</div>湖南长沙开源鑫茂大楼902</div>
                                 </div>
                                 <div class="aui-list-item-text" style="margin-top:0.5rem;">
                                     韩梅梅
@@ -86,7 +86,7 @@
                                 <img src="../image/tel_blue.png" class="aui-img-round aui-list-img-sm">
                             </div>
                             <div class="aui-list-item-inner aui-list-item-arrow">
-                                <div class="aui-list-item-text">
+                                <div class="aui-list-item-text" tapmode onclick="">
                                     <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">商家电话:<span>18390911258</span></div>
                                 </div>
                             </div>
