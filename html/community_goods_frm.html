@@ -22,27 +22,92 @@
 	</style>
 </head>
 <body>
-    <div class="goodslist">
-        <div class="goods">
-            <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png" class="left">
+    <div class="goodslist" id="app">
+        <div class="goods" v-for="(good,key) in goods" :key="key">
+            <img :src="good.thum" class="left">
             <div style="" class="right">
-                <p class="single-paragraph title">美国进口红提美国进口红提</p>
-                <p class="single-paragraph describe">新鲜可口</p>
+                <p class="single-paragraph title">{{good.name}}</p>
+                <p class="single-paragraph describe">{{good.intro}}</p>
                 <div class="price">
                     <div>
-                        <span style="color:#ff2c2c">￥39.00</span>
+                        <span style="color:#ff2c2c">￥{{good.price}}</span>
                         <span style="color:#737373">/份</span>
                     </div>
-                    <img src="../image/jia.png" class="jia" tapmode onclick="">
+                    <img src="../image/jia.png" class="jia" tapmode @click="addCart(good)">
                 </div>
             </div>
         </div>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var cateId;
+    var app = new Vue({
+        el: '#app',
+        data:{
+            goods: [],
+            page:1
+        },
+        methods:{
+            addCart: function(good){
+                api.sendEvent({
+                    name: 'community_goods_frm_add_cart',
+                    extra: {
+                        good: good
+                    }
+                });
+            }
+        }
+    })
     apiready = function(){
         api.parseTapmode();
+
+        addEventListener();
+        loadGoods();
     };
+
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'community_goods_frm_fresh'
+        }, function(ret, err){
+            if( ret ){
+                 cateId = ret.value.cateId;
+                 app.goods = [];
+                 app.page = 1;
+                 loadGoods();
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold: 20
+            }
+        }, function(ret, err){
+            loadGoods();
+        });
+    }
+
+    loadGoods = function(){
+        var data = {
+            shop_id: api.pageParam.shopId,
+            cate_id: cateId || ''
+        }
+        $api.ajax('POST',$api.host + 'goods/lists',data,function(ret){
+            if(ret.data.length != 0){
+                app.page ++;
+                ret.data.forEach(function(item){
+                    app.goods.push(item)
+                });
+            }
+        },{
+            auth: $api.auth,
+            'page-num': app.page,
+            'page-limit': 10
+        })
+    }
 </script>
 </html>

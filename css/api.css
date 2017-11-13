@@ -90,14 +90,32 @@ td,th {
 .area{margin: 0.5rem 0.5rem;}
 .area .input{height: 2.2rem;background-color: #fff;margin-bottom: 0.5rem; padding-left: 1.3rem;border-radius: 0.15rem;letter-spacing: 0.05rem;}
 .area .submit{height: 2.2rem;background-color: #358cff;text-align: center;line-height: 2.2rem;color:#fff;letter-spacing: 0.2rem;border-radius: 0.2rem;}
-.area .submit:active{background-color: #5a9ffa}
+.area .submit:active{background-color: #0e6be4}
 
 .area .mix{position:relative;display:flex;}
 .area .mix i{position:absolute;margin-top:-0.5rem;top:50%;left:0.3rem;margin-top: -0.8rem;}
 .area .mix #telephone{width:65%;display:inline-block;margin-right:0.5rem;}
 .area .mix .get-varicode{display:inline-block;background-color:#358cff;text-align:center;height:2.2rem;color:#fff;line-height:2.2rem;border-radius: 0.2rem;width:35%;}
-.area .mix .get-varicode:active{background-color: #5a9ffa;}
+.area .mix .get-varicode:active{background-color: #0e6be4;}
 
 .third{color:#999999;margin-top:2rem;text-align:center;}
 .icon{text-align:center;margin-top:1.2rem;}
 .icon img{width:1.5rem;display:inline-block;margin:0rem 1rem;}
+
+
+
+
+
+.shadow{background-color: rgba(0,0,0,0.25);position: fixed;z-index: -9;top: 0px;bottom: 0px;left:0px;right:0px;opacity: 0;}
+.shadow .shadow-modal{position: fixed;background-color: #fff;border-radius: 0.5rem;top:4rem; left:2.5rem;right:2.5rem;padding: 1rem 1rem;opacity: 0;transition: .5s opacity;}
+.shadow .shadow-modal .title{}
+.shadow .shadow-modal .title p{text-align: center; font-size: 0.9rem;}
+.shadow .shadow-modal .line{background:linear-gradient(to right,#eeeeee,#7e7e7e,#eeeeee);width: 100%;height: 1px;margin-top: 0.2rem;}
+.shadow .shadow-modal .money{margin-top: 0.5rem;color: #777}
+.shadow .shadow-modal .money .coin{text-align:center;color:#000;font-size:1.5rem;width:100%;letter-spacing:0.2rem;}
+.shadow .shadow-modal .label{color:#777;letter-spacing: 0.2rem;}
+.shadow .shadow-modal .pwd{margin-top: 0.5rem;color: #777;}
+.shadow .shadow-modal .pwd .blank{width:100%;height:2.8rem;margin-top:.8rem;position:absolute;z-index:-10}
+.shadow .shadow-modal .pwd input{text-align: left;letter-spacing:0.5rem;width:100%;padding-left: 0.5rem;}
+.shadow .shadow-modal .submit{margin-top: 1rem;color: #fff;background-color: #257df0;height: 2rem;line-height: 2rem;text-align: center;border-radius: 0.2rem;}
+.shadow .shadow-modal .submit:active{background-color: #0e6be4}

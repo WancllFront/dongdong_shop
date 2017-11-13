@@ -43,16 +43,16 @@
         <div class="goods">
             <div class="price">
                 <span style="color:#f63030;font-size:0.8rem;">￥</span>
-                <span style="color:#f63030;font-size:1.5rem;">1391.00</span>
-                <span style="color:#a8a8a8;font-size:0.6rem;text-decoration:line-through">￥3333.00</span>
+                <span style="color:#f63030;font-size:1.5rem;">{{goods.price}}</span>
+                <!-- <span style="color:#a8a8a8;font-size:0.6rem;text-decoration:line-through">￥{{goods.price}}</span> -->
             </div>
             <div class="title">
                 <div class="aui-label aui-label-info">包邮</div>
-                <span>科沃斯扫地机器人吸尘器科沃斯扫地机器人吸尘器科沃斯扫地机器人吸尘器</span>
+                <span>{{goods.name}}</span>
             </div>
             <div class="other">
-                <span style="float:left;">邮费:￥10.00</span>
-                <span style="float:right;">销量:12000</span>
+                <span style="float:left;">邮费:￥{{goods.freight_price}}</span>
+                <span style="float:right;">销量:{{goods.sell_num}}</span>
             </div>
         </div>
         <div style="height:0.3rem;background-color:#f4f4f4;width:100%;margin-top:0.2rem;"></div>
@@ -60,8 +60,8 @@
             <div tapmode onclick="changeNav(0)"><span id="span0" class="active">详情</span></div>
             <div tapmode onclick="changeNav(1)"><span id="span1" >评价</span></div>
         </div>
-        <div class="detail" id="sub0" style="" >
-            详情
+        <div class="detail" id="sub0" v-html="goods.desc" >
+
         </div>
         <div class="comment" id="sub1" style="display:none">
             <div class="aui-content aui-margin-b-10" v-for="(comment,key) in comments" :key="key" style="border-bottom:1px solid #f4f4f4;">
@@ -69,18 +69,37 @@
                     <li class="aui-list-item aui-list-item-middle" style="background-image:none;padding-right: 0.75rem;">
                         <div class="aui-media-list-item-inner">
                             <div class="aui-list-item-media" style="width:25%">
-                                <img src="../image/pro1.png" class="aui-img-round aui-list-img-sm" id="avatar">
+                                <img :src="comment.user_info.avatar" class="aui-img-round aui-list-img-sm" id="avatar">
                             </div>
                             <div class="aui-list-item-inner" style="width:40%;">
                                 <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-14">大魔王大魔王</div>
+                                    <div class="aui-list-item-title aui-font-size-14">{{comment.user_info.name}}</div>
                                 </div>
                                 <div class="aui-list-item-text aui-font-size-12">
-                                    2017-12-32 12:12:12
+                                    {{comment.create_time}}
                                 </div>
                             </div>
                             <div class="aui-list-item-right" style="width:35%" >
-                                <div class="aui-list-item-text">
+                                <div class="aui-list-item-text" v-if="comment.score == 1">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                </div>
+                                <div class="aui-list-item-text" v-else-if="comment.score == 2">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+
+                                </div>
+                                <div class="aui-list-item-text" v-else-if="comment.score == 3">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+
+                                </div>
+                                <div class="aui-list-item-text" v-else-if="comment.score == 4">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                    <img src="../image/star_light.png" style="width:20%">
+                                </div>
+                                <div class="aui-list-item-text" v-else-if="comment.score == 5">
                                     <img src="../image/star_light.png" style="width:20%">
                                     <img src="../image/star_light.png" style="width:20%">
                                     <img src="../image/star_light.png" style="width:20%">
@@ -92,7 +111,7 @@
                     </li>
                 </ul>
                 <div class="comment-content" style="padding:0rem 0.75rem;font-size:0.7rem;color#333;">
-                    水果超级甜超级好吃，老板人也很好，发货速度快。水果超级甜超级好吃，老板人也很好，发货速度快水果超级甜超级好吃，老板人也很好，发
+                    {{comment.content}}
                 </div>
                 <div class="img" style="padding:0.5rem 0.75rem; ">
                     <img v-for="(img,index) in comment.imgs" :key="index" :src="img" @click="preview(comment.imgs,index)">
@@ -110,7 +129,8 @@
         el: '#content',
         data:{
             comments:[],
-            page:1
+            page:1,
+            goods:{}
         },
         methods:{
             preview: function(imgs,index){
@@ -133,17 +153,25 @@
 
     var uiScrollPictureModule;
     var photoBrowser;
+    var scollPicture = [];
 
     apiready = function(){
         uiScrollPictureModule = api.require("UIScrollPicture");
         photoBrowser = api.require("photoBrowser");
 
-        loadScrollPicture();
+        loadGoods();
+        loadComments();
     };
-
-
-
-    var scollPicture = [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png']
+    loadGoods = function(){
+        // console.log(api.pageParam.goodsId)
+        $api.ajax('GET',$api.host + 'goods/' + api.pageParam.goodsId,{},function(ret){
+            app.goods = ret.data;
+            scollPicture = ret.data.imgs;
+            loadScrollPicture();
+        },{
+            auth: $api.auth
+        })
+    }
 
     loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 }, data: { paths: scollPicture, }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
 
@@ -155,23 +183,43 @@
         $api.css($api.byId('sub'+(1-index)), 'display:none');
 
     }
-    var ihtml = '加载中';
-    var moreDom = $api.byId('more');
+
     loadMoreComment = function(){
-        $api.text($api.byId('more'), ihtml);
-        var intervalInt = setInterval(function(){
-            ihtml += '.';
-            if(ihtml == '加载中.....'){
-                ihtml = '加载中'
+        loadComments();
+    }
+
+    loadComments = function(){
+        $api.ajax('POST',$api.host + 'query/goods_comments',{
+            goods_id: api.pageParam.goodsId
+        },function(ret){
+            if(ret.data.length != 0){
+                app.page ++;
+                ret.data.forEach(function(item){
+                    app.comments.push(item);
+                })
             }
-            $api.text(moreDom, ihtml);
-            $api.attr(moreDom, 'disabled', true);
-        },1000)
-        setTimeout(function(){
-            clearInterval(intervalInt);
-            $api.text(moreDom, '加载更多');
-            $api.removeAttr(moreDom, 'disabled');
-        },10000)
+        },{
+            auth: $api.auth,
+            'page-num':api.page,
+            'page-limit':10
+        })
+    }
+
+    buy = function(){
+        if(app.goods){
+            var goodsList = [];
+            app.goods.num  = 1;
+            goodsList.push(app.goods)
+            $api.goWindow('order_confirm_business_win',{
+                goodsList:goodsList
+            })
+        }else{
+            api.toast({
+                msg: '商品加载中,请稍后',
+                duration: 2000,
+                location: 'middle'
+            });
+        }
     }
 </script>
 

@@ -18,7 +18,7 @@
 
 <body>
     <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
-        <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
+        <a class="aui-pull-left aui-btn" tapmode onclick="closeWin()">
             <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
         </a>
         <div class="aui-title">我的订单</div>
@@ -61,7 +61,7 @@
                  w: 'auto',
                  h: frameH
             },
-            index: 0,
+            index: api.pageParam.status,
             preload: 0,
             frames: [{
                 name: 'order_status_0',
@@ -116,6 +116,11 @@
             name: 'orders_frm_group',
             index: index,
             scroll: true
+        });
+    }
+    closeWin = function(){
+        api.closeToWin({
+            name: 'home_win'
         });
     }
 </script>

@@ -15,33 +15,18 @@
 
 <body>
     <div class="aui-content aui-margin-b-15">
-        <ul class="aui-list aui-media-list">
-            <li class="aui-list-item aui-list-item-arrow">
+        <ul class="aui-list aui-media-list" id="app">
+            <li class="aui-list-item aui-list-item-arrow" v-for="(article,key) in articles" :key="key" tapmode @click="goArticle(article)">
                 <div class="aui-media-list-item-inner">
                     <div class="aui-list-item-inner">
                         <div class="aui-list-item-text">
-                            <div class="aui-list-item-title">咚咚社区特惠</div>
+                            <div class="aui-list-item-title">{{article.title}}</div>
                             <div class="aui-list-item-right">
                                 <div class="aui-dot" style="position:relative;top:0; right:0"></div>
                             </div>
                         </div>
                         <div class="aui-list-item-text aui-ellipsis-2">
-                            2017.10.01-2017.11.11期间，所有咚咚社区商铺购物,第二件半价优惠
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-arrow">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-inner">
-                        <div class="aui-list-item-text">
-                            <div class="aui-list-item-title">咚咚社区特惠</div>
-                            <div class="aui-list-item-right">
-                                <div class="aui-dot" style="position:relative;top:0; right:0"></div>
-                            </div>
-                        </div>
-                        <div class="aui-list-item-text aui-ellipsis-2">
-                            2017.10.01-2017.11.11期间，所有咚咚社区商铺购物,第二件半价优惠
+                            {{article.intro}}
                         </div>
                     </div>
                 </div>
@@ -50,10 +35,62 @@
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data:{
+            articles:[],
+            page:1
+        },
+        methods:{
+            goArticle: function(article){
+                $api.goWindow('article_win',{
+                    articleId: article.id
+                })
+            }
+        }
+    })
     apiready = function() {
+        api.parseTapmode();
+        loadArticles();
+
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:20
+            }
+        }, function(ret, err){
+            loadArticles();
+        });
+
+        api.setRefreshHeaderInfo({
+            bgColor: '#ccc',
+            textColor: '#fff',
+        }, function(ret, err){
+            app.articles = [];
+            app.page =1;
+            loadArticles();
+        });
 
     };
+
+    loadArticles = function(){
+        $api.ajax('POST',$api.host + 'query/article_type_articles',{
+            type_id:2
+        },function(ret){
+            if(ret.data.length != 0){
+                app.page ++ ;
+                ret.data.forEach(function(item){
+                    app.articles.push(item)
+                })
+            }
+        },{
+            auth:$api.auth,
+            'page-num':app.page,
+            'page-limit':10
+        })
+    }
 </script>
 
 </html>

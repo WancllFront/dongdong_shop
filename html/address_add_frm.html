@@ -27,7 +27,7 @@
                             收货人
                         </div>
                         <div class="aui-list-item-input">
-                            <input type="text" placeholder="" v-model="consigneeName">
+                            <input type="text" placeholder="" v-model="consigneeName" id="consigneeName">
                         </div>
                         <div class="aui-list-item-label-icon">
 
@@ -40,7 +40,7 @@
                             联系电话
                         </div>
                         <div class="aui-list-item-input">
-                            <input type="tel" placeholder="" v-model="telephone">
+                            <input type="tel" placeholder="" v-model="telephone" id="telephone">
                         </div>
                         <div class="aui-list-item-label-icon"  tapmode onclick="selectContacts()">
                             <i class="aui-iconfont aui-icon-right"></i>
@@ -63,7 +63,7 @@
                 <li class="aui-list-item" tapmode onclick="$api.goWindow('map_address_select_win')">
                     <div class="aui-list-item-inner">
                         <div class="aui-list-item-label">
-                            小区/街道
+                            街道/建筑
                         </div>
                         <div class="aui-list-item-input">
                             <span id="address">{{poi.name}}</span>
@@ -99,13 +99,14 @@
                 </li>
             </ul>
         </div>
-        <div class="save" tapmode onclick="">保存</div>
+        <div class="save" tapmode onclick="save()">保存</div>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
     var addressView;
+    var userinfo = $api.getStorage('userinfo');
     var app = new Vue({
         el: '#app',
         data:{
@@ -132,9 +133,24 @@
     apiready = function() {
         api.parseTapmode();
         addressView = api.require("addressView");
-
-        openAddressView();
         addEventListener();
+
+        if(api.pageParam.address){
+            var address = api.pageParam.address;
+            app.consigneeName = address.consignee_name;
+            app.telephone = address.mobile;
+            app.poi.name = address.poi;
+            app.poi.lat = address.lat;
+            app.poi.lng = address.lng;
+            app.detail = address.address;
+            app.isDefault = address.is_default == 1? true: false;
+            app.cityInfo = [
+                {name:address.province,id:address.province_code},
+                {name:address.city,id:address.city_code},
+                {name:address.county,id:address.county_code}
+            ];
+        };
+        openAddressView();
 
     };
     addEventListener = function(){
@@ -153,9 +169,9 @@
         addressView.open({
             file_addr: 'widget://res/city.txt', //数据源地址
             selected_color: '#ff0000',
-            pro_id: 110000, //省id
-            city_id: 110100, //市id
-            dir_id: 110101 //区id
+            pro_id: api.pageParam.address.province_code || 110000, //省id
+            city_id: api.pageParam.address.city_code || 110100, //市id
+            dir_id: api.pageParam.address.county_code || 110101 //区id
         });
     }
 
@@ -176,6 +192,115 @@
                 app.cityInfo = ret.data;
             }
         });
+    }
+    save = function(){
+        if(!app.consigneeName){
+            api.toast({
+                msg: '请填写收货人姓名',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('consigneeName').focus();
+            return;
+        }
+        if(!app.telephone){
+            api.toast({
+                msg: '请填写收货人联系电话',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('telephone').focus();
+            return;
+        }
+        if(app.cityInfo == []){
+            api.toast({
+                msg: '请选择省市县',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+        if(!app.poi.name){
+            api.toast({
+                msg: '请选择周围街道/建筑',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+        if(!app.detail){
+            api.toast({
+                msg: '请填写详细地址',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+
+        if(api.pageParam.address){
+            $api.ajax('PUT',$api.host + 'addresses/'+api.pageParam.address.id,{
+                'consignee_name': app.consigneeName,
+                'mobile': app.telephone,
+                'province':app.cityInfo[0].name,
+                'province_code': app.cityInfo[0].id,
+                'city': app.cityInfo[1].name,
+                'city_code': app.cityInfo[1].id,
+                'county': app.cityInfo[2].name,
+                'county_code': app.cityInfo[2].id,
+                'address': app.detail,
+                'is_default': app.isDefault? 1: 0,
+                'lat': app.poi.lat,
+                'lng': app.poi.lon,
+                'poi': app.poi.name
+            },function(ret){
+                api.toast({
+                    msg: ret.msg,
+                    duration: 2000,
+                    location: 'middle'
+                });
+                api.sendEvent({
+                    name: 'address_frm_fresh',
+                });
+                setTimeout(function(){
+                    api.closeWin();
+                },500)
+
+            },{
+                token: userinfo.token.token
+            })
+        }else{
+            $api.ajax('POST',$api.host + 'addresses',{
+                'consignee_name': app.consigneeName,
+                'mobile': app.telephone,
+                'province':app.cityInfo[0].name,
+                'province_code': app.cityInfo[0].id,
+                'city': app.cityInfo[1].name,
+                'city_code': app.cityInfo[1].id,
+                'county': app.cityInfo[2].name,
+                'county_code': app.cityInfo[2].id,
+                'address': app.detail,
+                'is_default': app.isDefault? 1: 0,
+                'lat': app.poi.lat,
+                'lng': app.poi.lon,
+                'poi': app.poi.name
+            },function(ret){
+                api.toast({
+                    msg: ret.msg,
+                    duration: 2000,
+                    location: 'middle'
+                });
+                api.sendEvent({
+                    name: 'address_frm_fresh',
+                });
+                setTimeout(function(){
+                    api.closeWin();
+                },500)
+
+            },{
+                token: userinfo.token.token
+            })
+        }
+
     }
 </script>
 

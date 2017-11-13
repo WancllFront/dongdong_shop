@@ -13,27 +13,28 @@
 </head>
 
 <body>
-    <div class="aui-content aui-margin-b-10">
+    <div class="aui-content aui-margin-b-10" id="app">
         <ul class="aui-list aui-media-list" style="background-image:none;">
-            <div>
+            <div v-for="(good,key) in goods" :key="key">
                 <li class="aui-list-item aui-list-item-middle">
                     <div class="aui-media-list-item-inner">
-                        <div class="aui-list-item-media" style="width: 2rem;">
-                            <img src="../image/select_blue.png" class="aui-img-round aui-list-img-sm">
+                        <div class="aui-list-item-media" style="width: 1.7rem;" tapmode @click="changeSelected(good)">
+                            <img v-show="good.isSelected" src="../image/select_blue.png" class="aui-img-round aui-list-img-sm">
+                            <img v-show="!good.isSelected" src="../image/circle.png" class="aui-img-round aui-list-img-sm">
                         </div>
                         <div class="aui-list-item-media" style="width: 5rem;">
-                            <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png" class="aui-list-img-sm" style="border:1px solid #f4f4f4;">
+                            <img :src="good.thum" class="aui-list-img-sm" style="border:1px solid #f4f4f4;">
                         </div>
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-text">
-                                <div class="aui-list-item-title aui-font-size-14" >科沃斯扫地机器人吸尘器家用智能一体 机超薄规划拖地机器人擦地机DB35</div>
+                                <div class="aui-list-item-title aui-font-size-14" >{{good.name}}</div>
                             </div>
                             <div class="aui-list-item-text" style="margin-top:0.5rem;">
-                                <span style="color:#f63030;font-size:0.8rem;">￥39.00</span>
+                                <span style="color:#f63030;font-size:0.8rem;">￥{{good.price}}</span>
                                 <div class="aui-list-item-text">
-                                    <img src="../image/jian_blue.png" style="width:1rem;">
-                                    <span style="padding:0rem 0.5rem;color:#333;">1</span>
-                                    <img src="../image/jia_blue.png" style="width:1rem;">
+                                    <img src="../image/jian_blue.png" style="width:1rem;" @click="sub(good)">
+                                    <span style="padding:0rem 0.5rem;color:#333;">{{good.num}}</span>
+                                    <img src="../image/jia_blue.png" style="width:1rem;"  @click="add(good)">
                                 </div>
                             </div>
                         </div>
@@ -41,46 +42,67 @@
                 </li>
                 <li class="aui-list-header" style="background-color:#fff;text-align:right;border-bottom:0.5rem solid #f4f4f4;">
                     <span></span>
-                    <span>小计:<span  style="color:#f63030;font-size:1rem;">￥39.00</span></span>
-                </li>
-            </div>
-            <div>
-                <li class="aui-list-item aui-list-item-middle">
-                    <div class="aui-media-list-item-inner">
-                        <div class="aui-list-item-media" style="width: 2rem;">
-                            <img src="../image/select_blue.png" class="aui-img-round aui-list-img-sm">
-                        </div>
-                        <div class="aui-list-item-media" style="width: 5rem;">
-                            <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png" class="aui-list-img-sm" style="border:1px solid #f4f4f4;">
-                        </div>
-                        <div class="aui-list-item-inner">
-                            <div class="aui-list-item-text">
-                                <div class="aui-list-item-title aui-font-size-14" >科沃斯扫地机器人吸尘器家用智能一体 机超薄规划拖地机器人擦地机DB35</div>
-                            </div>
-                            <div class="aui-list-item-text" style="margin-top:0.5rem;">
-                                <span style="color:#f63030;font-size:0.8rem;">￥39.00</span>
-                                <div class="aui-list-item-text">
-                                    <img src="../image/jian_blue.png" style="width:1rem;">
-                                    <span style="padding:0rem 0.5rem;color:#333;">1</span>
-                                    <img src="../image/jia_blue.png" style="width:1rem;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="aui-list-header" style="background-color:#fff;text-align:right;border-bottom:0.5rem solid #f4f4f4;">
-                    <span></span>
-                    <span>小计:<span  style="color:#f63030;font-size:1rem;">￥39.00</span></span>
+                    <span>小计:<span  style="color:#f63030;font-size:1rem;">￥{{good.price * good.num}}</span></span>
                 </li>
             </div>
         </ul>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data:{
+            goods:[]
+        },
+        methods:{
+            add: function(good){
+                good.num ++;
+                this.change();
+            },
+            sub: function(good){
+                if(good.num > 1){
+                    good.num --;
+                }
+                this.change()
+            },
+            changeSelected: function(good){
+                good.isSelected = !good.isSelected;
+                this.change()
+            },
+            change:function(){
+                api.sendEvent({
+                    name: 'cart_frm_change',
+                    extra: {
+                        goods: this.goods
+                    }
+                });
+            }
+        }
+    })
     apiready = function() {
         api.parseTapmode();
-        // console.log(api.pageParam.type)
+        app.goods = api.pageParam.goods;
+
+        api.addEventListener({
+            name: 'cart_win_changeSelectedAll'
+        }, function(ret, err){
+            if( ret ){
+                app.goods.forEach(function(item){
+                    item.isSelected = ret.value.isSelectedAll
+                })
+                api.sendEvent({
+                    name: 'cart_frm_change',
+                    extra: {
+                        goods: app.goods
+                    }
+                });
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+
     };
 </script>
 

@@ -580,7 +580,7 @@
             }
         );
     };
-    u.tokenPage = ['home_win','about_me_win','address_win','address_add','banck_add_win','bill_detial_win','cart_win','chat_win','collection_win','comment_win','comment_add_win','idcard_auth_win','logistics_win','my_bonus_win','my_wallet_win',
+    u.tokenPage = ['home_win','about_me_win','address_win','address_add','bank_win','bank_add_win','bill_detial_win','cart_win','chat_win','collection_win','comment_win','comment_add_win','idcard_auth_win','logistics_win','my_bonus_win','my_wallet_win',
 'wy_wallet_detail_win','my_wallet_overview_win','my_wallet_pay_win','my_wallet_pick_win','my_wallet_vip_buy_win','my_wallet_vip_detail_win','my_wallet_vip_list_win',
 'nickname_modify_win','order_confirm_win','order_detail_win','orders_win','pay_select_win','pay_success_win','sms_auth_win'];
 
@@ -642,9 +642,9 @@
     u.ocridcardUrl = 'https://api-cn.faceplusplus.com/cardpp/v1/ocridcard'
 
     u.host = 'http://192.168.1.110/index.php/api/';
-    u.auth = '';
+    u.auth = 'Basic_Ivj6eZRxMTx2yiyunZvnG8R65';
 
-    u.ajax = function(method,url,values,fun,token){
+    u.ajax = function(method,url,values,fun,headers){
 
         var uiLoading = api.require("UILoading");
         var uiId = '';
@@ -661,25 +661,31 @@
             data: {
                 values: values,
             },
-            headers:{
-                auth: 'Basic_Ivj6eZRxMTx2yiyunZvnG8R65',
-                token: token
-            },
+            headers:headers,
             timeout:10
         },function(ret, err){
             uiLoading.closeFlower ({id: uiId});
-
+            api.refreshHeaderLoadDone();
             if (ret) {
                 if(ret.code != 1){
+                    console.log('code: ' + ret.code + 'msg: '+ ret.msg)
                     api.toast({
                         msg: ret.msg,
                         duration: 2000,
                         location: 'middle'
                     })
+
+                    if(ret.code == -1){
+                        $api.clearStorage();
+                        api.closeToWin({
+                            name: 'root'
+                        });
+                    }
                 }else{
                     fun(ret)
                 }
             } else {
+                console.log(err.msg)
                 api.toast({
                     msg: '网络错误',
                     duration: 2000,
@@ -687,6 +693,10 @@
                 });
             }
         });
+    }
+
+    u.printLog = function(obj){
+        console.log(JSON.stringify(obj))
     }
 
 /*end*/

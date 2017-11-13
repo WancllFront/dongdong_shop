@@ -10,22 +10,34 @@
     <style>
         body {}
         .title{font-weight: bold;font-size: 0.8rem;width: 100%;padding: 0.5rem 0.5rem;text-align: center;background-color: #fff;}
-        .content{padding: 0rem 0.5rem;}
+        .content{padding: 0rem 0.5rem;background-color: #fff;}
+        .content img{max-width: 100%;}
     </style>
 </head>
 
 <body>
-    <img src="http://api.wancll.wygoo.com/data/upload/file/20171102/59fb11abbc6ab.png">
-    <div class="title">奶茶店</div>
-    <div class="content">
+    <img id="thum" src="">
+    <div class="title" id="name"></div>
+    <div class="content" id="content">
 
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function() {
-
+        loadDetail();
     };
+    loadDetail = function(){
+        $api.ajax('GET', $api.host + 'shops/' + api.pageParam.shopId,{},function(ret){
+
+            $api.attr($api.byId('thum'), 'src', ret.data.thum);
+            $api.text($api.byId('name'), ret.data.name);
+            $api.html($api.byId('content'), ret.data.desc);
+
+        },{
+            auth: $api.auth
+        })
+    }
 </script>
 
 </html>

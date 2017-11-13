@@ -22,51 +22,106 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="app">
         <div class="wrapper wrapper03" id="wrapper03">
         	<div class="scroller" style="width: 1807px; transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
         		<ul class="clearfix">
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;" class="cur"><a tapmode>全部</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
-        			<li tapmode style="margin-left: 0px; margin-right: 0px;"><a tapmode>分类</a></li>
+        			<li tapmode style="margin-left: 0px; margin-right: 0px;" v-for="(cate,key) in cates" :key="key" @click="changeCate(cate)"><a>{{cate.name}}</a></li>
         		</ul>
         	</div>
         </div>
         <div>
-            <div class="article-list" tapmode onclick="$api.goWindow('article_win')">
+            <div class="article-list" v-for="(article,key) in articles" :key="key" tapmode @click="goArticle(article)">
                 <div class="article-img">
-                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171024/59eea8da73d32.png">
+                    <img :src="article.thum">
                 </div>
-                <p>什么是孩子幸福的根本</p>
-            </div>
-            <div class="article-list">
-                <div class="article-img">
-                    <img src="http://api.wancll.wygoo.com/data/upload/file/20171024/59eea8da73d32.png">
-                </div>
-                <p>什么是孩子幸福的根本</p>
+                <p>{{article.title}}</p>
             </div>
         </div>
     </div>
 
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript" src="../script/jquery.js"></script>
 <script type="text/javascript" src="../script/flexible.js"></script>
 <script type="text/javascript" src="../script/iscroll.js"></script>
 <script type="text/javascript" src="../script/navbarscroll.js"></script>
 <script type="text/javascript">
+    var app = new Vue({
+        el:'#app',
+        data:{
+            cates:[{
+                id:1,
+                name:'全部'
+            }],
+            articles:[],
+            page:1,
+            activeCateId: 1
+        },
+        methods: {
+            changeCate: function(cate){
+                this.activeCateId = cate.id;
+                app.articles = [];
+                app.page = 1;
+                loadArticles();
+            },
+            goArticle: function(article){
+                $api.goWindow('article_win',{
+                    articleId: article.id,
+                    type:'culture'
+                })
+            }
+        }
+    })
     apiready = function() {
-        $('.wrapper03').navbarscroll();
         api.parseTapmode();
+        addEventListerner();
+        loadCates();
+        loadArticles();
     };
+
+    addEventListerner = function(){
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:20
+            }
+        }, function(ret, err){
+            loadArticles();
+        });
+    }
+
+    loadCates = function(){
+        $api.ajax('POST',$api.host + 'article_types/lists',{
+            article_type_id: 1,
+        },function(ret){
+            ret.data.forEach(function(item){
+                app.cates.push(item)
+            })
+            setTimeout(function(){
+                $('.wrapper03').navbarscroll();
+            },100)
+        },{
+            auth: $api.auth
+        })
+    }
+    loadArticles = function(){
+        $api.ajax('POST',$api.host + 'query/article_type_articles',{
+            type_id: app.activeCateId
+        },function(ret){
+            if(ret.data.length != 0){
+                app.page ++ ;
+                ret.data.forEach(function(item){
+                    app.articles.push(item)
+                })
+            }
+        },{
+            auth:$api.auth,
+            'page-num':app.page,
+            'page-limit':10
+        })
+    }
 
 </script>
 

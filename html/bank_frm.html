@@ -8,69 +8,165 @@
     <title>title</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <style>
-        body {padding-top: 0.5rem;background-color: #666;}
+        body {padding-top: 0.5rem;background-color: #666;height: 100%;}
         .bg{padding: 0rem 0.5rem;background-color: #666;}
         .bg .bank{position: relative;}
         .bg .bank .add{height:2rem;line-height:2rem;text-align:center;border-radius: 2rem;background-color:#fff;border:1px solid #2e76d7;color:#2e76d7;position:absolute;width:30%;left:35%;top:55%;}
         .bg .bank .add:active{background-color: #f4f4f4;}
+        .bg .bank .number{position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;letter-spacing: 0.1rem}
     </style>
 </head>
 
 <body>
-    <div class="bg">
+    <div class="bg" id="app">
         <div class="bank">
             <img src="../image/default_bank.png" style="width:100%;">
             <div class="add" tapmode onclick="$api.goWindow('bank_add_win')">添加银行卡</div>
         </div>
-        <div class="bank">
-            <img src="../image/nongye.png" style="width:100%;">
-            <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
-            <div style="position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;">****&nbsp;****&nbsp;****&nbsp;2548&nbsp;</div>
-        </div>
-        <div class="bank">
-            <img src="../image/jianshe.png" style="width:100%;">
-            <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
-            <div style="position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;">****&nbsp;****&nbsp;****&nbsp;2548&nbsp;</div>
-        </div>
-        <div class="bank">
-            <img src="../image/gongshang.png" style="width:100%;">
-            <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
-            <div style="position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;">****&nbsp;****&nbsp;****&nbsp;2548&nbsp;</div>
-        </div>
+        <div v-for="(card,key) in cards" :key="key" @click="deleteCard(card)">
+            <div class="bank" v-if="card.bank_name == '中国农业银行'">
+                <img src="../image/nongye.png" style="width:100%;">
+                <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
+                <div class="number">{{card.card_number | formatNumber}}</div>
+            </div>
+            <div class="bank" v-else-if="card.bank_name == '中国建设银行'">
+                <img src="../image/jianshe.png" style="width:100%;">
+                <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
+                <div class="number">{{card.card_number | formatNumber}}</div>
+            </div>
+            <div class="bank" v-else-if="card.bank_name == '中国工商银行'">
+                <img src="../image/gongshang.png" style="width:100%;">
+                <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
+                <div class="number">{{card.card_number | formatNumber}}</div>
+            </div>
 
-        <div class="bank">
-            <img src="../image/zhongguo.png" style="width:100%;">
-            <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
-            <div style="position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;">****&nbsp;****&nbsp;****&nbsp;2548&nbsp;</div>
+            <div class="bank" v-else-if="card.bank_name == '中国银行'">
+                <img src="../image/zhongguo.png" style="width:100%;">
+                <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
+                <div class="number">{{card.card_number | formatNumber}}</div>
+            </div>
+            <div class="bank" v-else-if="card.bank_name == '招商银行'">
+                <img src="../image/zhaoshang.png" style="width:100%;">
+                <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
+                <div class="number">{{card.card_number | formatNumber}}</div>
+            </div>
+            <div class="bank" v-else-if="card.bank_name == '光大银行'">
+                <img src="../image/guangda.png" style="width:100%;">
+                <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
+                <div class="number">{{card.card_number | formatNumber}}</div>
+            </div>
+            <div class="bank" v-else-if="card.bank_name == '中国邮政储蓄银行'">
+                <img src="../image/youzheng.png" style="width:100%;">
+                <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
+                <divclass="number">{{card.card_number | formatNumber}}</div>
+            </div>
+            <div class="bank" v-else-if="card.bank_name == '兴业银行'">
+                <img src="../image/xingye.png" style="width:100%;">
+                <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
+                <div class="number">{{card.card_number | formatNumber}}</div>
+            </div>
         </div>
-        <div class="bank">
-            <img src="../image/zhaoshang.png" style="width:100%;">
-            <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
-            <div style="position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;">****&nbsp;****&nbsp;****&nbsp;2548&nbsp;</div>
-        </div>
-        <div class="bank">
-            <img src="../image/guangda.png" style="width:100%;">
-            <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
-            <div style="position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;">****&nbsp;****&nbsp;****&nbsp;2548&nbsp;</div>
-        </div>
-        <div class="bank">
-            <img src="../image/youzheng.png" style="width:100%;">
-            <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
-            <div style="position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;">****&nbsp;****&nbsp;****&nbsp;2548&nbsp;</div>
-        </div>
-        <div class="bank">
-            <img src="../image/xingye.png" style="width:100%;">
-            <div style="position:absolute;top:30%;left:21.5%;color:#fff;">储蓄卡</div>
-            <div style="position:absolute;top:50%;left:21.5%;color:#fff;font-size:1.2rem;">****&nbsp;****&nbsp;****&nbsp;2548&nbsp;</div>
-        </div>
-
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
-    apiready = function() {
+    var userinfo = $api.getStorage('userinfo');
 
+    var app = new Vue({
+        el: '#app',
+        data:{
+            cards:[],
+            page:1
+        },
+        filters: {
+            formatNumber: function(cardNumber){
+                var format = ''
+                for(var i = 0; i < cardNumber.length; i++){
+                    if( (i+1) % 4 == 0){
+                        format += (cardNumber[i] + ' ');
+                    }else{
+                        format += cardNumber[i];
+                    }
+                }
+                return format;
+            }
+        },
+        methods: {
+            deleteCard: function(card){
+                api.confirm({
+                    title: '提示',
+                    msg: '移除此银行卡吗?',
+                    buttons: ['确定', '取消']
+                }, function(ret, err){
+                    if( ret ){
+                         if(ret.buttonIndex == 1){
+                             $api.ajax('DELETE',$api.host + 'bank_cards/'+card.id,{},function(ret){
+                                 api.toast({
+                                     msg: ret.msg,
+                                     duration: 2000,
+                                     location: 'bottom'
+                                 });
+                                 app.cards.splice(app.cards.indexOf(card),1);
+                             },{
+                                 token:userinfo.token.token
+                             })
+                         }
+                    }else{
+                         alert( JSON.stringify( err ) );
+                    }
+                });
+            }
+        }
+    })
+    apiready = function() {
+        api.parseTapmode();
+        addEventListener();
+        api.setRefreshHeaderInfo({
+            bgColor: '#ccc',
+            textColor: '#fff',
+        }, function(ret, err){
+            app.cards = [];
+            app.page = 1;
+            loadCards();
+        });
+
+        loadCards();
     };
+
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:20
+            }
+        }, function(ret, err){
+            loadCards();
+        });
+
+        api.addEventListener({
+            name: 'bank_win_refreshBankCard'
+        }, function(ret, err){
+            app.cards = [];
+            app.page = 1;
+            loadCards();
+        });
+    }
+
+    loadCards = function(){
+        $api.ajax('GET', $api.host + 'bank_cards', {}, function(ret){
+            if(ret.data.length != 0){
+                app.page ++ ;
+                ret.data.forEach(function(item){
+                    app.cards.push(item);
+                })
+            }
+        },{
+            token: userinfo.token.token,
+            'page-num': app.page,
+            'page-limit': 10
+        })
+    }
 </script>
 
 </html>

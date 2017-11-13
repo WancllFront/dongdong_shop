@@ -42,16 +42,21 @@
 
     <div class="third">第三方账号登录</div>
     <div class="icon">
-        <img src="../image/sina.png">
-        <img src="../image/qq.png">
-        <img src="../image/wechat.png">
+        <img src="../image/sina.png" tapmode onclick="loginThird('weibo')">
+        <img src="../image/qq.png" tapmode onclick="loginThird('QQPlus')">
+        <img src="../image/wechat.png" tapmode onclick="loginThird('wx')">
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     var uiLoading;
+    var qq,wx,weibo
     apiready = function() {
         uiLoading = api.require("UILoading");
+        qq = api.require("QQPlus");
+        weibo = api.require("weibo");
+        wx = api.require("wx");
+
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
         var header = $api.byId('header');
@@ -90,7 +95,25 @@
             setTimeout(function(){
                 $api.goWindow('home_win')
             },500)
+        },{
+            auth: $api.auth
         })
+    }
+    loginThird = function(type){
+        if(type == 'QQPlus'){
+            qq.installed(function(ret, err) {
+                if (ret.status) {
+                    qq.login(function(ret, err) {
+                        api.alert({
+                            title: 'id和token',
+                            msg: ret.openId + ret.accessToken
+                        });
+                    });
+                } else {
+                    api.toast({ msg: "请安装qq客户端" });
+                }
+            });
+        }
     }
 </script>
 

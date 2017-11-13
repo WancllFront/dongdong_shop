@@ -24,14 +24,14 @@
             <a class="aui-btn aui-pull-left" tapmode onclick="$api.closeWin()" >
                 <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
             </a>
-            <div class="aui-title" id="title"></div>
-            <a class="aui-btn aui-pull-right" v-if="shopId == 0">
+            <div class="aui-title" id="title">商城购物车</div>
+            <a class="aui-btn aui-pull-right" tapmode @click="deleteCart()">
                 <span class="aui-iconfont aui-icon-trash" style="color:#000;"></span>
             </a>
         </header>
 
         <footer class="aui-bar aui-bar-tab" id="footer">
-            <div class="selectall" @click="changeSelectedAll()">
+            <div class="selectall" tapmode @click="selectedAll()">
                 <img v-show="!isSelectedAll" src="../image/circle.png">
                 <img v-show="isSelectedAll" src="../image/select_blue.png">
                 <span>全选</span>
@@ -39,7 +39,7 @@
             <div class="price">
                 合计: <span style="color:#f63030;font-size:1rem;">￥{{totalPrice}}</span>
             </div>
-            <div class="submit" tapmode onclick="$api.goWindow('order_confirm_win',{shopId:app.ShopId,goods})">结算</div>
+            <div class="submit" tapmode onclick="checkout()">结算</div>
         </footer>
     </div>
 </body>
@@ -49,37 +49,26 @@
     var app = new Vue({
         el: '#app',
         data:{
-            shopId:0,
-            isSelectedAll: true,
+            isSelectedAll: false,
             totalPrice: 0
         },
         methods:{
-            changeSelectedAll: function(){
-                this.isSelectedAll = !this.isSelectedAll;
+            selectedAll: function(){
                 api.sendEvent({
-                    name: 'cart_win_changeSelectedAll',
+                    name: 'business_cart_win_selectedAll',
                     extra: {
-                        isSelectedAll:this.isSelectedAll
+                        selectedFlag: !this.isSelectedAll
                     }
+                });
+            },
+            deleteCart: function(){
+                api.sendEvent({
+                    name: 'business_cart_win_deleteCart',
                 });
             }
         }
     })
     apiready = function(){
-        app.shopId = api.pageParam.shopId;
-        if(app.shopId){
-            $api.text($api.byId('title'),'社区购物车');
-            api.pageParam.goods.forEach(function(item){
-                item.isSelected = true;
-                item.num = 1;
-            })
-        }else{
-            $api.text($api.byId('title'),'商城购物车');
-            api.pageParam.goods.forEach(function(item){
-                item.isSelected = false;
-            })
-        }
-        computeGoods(api.pageParam.goods);
 
         api.parseTapmode();
         var header = $api.byId('aui-header');
@@ -88,8 +77,8 @@
         var body_h = $api.offset($api.dom('body')).h;
         var footerH = $api.offset($api.byId('footer')).h;
         api.openFrame({
-            name: 'cart_frm',
-            url: './cart_frm.html',
+            name: 'business_cart_frm',
+            url: './business_cart_frm.html',
             bounces: true,
             bgColor: '#fff',
             rect: {
@@ -98,36 +87,43 @@
                 w: 'auto',
                 h: api.winHeight-headerPos.h-footerH
             },
-            pageParam:{
-                goods: api.pageParam.goods
-            }
         });
 
         addEventListener();
     };
     addEventListener = function(){
         api.addEventListener({
-            name: 'cart_frm_change'
+            name: 'business_cart_frm_change'
         }, function(ret, err){
             if( ret ){
-                computeGoods(ret.value.goods)
+                app.isSelectedAll = ret.value.carts.every(function(item){
+                    return item.isSelected;
+                });
+                var totalPrice = 0;
+                ret.value.carts.forEach(function(item){
+                    if(item.isSelected){
+                        totalPrice += item.goods_info.price * item.num;
+                    }
+                })
+                app.totalPrice = totalPrice;
             }else{
                  alert( JSON.stringify( err ) );
             }
         });
+
+        api.addEventListener({
+            name: 'resetCartsStatus'
+        }, function(ret, err){
+            app.isSelectedAll = false;
+            app.totalPrice = 0;
+        });
     }
 
-    computeGoods = function(goods){
-        var totalPrice = 0;
-        goods.forEach(function(item){
-            if(item.isSelected){
-                totalPrice += (item.price * item.num)
-            }
+    checkout = function(){
+        api.sendEvent({
+            name: 'business_cart_win_checkout',
         });
-        app.totalPrice = totalPrice;
-        app.isSelectedAll = goods.every(function(item){
-            return item.isSelected;
-        })
+
     }
 </script>
 </html>

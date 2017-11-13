@@ -29,130 +29,77 @@
         }
         .aui-list .aui-list-item {background-color: #f4f4f4;}
         .aui-list .aui-list-item:active{background-color: #fff;}
+        .aui-list .active{background-color: #fff;}
     </style>
 </head>
 <body>
-
-    <header class="aui-bar aui-bar-nav" id="aui-header">
-        <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
-            <span class="aui-iconfont aui-icon-left"></span>
-        </a>
-        <div class="aui-title" style="left:2rem; right: 2rem;">
-            <div class="aui-searchbar" id="search">
-                <div class="aui-searchbar-input aui-border-radius">
-                    <i class="aui-iconfont aui-icon-search" style="color:#000!important;"></i>
-                    <input type="search" placeholder="请输入搜索内容" id="search-input" >
-                    <div class="aui-searchbar-clear-btn" tapmode>
-                        <i class="aui-iconfont aui-icon-close"></i>
+    <div id="app">
+        <header class="aui-bar aui-bar-nav" id="aui-header">
+            <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title" style="left:2rem; right: 2rem;">
+                <div class="aui-searchbar" id="search">
+                    <div class="aui-searchbar-input aui-border-radius">
+                        <i class="aui-iconfont aui-icon-search" style="color:#000!important;"></i>
+                        <input type="search" placeholder="请输入搜索内容" id="search-input" >
+                        <div class="aui-searchbar-clear-btn" tapmode>
+                            <i class="aui-iconfont aui-icon-close"></i>
+                        </div>
                     </div>
+                    <div class="aui-searchbar-btn" tapmode>取消</div>
                 </div>
-                <div class="aui-searchbar-btn" tapmode>取消</div>
             </div>
-        </div>
-        <a class="aui-pull-right aui-btn" tapmode onclick="$api.goWindow('cart_win',{type:'community'})">
-            <div class="aui-badge">10</div>
-            <img src="../image/gouwuche.png" style="width:1.3rem;">
-            <!-- <span class="aui-iconfont aui-icon-cart"></span> -->
-        </a>
-    </header>
-    <section class="aui-content" id="classify-list">
-        <ul class="aui-list aui-list-noborder" id="classify-ul" >
-            <li class="aui-list-item" tapmode onclick="changeCate();" >
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">男装</div>
-                </div>
-            </li>
-            <li class="aui-list-item" tapmode onclick="changeCate();" >
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">女装</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">男鞋</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">女鞋</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">内衣配饰</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">手机数码</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">电脑办公</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">家用电器</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">食品生鲜</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">玩具乐器</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">男装</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">女装</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">男鞋</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">女鞋</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">内衣配饰</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">手机数码</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">电脑办公</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">家用电器</div>
-                </div>
-            </li>
-
-        </ul>
-    </section>
+            <a class="aui-pull-right aui-btn" tapmode onclick="goCommunityCart()">
+                <div class="aui-badge">{{cartNum}}</div>
+                <img src="../image/gouwuche.png" style="width:1.3rem;">
+                <!-- <span class="aui-iconfont aui-icon-cart"></span> -->
+            </a>
+        </header>
+        <section class="aui-content" id="classify-list">
+            <ul class="aui-list aui-list-noborder" id="classify-ul" >
+                <li class="aui-list-item" :class="{active:cate.isSelected}" tapmode @click="changeCate(cate)" v-for="(cate,key) in cates" :key="key" >
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">{{cate.name}}</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+    </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+    var app  = new Vue({
+        el: '#app',
+        data:{
+            cates:[{
+                id:'',
+                name:'所有商品',
+                isSelected: true
+            }],
+            cartGoods:[]
+        },
+        methods:{
+            changeCate: function(cate){
+                this.cates.forEach(function(item){
+                    item.isSelected = (item.id == cate.id? true:false)
+                })
+                api.sendEvent({
+                    name: 'community_goods_frm_fresh',
+                    extra: {
+                        cateId:cate.id
+                    }
+                });
+            }
+        },
+        computed:{
+            cartNum: function(){
+                return this.cartGoods.length
+            }
+        }
+    })
     apiready = function(){
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
@@ -168,16 +115,50 @@
         api.openFrame({
             name: 'community_goods_frm',
             url: './community_goods_frm.html',
-            bounces: false,
+            bounces: true,
             rect: {
                 x: classifyListH,
                 y: headerPos.h,
                 w: api.winWidth-classifyListH-5,
                 h: 'auto'
             },
-            hScrollBarEnabled:false
-        })
+            hScrollBarEnabled:false,
+            pageParam:{
+                shopId: api.pageParam.shopId
+            }
+        });
+
+        api.addEventListener({
+            name: 'community_goods_frm_add_cart'
+        }, function(ret, err){
+            if( ret ){
+                if(!app.cartGoods.some(function(item){
+                    return item.id == ret.value.good.id
+                })){
+                    app.cartGoods.push(ret.value.good)
+                }
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+
+        loadCates();
     };
+
+    goCommunityCart = function(){
+        if(app.cartGoods.length == 0){
+            api.toast({
+                msg: '购物车空空如也',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }else{
+            $api.goWindow('cart_win',{
+                shopId:api.pageParam.shopId,
+                goods: app.cartGoods
+            })
+        }
+    }
 
     //搜索处理
     var searchBar = document.querySelector(".aui-searchbar");
@@ -219,9 +200,17 @@
         }
     }
 
-    changeCate = function(){
-        alert(123)
+    loadCates = function(){
+        $api.ajax('POST',$api.host + 'query/shop_goods_cates',{
+            shop_id: api.pageParam.shopId
+        },function(ret){
+            ret.data.forEach(function(item,index){
+                item.isSelected = false;
+                app.cates.push(item);
+            })
+        },{
+            auth: $api.auth
+        })
     }
-
 </script>
 </html>

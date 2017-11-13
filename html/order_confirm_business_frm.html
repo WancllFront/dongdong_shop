@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {}
+        .order{padding: 0.5rem;background-color: #fff;}
+        .order .goods{display: flex;align-items: center;background-color: #f7f7f7;}
+        .order .goods .thum{width: 30%;padding: 0.5rem 0.5rem;;}
+        .order .goods .thum img{width: 100%;}
+        .order .goods .other{width: 70%;padding: 0.5rem 0.5rem 0.5rem 0.3rem;;}
+        .order .goods .other .title{margin-bottom: 1rem;}
+        .order .goods .other .price{color:#fe4545}
+        .order .goods .other .price:after{display:block;content:"";clear:both;}
+
+        .order .line:after{display:block;content:"";clear:both;}
+        .order .line .left{float: left;display: inline-block;color: #777;font-size: 0.75rem;height: 2rem;line-height: 2rem;}
+        .order .line .right{float: right;color: #777;font-size: 0.75rem;height: 2rem;line-height: 2rem;}
+        .community-dispat-way .way{height: 2.5rem;display: flex;}
+        .community-dispat-way .way div{display: inline-block;width: 50%;background-color: #c6c4c4;color: #fff;text-align: center;line-height: 2.5rem;}
+        .community-dispat-way .way .active{background:linear-gradient(to bottom,#41c4da,#34a3e4,#2680ef);}
+        .community-dispat-way .hidden{display: none;}
+
+        .aui-tips{background-color: #fffebe;color:#333}
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
+        <div class="aui-content">
+            <ul class="aui-list aui-media-list" style="background-image:none;">
+                <li class="aui-list-item aui-list-item-middle" tapmode onclick="$api.goWindow('address_win',{shopId:0})">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 2rem;">
+                            <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">{{address.province}}{{address.city}}{{address.county}}{{address.address}}</div>
+                            </div>
+                            <div class="aui-list-item-text" style="margin-top:0.5rem;">
+                                {{address.consignee_name}}
+                                <div class="aui-list-item-text">{{address.mobile}}</div>
+                                <div class="aui-list-item-text"></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
+
+        <div class="order">
+            <div class="goodslist" v-for="(goods,key) in goodsList" :key="key">
+                <div class="goods">
+                    <div class="thum">
+                        <img :src="goods.thum">
+                    </div>
+                    <div class="other">
+                        <div class="title">
+                            {{goods.name}}
+                        </div>
+                        <div class="price">
+                            <span>￥{{goods.price}}</span><span style="float:right;color:#555;">x{{goods.num}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="height:0.5rem;background-color:#fff;width:100%;"></div>
+            </div>
+            <!-- <div class="line">
+                <div class="left">购买数量:</div>
+                <div class="right" style="display:flex;padding:0.5rem 0rem;">
+                    <img src="../image/jian_blue.png" style="width:1rem;display:inline-block;">
+                    <span style="line-height:1rem;padding:0rem 0.5rem;">1</span>
+                    <img src="../image/jia_blue.png" style="width:1rem;display:inline-block;">
+                </div>
+            </div> -->
+            <div class="line">
+                <div  class="left">配送费用:</div>
+                <div class="right">￥{{expressPrice}}</div>
+            </div>
+            <!-- <div class="line">
+                <div  class="left">新品优惠:</div>
+                <div class="right">-3.00</div>
+            </div> -->
+            <div class="line">
+                <div  class="left">买家留言:</div>
+                <div class="right">
+                    <textarea name="name" rows="18" cols="80" style="border:1px solid #f7f7f7;height:5rem;" id="message"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+
+    var app = new Vue({
+        el: '#app',
+        data:{
+            goodsList: [],
+            address:{}
+        },
+        methods:{
+
+        },
+        computed:{
+            expressPrice: function(){
+                var ePrice = 0
+                this.goodsList.forEach(function(item){
+                    ePrice += item.freight_price*1
+                })
+                return ePrice;
+            }
+        }
+    })
+    apiready = function() {
+        api.parseTapmode();
+        addEventListener();
+        loadDefaultAddress();
+        app.goodsList = api.pageParam.goodsList
+    };
+
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'order_confirm_business_frm'
+        }, function(ret, err){
+            if( ret ){
+                 app.address = ret.value.address
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+
+    }
+
+    loadDefaultAddress = function(){
+        $api.ajax('POST',$api.host + 'query/default_address',{},function(ret){
+            if(!ret.data){
+                api.toast({msg:'请先添加地址'})
+                setTimeout(function(){
+                    $api.goWindow('address_win',{shopId:0})
+                },500)
+            }else{
+                app.address = ret.data;
+            }
+        },{
+            token: userinfo.token.token,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        })
+    }
+
+    submitOrder = function(){
+        var message = $api.val($api.byId('message'));
+        var goodsInfo = [];
+        app.goodsList.forEach(function(item){
+            goodsInfo.push({
+                goods_id: item.id,
+                num:item.num || 1
+            })
+        });
+        if(!app.address){
+            api.toast({
+                msg: '地址加载出错，请重新选择地址',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return;
+        }
+        if(goodsInfo){
+            $api.ajax('POST',$api.host + 'orders',{
+                shop_id:0,
+                delivery_way: 0,
+                address_id: app.address.id,
+                goods_info: JSON.stringify(goodsInfo),
+                memo: message
+            },function(ret){
+                api.toast({
+                    msg: ret.msg,
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                setTimeout(function(){
+                    $api.goWindow('pay_select_win',{
+                        order:ret.data
+                    })
+                },500)
+
+            },{
+                token: userinfo.token.token
+            })
+        }else{
+            api.toast({
+                msg: '商品信息出错，请返回',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+        }
+    }
+
+</script>
+
+</html>

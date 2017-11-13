@@ -10,7 +10,7 @@
     <style>
         body {}
         .goodslist{background-color: #fff;}
-        .goodslist .goods{width: 49%;text-align: center;display: inline-block;}
+        .goodslist .goods{width: 50%;text-align: center;display: inline-block;border: 1px solid #f4f4f4}
         .goodslist .goods .thum{padding: 0.2rem 0.2rem;}
         .goodslist .goods .thum img{display: inline-block;width: 90%;}
         .goodslist .goods .title{text-align: left;padding-left: 0.5rem;padding-top: 0.5rem;font-size: 0.75rem;}
@@ -22,52 +22,64 @@
 </head>
 
 <body>
-    <div class="goodslist">
-        <div class="goods" tapmode onclick="$api.goWindow('business_goods_detail_win')">
+    <div class="goodslist" id="app">
+        <div class="goods" v-for="(good,key) in goods" :key="key" tapmode @click="goGoodsDetail(good)">
             <div class="thum">
-                <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+                <img :src="good.thum">
             </div>
-            <div class="title">考拉工厂店 </div>
-            <div class="price">￥<span>123.00</span></div>
+            <div class="title">{{good.name}}</div>
+            <div class="price">￥<span>{{good.price}}</span></div>
         </div>
-        <div class="goods">
-            <div class="thum">
-                <img src="http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png">
-            </div>
-            <div class="title">水果水果</div>
-            <div class="price">￥<span>123.00</span></div>
-        </div>
-        <div class="goods">
-            <div class="thum">
-                <img src="http://b.hiphotos.baidu.com/image/pic/item/c2fdfc039245d6886d678c81aec27d1ed21b24a9.jpg">
-            </div>
-            <div class="title">水果水果</div>
-            <div class="price">￥<span>123.00</span></div>
-        </div>
-        <div class="goods">
-            <div class="thum">
-                <img src="http://pic71.nipic.com/file/20150610/13549908_104823135000_2.jpg">
-            </div>
-            <div class="title">考拉工厂店 牛奶丝双宫茧桑 蚕丝春秋被 3斤</div>
-            <div class="price">￥<span>123.00</span></div>
-        </div>
-
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
-    // fixImage()
+    var app = new Vue({
+        el: '#app',
+        data:{
+            goods:[],
+            page:1
+        },
+        methods: {
+            goGoodsDetail: function(good){
+                $api.goWindow('business_goods_detail_win',{
+                    goodsId: good.id
+                })
+            }
+        }
+    })
     apiready = function() {
         api.parseTapmode();
+        if(api.pageParam.cateId){
+            loadGoodsByCateId();
+        }else if(api.pageParam.keywords){
+            loadGoodsByKeywords();
+        }
 
     };
 
-    fixImage = function(){
-        imgDom = $api.domAll('.thum');
+    loadGoodsByKeywords = function(){
 
-        imgDom.forEach((item)=>{
-            $api.css(item, 'height:' + $api.offset(item).w + 'px');
-            $api.css(item, 'line-height:' + $api.offset(item).w + 'px');
+    }
+
+    loadGoodsByCateId = function(){
+
+        $api.ajax('POST',$api.host + 'goods/lists',{
+            cate_id: api.pageParam.cateId,
+            shop_id: 0
+        },function(ret){
+
+            if(ret.data.length != 0){
+                app.page ++;
+                ret.data.forEach(function(item){
+                    app.goods.push(item)
+                })
+            }
+        },{
+            auth: $api.auth,
+            'page-num': app.page,
+            'page-limit': 10
         })
     }
 </script>

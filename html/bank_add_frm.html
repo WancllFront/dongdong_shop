@@ -18,7 +18,7 @@
     <div class="area" style="margin-top:0rem;">
         <div class="mix">
             <i class="aui-iconfont">开卡银行</i>
-            <select style="padding-left:3.5rem;width:100%;color:#999;border-color:#fff;" type="text" class="input" >
+            <select style="padding-left:3.5rem;width:100%;color:#999;border-color:#fff;" type="text" class="input" id="bankName" >
                 <option value="">请选择</option>
                 <option>中国农业银行</option>
                 <option>中国建设银行</option>
@@ -27,26 +27,79 @@
                 <option>招商银行</option>
                 <option>光大银行</option>
                 <option>中国邮政储蓄银行</option>
-                <option>中国兴业银行</option>
+                <option>兴业银行</option>
             </select>
         </div>
         <div class="mix">
             <i class="aui-iconfont">持卡人</i>
-            <input style="padding-left:3.5rem;width:100%;color:#999;" type="text" class="input" id="telephone-novaricode" placeholder="">
+            <input style="padding-left:3.5rem;width:100%;color:#999;" type="text" class="input" id="bankOwner" placeholder="">
         </div>
 
         <div class="mix">
             <i class="aui-iconfont">卡号</i>
-            <input style="padding-left:3.5rem;width:100%;`color:#999;" type="tel" class="input" id="password" placeholder="">
+            <input style="padding-left:3.5rem;width:100%;color:#999;letter-spacing:0.2rem;" type="tel" class="input" id="bankNumber" placeholder="">
         </div>
-        <div class="submit" tapmode onclick="" style="height:3rem;line-height:3rem;border-radius:0.3rem;">添加</div>
+        <div class="submit" tapmode onclick="add()" style="height:2.2rem;line-height:2.2rem;border-radius:0.2rem;">保存</div>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
     apiready = function() {
-
+        api.parseTapmode();
     };
+    add = function(){
+        bankName = $api.val($api.byId('bankName'));
+        bankOwner = $api.val($api.byId('bankOwner'));
+        bankNumber = $api.val($api.byId('bankNumber'));
+
+        if(!bankName){
+            api.toast({
+                msg: '请选择开卡银行',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('bankName').focus();
+            return;
+        }
+        if(!bankOwner){
+            api.toast({
+                msg: '请填写持卡人',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('bankOwner').focus();
+            return;
+        }
+        if(!bankNumber || bankNumber.length < 16){
+            api.toast({
+                msg: '请填写正确的卡号',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('bankNumber').focus();
+            return;
+        }
+
+        $api.ajax('POST',$api.host + 'bank_cards',{
+            'bank_name': bankName,
+            'card_number': bankNumber,
+            'card_holder': bankOwner
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'middle'
+            });
+            api.sendEvent({
+                name: 'bank_win_refreshBankCard',
+            });
+
+            setTimeout(function(){$api.closeWin()},500)
+        },{
+            token: userinfo.token.token
+        })
+    }
 </script>
 
 </html>

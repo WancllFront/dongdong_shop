@@ -12,7 +12,7 @@
 </head>
 <body>
     <header class="aui-bar aui-bar-nav aui-bar-light"  id="aui-header">
-        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin()" >
+        <a class="aui-btn aui-pull-left" tapmode onclick="$api.closeWin()" >
             <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
         </a>
         <div class="aui-title">地址管理</div>
@@ -44,13 +44,9 @@
                 h: api.winHeight-headerPos.h-footerH
             },
             pageParam:{
-                type: api.pageParam.type
+                shopId: api.pageParam.shopId
             }
         })
     };
-    function closeWin(){
-        api.closeWin({
-        });
-    }
 </script>
 </html>

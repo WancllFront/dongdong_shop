@@ -9,76 +9,141 @@
     <style>
         body {}
         .shop-list{background-color: #f4f4f4;}
-        .shop-list .shop{width:100%;background-color:#fff;margin-bottom:1rem;position:relative;}
+        .shop-list .shop{width:100%;background-color:#fff;margin-bottom:0.5rem;position:relative;}
         .shop-list .shop .thum{width:100%;height:12rem;}
         .shop-list .shop .text{padding:0.8rem 5rem 0.9rem 1rem;}
         .shop-list .shop .text .title{text-overflow: ellipsis;font-weight:bold;white-space: nowrap;overflow:hidden;}
         .shop-list .shop .text .describe{overflow:hidden;padding-top:0.3rem;letter-spacing:0.03rem;color:#7e7e7e;font-size:0.7rem;text-overflow: ellipsis;font-weight:bold;white-space: nowrap;}
         .shop-list .shop .distance{position:absolute;top:14rem;right:1rem;height:1.5rem;}
-        .shop-list .shop .distance img{width:1.25rem;vertical-align:middle;}
-        .shop-list .shop .distance span{line-height:1.5rem;color:#7e7e7e;}
+        .shop-list .shop .distance img{width:1.1rem;vertical-align:middle;}
+        .shop-list .shop .distance span{line-height:1.5rem;color:#7e7e7e;font-size: 0.8rem;}
     </style>
 </head>
 
 <body>
     <div class="shop-list" id="app">
         <div class="shop" v-for="(shop,key) in shops" :key="key" tapmode @click="goGoods(shop)">
-            <img class="thum" src="../image/loading_more.gif" data-src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f030871254e.png" >
+            <img class="thum" :src="shop.thum" >
             <div class="text" >
-                <p class="title">粮食夫由（远大店）</p>
-                <p class="describe">湖南省长沙市开源路山水人家32栋一楼</p>
+                <p class="title">{{shop.name}}</p>
+                <p class="describe">{{shop.address}}</p>
             </div>
-            <div class="distance" style="position:absolute;top:14rem;right:1rem;height:1.5rem;">
-                <img src="../image/location.png" style="width:1.25rem;vertical-align:middle;">
-                <span style="line-height:1.5rem;color:#7e7e7e;">&lt;&nbsp;100m</span>
+            <div class="distance">
+                <img src="../image/location.png">
+                <span>&lt;&nbsp;{{shop.distance}}</span>
             </div>
         </div>
-        <div class="shop" v-for="(shop,key) in shops" :key="key" tapmode @click="goGoods(shop)">
-            <img class="thum" src="../image/loading_more.gif" data-src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f030871254e.png" >
-            <div class="text" >
-                <p class="title">粮食夫由（远大店）</p>
-                <p class="describe">湖南省长沙市开源路山水人家32栋一楼</p>
-            </div>
-            <div class="distance" style="position:absolute;top:14rem;right:1rem;height:1.5rem;">
-                <img src="../image/location.png" style="width:1.25rem;vertical-align:middle;">
-                <span style="line-height:1.5rem;color:#7e7e7e;">&lt;&nbsp;100m</span>
-            </div>
-        </div>
-
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
-<script type="text/javascript" src="../script/aui-lazyload.js" ></script>
+
 <script type="text/javascript">
+    var lat,lng;
+    var aMap;
     var app = new Vue({
         el: '#app',
         data:{
-            shops: [
-                {
-                    id:1
-                }
-            ]
+            shops: [],
+            page:1
         },
         methods:{
             goGoods: function(shop){
-                api.openWin({
-                    name: 'community_goods_win',
-                    url: './community_goods_win.html',
-                    pageParam: {
-                        shopId: shop.id
-                    },
-                    vScrollBarEnabled:false
-                });
+                $api.goWindow('community_goods_win',{
+                    shopId: shop.id
+                })
             }
         }
     })
-    new auiLazyload({
-        errorImage:'../image/error-img.png'
-    });
-    apiready = function() {
 
+    apiready = function() {
+        aMap = api.require("aMap");
+        api.parseTapmode();
+
+        setPullRefresh();
+        addEventListener();
+        openAMap();
     };
+
+    setPullRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#ccc',
+            textColor: '#fff',
+        }, function(ret, err){
+            app.shops = [];
+            app.page = 1;
+            loadShops()
+        });
+    }
+
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'reloadLocation'
+        }, function(ret, err){
+            getLocation();
+        });
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:10
+            }
+        }, function(ret, err){
+            loadShops();
+        });
+
+    }
+
+    loadShops = function(){
+        $api.ajax('POST',$api.host + 'shops/lists',{
+            lng:lng,
+            lat:lat
+        },function(ret){
+            setTimeout(function(){
+                if(ret.data.length != 0){
+                    app.page ++;
+                    ret.data.forEach(function(item){
+                        app.shops.push(item);
+                    })
+                }
+            },1000)
+        },{
+            auth: $api.auth,
+            'page-num': app.page,
+            'page-limit': 10
+        })
+    }
+
+    openAMap = function(){
+        aMap.open({
+            showUserLocation: true,
+        }, function(ret, err) {
+            if (ret.status) {
+                aMap.hide();
+                getLocation();
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    getLocation = function(){
+        aMap.getLocation(function(ret, err) {
+            if (ret.status) {
+                // alert(JSON.stringify(ret));
+                lat = ret.lat;
+                lng = ret.lon;
+                app.shops = [];
+                app.page = 1;
+                loadShops();
+            } else {
+                api.toast({
+                    msg: '定位失败',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
 
 
 

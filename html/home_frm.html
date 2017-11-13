@@ -32,7 +32,7 @@
     <div class="top" id="top">
         <img class="setting" src="../image/setting.png" tapmode onclick="$api.goWindow('about_me_win')" >
         <div class="comment" tapmode onclick="$api.goWindow('notice_win')" >
-            <div class="aui-badge">10</div>
+            <!-- <div class="aui-badge"></div> -->
             <img  src="../image/comment_white.png">
         </div>
         <div class="thum" id="thum">
@@ -53,19 +53,19 @@
         </ul>
     </div>
     <div class="aui-bar aui-bar-tab">
-        <div class="aui-bar-tab-item">
+        <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('orders_win',{status:1})">
             <img src="../image/waitingpay.png">
             <div class="aui-bar-tab-label">待付款</div>
         </div>
-        <div class="aui-bar-tab-item">
+        <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('orders_win',{status:2})">
             <img src="../image/fahuo.png">
             <div class="aui-bar-tab-label">待发货</div>
         </div>
-        <div class="aui-bar-tab-item">
+        <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('orders_win',{status:3})">
             <img src="../image/shouhuo.png">
             <div class="aui-bar-tab-label">待收货</div>
         </div>
-        <div class="aui-bar-tab-item" >
+        <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('orders_win',{status:4})">
             <img src="../image/pingjia.png">
             <div class="aui-bar-tab-label">待评价</div>
         </div>
@@ -86,7 +86,7 @@
                     <div class="aui-list-item-right" style="color:#0056c6;font-size:0.7rem;">能生钱的钱包</div>
                 </div>
             </li>
-            <li class="aui-list-item" tapmode onclick="$api.goWindow('cart_win',{type:'business'})">
+            <li class="aui-list-item" tapmode onclick="$api.goWindow('business_cart_win')">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/gouwuche.png" style="width:1rem;">
                 </div>
@@ -94,7 +94,7 @@
                     购物车
                 </div>
             </li>
-            <li class="aui-list-item" tapmode onclick="$api.goWindow('address_win')">
+            <li class="aui-list-item" tapmode onclick="$api.goWindow('address_win',{shopId:''})">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/dizhi.png" style="width:1rem;">
                 </div>

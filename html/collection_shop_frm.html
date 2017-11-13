@@ -24,32 +24,15 @@
 </head>
 
 <body>
-    <div class="goodslist">
-        <div class="goods">
+    <div class="goodslist" id="app">
+        <div class="goods" v-for="(collection,key) in collections" :key="key">
             <div class="left">
-                <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+                <img :src="collection.shop_info.thum">
             </div>
 
             <div style="" class="right">
-                <p class="single-paragraph title">美国进口红提美国进口红提</p>
-                <p class="single-paragraph describe">新鲜可口</p>
-                <div class="price">
-                    <!-- <div>
-                        <span style="color:#ff2c2c">￥39.00</span>
-                        <span style="color:#737373">/份</span>
-                    </div> -->
-                    <img src="../image/delete.png" class="jia" tapmode onclick="">
-                </div>
-            </div>
-        </div>
-        <div class="goods">
-            <div class="left">
-                <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
-            </div>
-
-            <div style="" class="right">
-                <p class="single-paragraph title">美国进口红提美国进口红提</p>
-                <p class="single-paragraph describe">新鲜可口</p>
+                <p class="single-paragraph title">{{collection.shop_info.name}}</p>
+                <p class="single-paragraph describe">{{collection.shop_info.desc}}</p>
                 <div class="price">
                     <!-- <div>
                         <span style="color:#ff2c2c">￥39.00</span>
@@ -62,10 +45,87 @@
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
-    apiready = function() {
+    var userinfo = $api.getStorage('userinfo');
 
+    var app = new Vue({
+        el: '#app',
+        data:{
+            collections: [],
+            page:1
+        },
+        methods:{
+            deleteCollection:function(collection){
+                api.confirm({
+                    title: '提示',
+                    msg: '确定从收藏夹移除吗?',
+                    buttons: ['确定', '取消']
+                }, function(ret, err){
+                    if( ret ){
+                        if(ret.buttonIndex == 1){
+                            $api.ajax('DELETE',$api.host + 'shop_collections/' + collection.id,{},function(ret){
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                                app.collections.splice(app.collections.indexOf(collection),1);
+                            },{
+                                token:userinfo.token.token
+                            })
+                        }
+                    }else{
+                         alert( JSON.stringify( err ) );
+                    }
+                });
+            }
+        }
+    })
+    apiready = function() {
+        api.parseTapmode();
+        setRefresh();
+        addEventListener();
+
+        loadCollections()
     };
+
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:20
+            }
+        }, function(ret, err){
+            loadCollections();
+        });
+    }
+
+    setRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#ccc',
+            textColor: '#fff',
+        }, function(ret, err){
+            app.collections = [];
+            app.page = 1;
+            loadCollections()
+        });
+    }
+
+    loadCollections = function(){
+        $api.ajax('GET',$api.host + 'shop_collections',{},function(ret){
+            if(ret.data.length != 0){
+                app.page ++;
+                ret.data.forEach(function(item){
+                    app.collections.push(item);
+                })
+            }
+        },{
+            token:userinfo.token.token,
+            'page-num': app.page,
+            'page-limit':10
+        })
+    }
 </script>
 
 </html>

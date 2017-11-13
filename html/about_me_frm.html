@@ -82,7 +82,7 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     var gendar = ['保密','男','女'];
-    var userinfo = {};
+    var userinfo = $api.getStorage('userinfo');
     apiready = function() {
         $api.text($api.byId('version'), 'v ' + api.version);
         fixAvatar();
@@ -123,7 +123,7 @@
                 buttons: ['保密','男','女']
             }, function(ret, err){
                 updateAjax({
-                    sex: ret.buttonIndex - 1
+                    gender: ret.buttonIndex - 1
                 })
             });
         }else if(type == 'avatar'){
@@ -183,7 +183,9 @@
             api.sendEvent({
                 name: 'updateUser',
             });
-        },userinfo.token.token)
+        },{
+            token: userinfo.token.token
+        })
     }
 
     logout = function(){

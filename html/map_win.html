@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {}
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
+        <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
+            <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
+        </a>
+        <div class="aui-title">地图</div>
+    </header>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var aMap;
+    var lat,lng;
+    apiready = function() {
+        aMap = api.require("aMap");
+        api.parseTapmode();
+        api.setStatusBarStyle({ style: 'dark' });
+        var header = $api.byId('header');
+        $api.fixStatusBar(header);
+        var headerH = $api.offset(header).h;
+        var frameH = api.winHeight - headerH;
+
+        aMap.open({
+            rect: {
+                x: 0,
+                y: headerH,
+                w: 'auto',
+                h: 'auto'
+            },
+            showUserLocation: true,
+            zoomLevel: 18,
+            fixedOn: api.frameName,
+            fixed: true
+        }, function(ret, err) {
+            if (ret.status) {
+                initMap();
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    };
+
+    initMap = function(){
+        aMap.getLocation(function(ret, err) {
+            if (ret.status) {
+                lat = ret.lat;
+                lng = ret.lon;
+                aMap.setCenter({
+                    coords: {
+                        lon: ret.lon,
+                        lat: ret.lat
+                    },
+                    animation: true
+                });
+                searchRoute()
+            } else {
+                alert(JSON.stringify(ret));
+            }
+        });
+    }
+    searchRoute = function(){
+        aMap.searchRoute({
+            id: 1,
+            type: 'drive',
+            policy: 'drive_time_first',
+            start: {
+                lon: lng,
+                lat: lat
+            },
+            end: {
+                lon: api.pageParam.lng,
+                lat: api.pageParam.lat
+            },
+            waypoints: []
+        }, function(ret, err) {
+            if (ret.status) {
+                aMap.drawRoute({
+                   id: 1,
+                   index: 0,
+                   styles: {
+                       walkLine: {
+                           width: 3,
+                           color: '#698B22',
+                           lineDash: false,
+                           strokeImg: ''
+                       },
+                       driveLine: {
+                           width: 6,
+                           color: '#0000EE',
+                           lineDash: false,
+                           strokeImg: ''
+                       },
+                       busLine: {
+                           width: 4,
+                           color: '#00BFFF',
+                           lineDash: false,
+                           strokeImg: ''
+                       },
+                       icons: {
+                           start: '',
+                           end: '',
+                           bus: '',
+                           car: '',
+                           man: ''
+                       }
+                   }
+               });
+            }
+        });
+
+    }
+</script>
+
+</html>

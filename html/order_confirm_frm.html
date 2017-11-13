@@ -97,32 +97,6 @@
             <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
         </div>
 
-        <div v-if="type == 'business'">
-            <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
-            <div class="aui-content">
-                <ul class="aui-list aui-media-list" style="background-image:none;">
-                    <li class="aui-list-item aui-list-item-middle" tapmode @click="selectAddress('business')">
-                        <div class="aui-media-list-item-inner">
-                            <div class="aui-list-item-media" style="width: 2rem;">
-                                <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
-                            </div>
-                            <div class="aui-list-item-inner aui-list-item-arrow">
-                                <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">湖南长沙开源鑫茂大楼902</div>
-                                </div>
-                                <div class="aui-list-item-text" style="margin-top:0.5rem;">
-                                    韩梅梅
-                                    <div class="aui-list-item-text">18390911268</div>
-                                    <div class="aui-list-item-text"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
-        </div>
-
         <div class="order">
             <div class="goodslist">
                 <div class="goods">
@@ -154,7 +128,7 @@
                 <div class="right">3.00</div>
             </div>
             <div class="line">
-                <div  class="left">新品优惠:</div>
+                <div class="left">新品优惠:</div>
                 <div class="right">-3.00</div>
             </div>
             <div class="line">
@@ -187,20 +161,7 @@
     apiready = function() {
         api.parseTapmode();
         app.type = api.pageParam.type;
-        handlerEvent()
     };
-    handlerEvent = function(){
-        api.addEventListener({
-            name: 'selectAddress'
-        }, function(ret, err){
-            if( ret ){
-                 alert( JSON.stringify( ret ) );
-            }else{
-                 alert( JSON.stringify( err ) );
-            }
-        });
-
-    }
 
 </script>
 

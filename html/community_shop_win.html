@@ -10,44 +10,45 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         body {}
+            .aui-bar-tab .aui-active{color:#358cff}
+            .aui-bar-tab .aui-bar-tab-item img{width:1.3rem;margin: 0 auto;}
     </style>
 </head>
 
 <body>
     <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
-        <a class="aui-pull-left aui-btn" tapmode onclick="getLocation()">
+        <a class="aui-pull-left aui-btn" tapmode onclick="reloadLocation()">
             <span class="aui-iconfont aui-icon-location" style="color:#3c80eb;font-weight:bold;"></span>
         </a>
         <div class="aui-title">社区购物</div>
     </header>
     <footer class="aui-bar aui-bar-tab" id="footer" style="background-color: #f4f4f4;border-top: 1px solid #d0cece">
         <div class="aui-bar-tab-item " tapmode onclick="$api.goWindow('index',{},'none');">
-            <i class="aui-iconfont aui-icon-home"></i>
+            <img src="../image/footer1.png">
             <div class="aui-bar-tab-label">首页</div>
         </div>
         <div class="aui-bar-tab-item  aui-active" tapmode>
-            <i class="aui-iconfont aui-icon-star"></i>
+            <img src="../image/footer2.png">
             <div class="aui-bar-tab-label">社区购物</div>
         </div>
         <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_shop_win',{},'none');">
-            <i class="aui-iconfont aui-icon-cart"></i>
+            <img src="../image/footer3.png">
             <div class="aui-bar-tab-label">商城购物</div>
         </div>
         <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('my_wallet_win',{},'none');">
-            <i class="aui-iconfont aui-icon-cert" ></i>
+            <img src="../image/footer4.png">
             <div class="aui-bar-tab-label">我的钱包</div>
         </div>
         <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('home_win',{},'none')">
-            <i class="aui-iconfont aui-icon-my"></i>
+            <img src="../image/footer5.png">
             <div class="aui-bar-tab-label">我的</div>
         </div>
     </footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
-    var aMap;
+
     apiready = function() {
-        aMap = api.require("aMap");
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
         var header = $api.byId('header');
@@ -66,47 +67,15 @@
                 h: frameH
             }
         });
-
-        openAMap();
     };
-    openAMap = function(){
-        aMap.open({
-            rect: {
-                x: 0,
-                y: 0,
-                w: 320,
-                h: 300
-            },
-            showUserLocation: true,
-            zoomLevel: 11,
-            center: {
-                lon: 116.4021310000,
-                lat: 39.9994480000
-            },
-            fixedOn: api.frameName,
-            fixed: true
-        }, function(ret, err) {
-            if (ret.status) {
-                aMap.hide();
-            } else {
-                alert(JSON.stringify(err));
-            }
-        });
 
-    }
-    getLocation = function(){
-        aMap.getLocation(function(ret, err) {
-            if (ret.status) {
-                alert(JSON.stringify(ret));
-            } else {
-                api.toast({
-                    msg: '定位失败',
-                    duration: 2000,
-                    location: 'bottom'
-                });
-            }
+    reloadLocation = function(){
+        api.sendEvent({
+            name: 'reloadLocation',
         });
     }
+
+
 </script>
 
 </html>

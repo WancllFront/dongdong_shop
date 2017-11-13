@@ -16,7 +16,7 @@
         .aui-bar-nav .aui-btn .aui-iconfont{color: #000;}
         .aui-searchbar .aui-iconfont{color:#000;}
         .aui-active{color:#b6cbe6}
-        .aui-bar-nav .aui-pull-right{padding:0rem 1rem;}
+        /*.aui-bar-nav .aui-pull-right{padding:0rem 1rem;}*/
         .aui-btn .aui-badge{margin-left: -0.1rem;}
         #classify-list {
             width: 5rem;
@@ -32,16 +32,17 @@
         }
         .aui-list .aui-list-item {background-color: #f4f4f4;}
         .aui-list .aui-list-item:active{background-color: #fff;}
+        .aui-list .active{background-color: #fff;}
         </style>
     </style>
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav" id="header">
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
         <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
             <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
         </a>
-        <div class="aui-title" style="left:2rem; right: 2rem;">
+        <div class="aui-title" style="left:1.5rem; right: 2rem;">
             <div class="aui-searchbar" id="search">
                 <div class="aui-searchbar-input aui-border-radius">
                     <i class="aui-iconfont aui-icon-search" style="color:#000!important;"></i>
@@ -60,103 +61,37 @@
     </header>
     <section class="aui-content" id="classify-list">
         <ul class="aui-list aui-list-noborder" id="classify-ul" >
-            <li class="aui-list-item" tapmode onclick="" >
+            <li class="aui-list-item" :class="{active:cate.isSelected}" tapmode @click="changeCate(cate)" v-for="(cate,key) in cates" :key="key" >
                 <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">男装</div>
+                    <div class="aui-list-item-title">{{cate.name}}</div>
                 </div>
             </li>
-            <li class="aui-list-item" tapmode onclick="" >
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">女装</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">男鞋</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">女鞋</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">内衣配饰</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">手机数码</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">电脑办公</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">家用电器</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">食品生鲜</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">玩具乐器</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">男装</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">女装</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">男鞋</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">女鞋</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">内衣配饰</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">手机数码</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">电脑办公</div>
-                </div>
-            </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">家用电器</div>
-                </div>
-            </li>
-
         </ul>
     </section>
 
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var app = new Vue({
+        el: '#classify-list',
+        data:{
+            cates:[]
+        },
+        methods:{
+            changeCate: function(cate){
+                this.cates.forEach(function(item){
+                    item.isSelected = (item.id == cate.id? true:false)
+                })
+                api.sendEvent({
+                    name: 'business_cate_list_frm_loadSubCates',
+                    extra: {
+                        subCates: cate._child || []
+                    }
+                });
+            }
+        }
+    })
 
     apiready = function(){
         api.parseTapmode();
@@ -173,7 +108,7 @@
         api.openFrame({
             name: 'business_cate_list_frm',
             url: './business_cate_list_frm.html',
-            bounces: false,
+            bounces: true,
             rect: {
                 x: classifyListH,
                 y: headerPos.h,
@@ -181,8 +116,33 @@
                 h: 'auto'
             },
             hScrollBarEnabled:false
-        })
+        });
+        loadCates();
     };
+    loadCates = function(){
+        $api.ajax('POST',$api.host + 'goods_cates/lists',{
+            shop_id: 0
+        },function(ret){
+            ret.data.forEach(function(item,index){
+                if(index == 0){
+                    item.isSelected = true;
+                    setTimeout(function(){
+                        api.sendEvent({
+                            name: 'business_cate_list_frm_loadSubCates',
+                            extra: {
+                                subCates: item._child || []
+                            }
+                        });
+                    },500)
+                }else{
+                    item.isSelected = false;
+                }
+                app.cates.push(item);
+            })
+        },{
+            auth:$api.auth
+        })
+    }
     //搜索处理
     var searchBar = document.querySelector(".aui-searchbar");
     var searchBarInput = document.querySelector(".aui-searchbar input");

@@ -15,24 +15,28 @@
             height: 1rem;
         }
         .aui-radio:checked, .aui-radio.aui-checked, .aui-checkbox:checked, .aui-checkbox.aui-checked{background-color: #267df0;border-color: #267df0}
+        /*.aui-label-info{color:#358cff}*/
 	</style>
 </head>
 <body>
     <section class="aui-content" id="app">
-        <div class="aui-card-list" v-for="(address,key) in addresses" :key="key" @click="selectAddress(address)">
-            <div class="aui-card-list-header aui-font-size-14">
-                {{address.name}}&nbsp;&nbsp;{{address.telephone}}
-            </div>
-            <div class="aui-card-list-content-padded aui-padded-t-0 text-light">
-                {{address.address}}
+        <div class="aui-card-list" v-for="(address,key) in addresses" :key="key">
+            <div @click="selectAddress(address)">
+                <div class="aui-card-list-header aui-font-size-14">
+                    &nbsp;{{address.consignee_name}}&nbsp;&nbsp;{{address.mobile}}
+                    <div v-if="shopId != 0" class="aui-label aui-label-info">已认证</div>
+                </div>
+                <div class="aui-card-list-content-padded aui-padded-t-0 text-light">
+                    {{address.province + address.city + address.county + address.address}}
+                </div>
             </div>
             <div class="aui-card-list-footer aui-border-t">
-                <div>
-                    <span class="aui-radio aui-checked aui-margin-r-5"></span>默认地址
+                <div tapmode @click="setDefault(address)">
+                    <span class="aui-radio aui-margin-r-5" v-bind:class="{'aui-checked': (address.is_default == 1 )}"></span>默认地址
                 </div>
                 <div>
-                    <i class="aui-iconfont aui-icon-edit aui-margin-r-5 aui-font-size-14" @click.stop="editAddress()"></i>编辑
-                    <i class="aui-iconfont aui-icon-trash aui-margin-r-5 aui-margin-l-15 aui-font-size-14" @click.stop="deleteAddress()"></i>删除
+                    <div tapmode @click="editAddress(address)" style="display:inline;"><i class="aui-iconfont aui-icon-edit aui-margin-r-5 aui-font-size-14"></i>编辑</div>
+                    <div tapmode @click="deleteAddress(address)" style="display:inline;"><i class="aui-iconfont aui-icon-trash aui-margin-r-5 aui-margin-l-15 aui-font-size-14"></i>删除</div>
                 </div>
             </div>
         </div>
@@ -41,42 +45,144 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+
     var app = new Vue({
         el:'#app',
         data:{
-            addresses:[{
-                id:1,
-                province:'湖南省',
-                city:'长沙',
-                county: '星沙',
-                address:'湖南省长沙星沙',
-                name:'大魔王',
-                telephone: '18390911268'
-            }],
-            page:1
+            addresses:[],
+            page:1,
+            shopId:0
         },
         methods:{
             selectAddress: function(address){
-                if(api.pageParam.type){
+                if(this.shopId === ''){}else if(this.shopId === 0){
                     api.sendEvent({
-                        name: 'selectAddress',
+                        name: 'order_confirm_business_frm',
                         extra: {
-                            address: address,
-                            type:api.pageParam.type
+                            address:address
                         }
                     });
+                    api.closeWin();
+                }else{
+                    api.sendEvent({
+                        name: 'adddress_frm_select_community_address',
+                        extra: {
+                            address:address
+                        }
+                    });
+                    $api.closeWin();
                 }
             },
             editAddress: function(address){
-
+                $api.goWindow('address_add_win',{
+                    address:address
+                })
             },
             deleteAddress: function(address){
-
+                api.confirm({
+                    title: '提示',
+                    msg: '确定删除该地址吗',
+                    buttons: ['确定', '取消']
+                }, function(ret, err){
+                    if( ret ){
+                         if(ret.buttonIndex == 1){
+                             $api.ajax('DELETE',$api.host+'addresses/'+address.id,{},function(ret){
+                                 api.toast({msg:ret.msg});
+                                 app.addresses.splice(app.addresses.indexOf(address),1);
+                             },{
+                                 token:userinfo.token.token
+                             })
+                         }
+                    }else{
+                         alert( JSON.stringify( err ) );
+                    }
+                });
+            },
+            setDefault: function(address){
+                $api.ajax('PUT',$api.host + 'addresses/' + address.id,{
+                    'is_default':1
+                },function(ret){
+                     api.toast({msg:ret.msg});
+                     app.addresses.forEach(function(item){
+                         item.id == address.id? (item.is_default = 1):(item.is_default = 0)
+                     })
+                },{
+                    token: userinfo.token.token
+                })
             }
         }
     })
     apiready = function(){
         api.parseTapmode();
+
+        loadAddress();
+        setRefresh();
+        addEventListener();
     };
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:20
+            }
+        }, function(ret, err){
+            loadAddress();
+        });
+
+        api.addEventListener({
+            name: 'address_frm_fresh'
+        }, function(ret, err){
+            app.addresses = [];
+            app.page = 1;
+            loadAddress();
+        });
+
+    }
+
+    setRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#ccc',
+            textColor: '#fff',
+        }, function(ret, err){
+            app.page = 1;
+            app.addresses = [];
+            loadAddress();
+        });
+    }
+
+    loadAddress = function(){
+        app.shopId = api.pageParam.shopId;
+        if(api.pageParam.shopId){
+            //社区选择地址
+            $api.ajax('POST',$api.host + 'addresses/lists',{
+                shop_id: api.pageParam.shopId
+            },function(ret){
+                if(ret.data.length != 0){
+                    app.page ++;
+                    ret.data.forEach(function(item){
+                        app.addresses.push(item)
+                    })
+                }
+            },{
+                token: userinfo.token.token,
+                'page-num':app.page,
+                'page-limit':10
+            })
+        }else{
+            $api.ajax('GET',$api.host + 'addresses',{},function(ret){
+                if(ret.data.length != 0){
+                    app.page ++;
+                    ret.data.forEach(function(item){
+                        app.addresses.push(item)
+                    })
+                }
+            },{
+                token: userinfo.token.token,
+                'page-num':app.page,
+                'page-limit':10
+            })
+        }
+    }
 </script>
 </html>

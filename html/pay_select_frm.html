@@ -18,8 +18,8 @@
 <body>
     <div style="background-color:#f4f4f4;height:0.5rem"></div>
     <div class="orderinfo">
-        <div style="color:#808080;line-height:1.7rem;">订单号：123131213123131</div>
-        <div style="color:#808080;line-height:1.7rem;">订单金额：<span style="color:555555;font-size:1rem;font-weight:bold;">￥202.8</span></div>
+        <div style="color:#808080;line-height:1.7rem;" id="orderNum">订单号：123131213123131</div>
+        <div style="color:#808080;line-height:1.7rem;">订单金额：<span style="color:555555;font-size:1rem;font-weight:bold;" id="totalPrice">￥202.8</span></div>
     </div>
     <div style="background-color:#f4f4f4;height:0.5rem"></div>
     <div class="aui-content aui-margin-b-15" >
@@ -41,8 +41,12 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var order = {}
     apiready = function() {
+        order = api.pageParam.order;
 
+        $api.text($api.byId('orderNum'), '订单号：'+order.order_no);
+        $api.text($api.byId('totalPrice'), '￥'+order.total_money);
     };
 </script>
 

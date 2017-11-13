@@ -23,31 +23,32 @@
         .shadow .shadow-modal{position: fixed;background-color: #fff;border-radius: 0.5rem;top:7rem; left:2.5rem;right:2.5rem;padding: 1rem 1rem;opacity: 0;transition: .5s opacity;}
         .shadow .shadow-modal .title{}
         .shadow .shadow-modal .title .embed{display:inline-block;padding-right:2rem;padding-bottom:2rem; position: absolute;}
-        .shadow .shadow-modal .title p{text-align: center; font-size: 1.5rem;}
+        .shadow .shadow-modal .title p{text-align: center; font-size: 1.3rem;}
         .shadow .shadow-modal .title .line{background:linear-gradient(to right,#eeeeee,#7e7e7e,#eeeeee);width: 100%;height: 1px;margin-top: 0.5rem;}
-        .shadow .shadow-modal .money{margin-top: 0.9rem;color: #777}
+        .shadow .shadow-modal .money{margin-top: 0.5rem;color: #777}
         .shadow .shadow-modal .money .line{background:linear-gradient(to right,#eeeeee,#7e7e7e,#eeeeee);width: 100%;height: 1px;margin-top: 0.5rem;}
         .shadow .shadow-modal .money input{margin-left:0.35rem;color:#777;margin-top:0.3rem;letter-spacing: 0.5rem;}
         .shadow .shadow-modal .pwd{margin-top: 1rem;color: #777;}
         .shadow .shadow-modal .pwd .blank{width:100%;height:2.8rem;margin-top:.8rem;position:absolute;z-index:-10}
-        .shadow .shadow-modal .pwd input{letter-spacing:2.1rem;width:100%;margin-top:1.5rem;padding-left:1.2rem;}
-        .shadow .shadow-modal .submit{margin-top: 2.2rem;color: #fff;background-color: #257df0;height: 2.5rem;line-height: 2.5rem;text-align: center;border-radius: 0.5rem;}
+        .shadow .shadow-modal .pwd input{letter-spacing:0.5rem;width:100%;margin-top:1.5rem;padding-left:0.35rem;text-align: left;}
+        .shadow .shadow-modal .pwd .line{background:linear-gradient(to right,#eeeeee,#7e7e7e,#eeeeee);width: 100%;height: 1px;margin-top: 0.5rem;}
+        .shadow .shadow-modal .submit{margin-top: 1.5rem;color: #fff;background-color: #257df0;height: 2.5rem;line-height: 2.5rem;text-align: center;border-radius: 0.2rem;}
         .shadow .shadow-modal .submit:active{background-color: #3d8cf3}
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <p class="title">什么是孩子幸福的根本发生</p>
+    <div class="container" id="app">
+        <p class="title">{{article.title}}</p>
         <div class="describe">
-            <span style="width:40%; text-align:left;">2017-06-10 19:12:20</span>
-            <span style="width:20%; text-align:center;">小顽童</span>
-            <span style="width:40%; text-align:right;">阅读量:10000000000</span>
+            <span style="width:40%; text-align:left;">{{article.create_time}}</span>
+            <span style="width:20%; text-align:center;">{{article.author}}</span>
+            <span style="width:40%; text-align:right;">阅读量:{{article.click_num}}</span>
         </div>
-        <div class="content" id="content">
+        <div class="content" id="content" v-html="article.content">
 
         </div>
-        <div class="award">
+        <div class="award" v-if="isShowAward">
             <img src="../image/award.png" tapmode onclick="goAward();">
         </div>
     </div>
@@ -55,7 +56,6 @@
         <div class="shadow-modal" id="modal">
             <div class="title" >
                 <div tapmode onclick="cancelAward()" class="embed">
-                    <!-- <embed src="../svg/cha.svg" type="image/svg+xml"style="width:1rem;" /> -->
                     <img src="../image/cha.png" style="width:1rem;">
                 </div>
 
@@ -64,23 +64,14 @@
             </div>
             <div class="money">
                 <p>打赏金额</p>
-                <p style="margin-top:1rem;">￥</p>
-                <input type="text" id="money" onkeyup="value=value.replace(/[^\d]/g,'')">
+                <p style="margin-top:0.5rem;">￥</p>
+                <input type="tel" id="money" onkeyup="value=value.replace(/[^\d]/g,'')">
                 <div class="line"></div>
             </div>
             <div class="pwd">
                 <p>输入支付密码</p>
-                <table class="blank" border="1" bordercolor="#cccccc">
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-                <input type="password" id="password" onkeyup="passwordCallback(value)">
+                <input type="password" id="password">
+                <div class="line"></div>
             </div>
             <div class="submit" id="submit" tapmode onclick="">
                 <p>打赏</p>
@@ -89,36 +80,42 @@
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data:{
+            article:{},
+            isShowAward:false
+        }
+    })
     apiready = function() {
         api.parseTapmode();
-        loadArticle()
+        loadArticle();
 
+        if(api.pageParam.type == 'culture'){
+            app.isShowAward = true;
+        }
     };
 
-    loadArticle = function(articleId){
-        api.ajax({
-            url: 'http://192.168.0.108/index.php/v2/articles/read',
-            method: 'post',
-            data: {
-                values: {
-                    article_id: 7
-                },
-            },
-            headers:{
-                auth: 'Basic_Ivj6eZRx40+MTx2ZvnG8R65',
-                'Accept': '*/*'
-            }
-        },function(ret, err){
-            if (ret) {
-                //$api.html($api.byId('content'), ret.data.content);
-            } else {
-                //alert( JSON.stringify( err ) );
-            }
-        });
+    loadArticle = function(){
+        $api.ajax('GET',$api.host + 'articles/' + api.pageParam.articleId,{},function(ret){
+            app.article = ret.data;
+        },{
+            auth:$api.auth
+        })
 
     }
     goAward = function(){
+        var userinfo = $api.getStorage('userinfo');
+        if(!userinfo){
+            api.toast({
+                msg: '请先登录',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
         $api.css($api.byId('shadow'), 'opacity:1;z-index:9');
         $api.css($api.byId('modal'), 'opacity:1;');
         $api.val($api.byId('password'), '');
@@ -128,13 +125,6 @@
         $api.css($api.byId('shadow'), 'opacity:0;z-index:-9');
         $api.css($api.byId('modal'), 'opacity:0;');
     }
-    passwordCallback = function(value){
-        if(value.length == 6){
-            $api.val($api.byId('password'), value.substr(0,6));
-            document.getElementById('password').blur();
-        }
-    }
-
 </script>
 
 </html>

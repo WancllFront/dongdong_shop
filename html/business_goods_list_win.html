@@ -18,13 +18,13 @@
         .aui-active{color:#b6cbe6}
         .aui-bar-nav .aui-pull-right{padding:0rem 1rem;}
         .aui-btn .aui-badge{margin-left: -0.1rem;}
-    
+
         </style>
     </style>
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav" id="header">
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
         <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
             <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
         </a>
@@ -50,7 +50,7 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
-
+    var cateId = '';
     apiready = function() {
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
@@ -67,6 +67,9 @@
                 y: headerH,
                 w: 'auto',
                 h: frameH
+            },
+            pageParam:{
+                cateId: api.pageParam.cateId || ''
             }
         });
     };
@@ -109,8 +112,6 @@
             searchBarInput.blur();
         }
     }
-
-
 </script>
 
 </html>
