@@ -36,10 +36,10 @@
 <body>
     <div class="goods">
         <div class="thum">
-            <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+            <img src="" id="thum">
         </div>
         <div class="content">
-            <textarea name="name" rows="8" cols="80" placeholder="商品满足您的期待吗？说说你的体验，分享给 想买的TA们吧"></textarea>
+            <textarea name="name" rows="8" cols="80" placeholder="商品满足您的期待吗？说说你的体验，分享给 想买的TA们吧" id="message"></textarea>
         </div>
     </div>
     <div class="comment">
@@ -62,15 +62,21 @@
             </div>
         </div>
     </div>
-    <div class="button" tapmode onclick="">提交评价</div>
+    <div class="button" tapmode onclick="comment()">提交评价</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+
+    var score = 0;
+    var imgs = [];
     var imgsDom = $api.byId('imgs');
+    var goods = {};
 
     apiready = function() {
         api.parseTapmode();
-
+        goods = api.pageParam.goods;
+        $api.attr($api.byId('thum'), 'src', goods.thum);
     };
     addPhoto = function(){
         api.actionSheet({
@@ -88,6 +94,7 @@
                     saveToPhotoAlbum: false
                 }, function(ret, err){
                     if(ret){
+                        imgs.push(ret.base64Data)
                         var ihtml = '<img class="photo" src="' + ret.base64Data + '">'
                         $api.html(imgsDom, ihtml + $api.html(imgsDom));
                     }else{
@@ -98,6 +105,7 @@
         });
     }
     gostar = function(level){
+        score = level;
         for(var i = 1; i <= 5; i ++){
             if(i <= level){
                 $api.attr($api.byId('star' + i), 'src', '../image/star_light.png');
@@ -105,6 +113,36 @@
                 $api.attr($api.byId('star' + i), 'src', '../image/star_pray.png');
             }
         }
+    }
+    comment = function(){
+        if(score == 0){
+            api.toast({
+                msg: '请选择星级',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+        $api.ajax('POST',$api.host+'goods_comments',{
+            order_id: goods.order_id,
+            goods_id: goods.goods_id,
+            score: score,
+            content: $api.val($api.byId('message')),
+            imgs: JSON.stringify(imgs)//.replace(/\+/g,"%2B")
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'middle'
+            });
+            setTimeout(function(){
+                api.closeToWin({
+                    name: 'home_win'
+                });
+            }, 500)
+        },{
+            token: userinfo.token.token
+        })
     }
 </script>
 

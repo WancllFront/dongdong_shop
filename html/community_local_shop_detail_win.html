@@ -64,16 +64,17 @@
         })
     };
     call = function(){
-        api.call({
-            type: 'tel_prompt',
-            number: api.pageParam.telephone
+        api.execScript({
+            frameName: 'community_local_shop_detail_frm',
+            script: 'call();'
         });
+
     }
     map = function(){
-        $api.goWindow('map_win',{
-            lat:api.pageParam.lat,
-            lng: api.pageParam.lng
-        })
+        api.execScript({
+            frameName: 'community_local_shop_detail_frm',
+            script: 'map();'
+        });
     }
 
 </script>

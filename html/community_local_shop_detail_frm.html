@@ -24,18 +24,46 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var shop = '';
     apiready = function() {
         loadDetail();
     };
     loadDetail = function(){
         $api.ajax('GET', $api.host + 'shops/' + api.pageParam.shopId,{},function(ret){
-
+            shop = ret.data;
             $api.attr($api.byId('thum'), 'src', ret.data.thum);
             $api.text($api.byId('name'), ret.data.name);
             $api.html($api.byId('content'), ret.data.desc);
-
         },{
             auth: $api.auth
+        })
+    }
+    call = function(){
+        if(!shop){
+            api.toast({
+                msg: '加载中，请稍后',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+        api.call({
+            type: 'tel_prompt',
+            number: shop.mobile
+        });
+    }
+    map = function(){
+        if(!shop){
+            api.toast({
+                msg: '加载中，请稍后',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+        $api.goWindow('map_win',{
+            lat: shop.lat,
+            lng: shop.lng
         })
     }
 </script>

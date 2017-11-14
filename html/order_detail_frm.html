@@ -35,7 +35,7 @@
 
 <body>
     <div id="app">
-        <div style="border-bottom:0.5rem solid #f4f4f4;">
+        <div style="border-bottom:0.5rem solid #f4f4f4;" v-if="order.delivery_way != 2">
             <img v-if="order.status == 1" src="../image/order_fukuan.png" style="width:100%;">
             <img v-if="order.status == 2" src="../image/order_fahuo.png" style="width:100%;">
             <img v-if="order.status == 3" src="../image/order_wuliu.png" style="width:100%;">
@@ -43,7 +43,40 @@
             <img v-if="order.status == 5" src="../image/order_finish.png" style="width:100%;">
         </div>
 
-        <div class="aui-content aui-margin-b-10">
+
+        <div class="aui-content" v-if="order.delivery_way == 2" >
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle" >
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 2rem;">
+                            <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow" tapmode onclick="goLocalShop()">
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">{{order.address}}</div>
+                            </div>
+                            <div class="aui-list-item-text" style="margin-top:0.5rem;">
+                                <div class="aui-list-item-title aui-font-size-16">{{order.consignee_name}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 2rem;">
+                            <img src="../image/tel_blue.png" class="aui-img-round aui-list-img-sm">
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow" tapmode onclick="goLocalShop()">
+                            <div class="aui-list-item-text" tapmode onclick="">
+                                <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">商家电话:<span>{{order.mobile}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="aui-content aui-margin-b-10" v-if="order.delivery_way != 2">
             <ul class="aui-list aui-media-list" style="background-image:none;">
                 <li class="aui-list-header" style="background-color:#fff;border-bottom:1px solid #f4f4f4;font-size:0.7rem;">
                     收货人信息
@@ -72,12 +105,13 @@
             <div class="order">
                 <div class="title">
                     <span class="time">{{order.create_time}}</span>
-                    <span class="status" v-if="order.status == 1">待付款</span>
-                    <span class="status" v-if="order.status == 2">待发货</span>
-                    <span class="status" v-if="order.status == 3">待收货</span>
-                    <span class="status" v-if="order.status == 4">待评价</span>
-                    <span class="status" v-if="order.status == 5">已完成</span>
-                    <span class="status" v-if="order.status == 9">已取消</span>
+                    <span class="status" v-if="order.status == 1 && order.delivery_way == 0">待付款</span>
+                    <span class="status" v-if="order.status == 1 && order.delivery_way == 2">待自提</span>
+                    <span class="status" v-else-if="order.status == 2">待发货</span>
+                    <span class="status" v-else-if="order.status == 3">待签收</span>
+                    <span class="status" v-else-if="order.status == 4">待评价</span>
+                    <span class="status" v-else-if="order.status == 5">已完成</span>
+                    <span class="status" v-else-if="order.status == 9">已取消</span>
                 </div>
                 <div class="goodslist" v-for="(goods,key) in order.goods_info" :key="key">
                     <div class="thum">
@@ -89,32 +123,29 @@
                     <div class="other">
                         <div class="price">￥{{goods.price}}</div>
                         <div class="num">x1</div>
-                        <!-- <div class="after">申请售后</div> -->
+                        <div class="after" v-if="order.status == 4 && goods.is_comment == 0" @click.stop="commentOrder(goods)" >评价</div>
                     </div>
                 </div>
                 <div class="total-price">共{{order.goods_info.length}}件商品&nbsp;合计:<span style="color:#df0303">￥{{order.total_money}}</span>&nbsp;(含运费:￥1{{order.freight_money}})</div>
                 <div class="button" v-if="order.shop_id == 0">
                     <div v-if="order.status == 1" @click.stop="cancelOrder(order)">取消订单</div>
                     <div class="blue" v-if="order.status == 1" @click.stop="pay(order)">立即付款</div>
-                    <div v-if="order.status == 2">提醒发货</div>
+                    <div v-if="order.status == 2" @click.stop="remindSend()">提醒发货</div>
                     <div class="blue" v-if="order.status==3" tapmode onclick="$api.goWindow('logistics_win')">查看物流</div>
-                    <div class="blue" v-if="order.status==3">确认收货</div>
-                    <div class="blue" v-if="order.status==4">评价</div>
+                    <div class="blue" v-if="order.status==3" @click.stop="receiptOrder(order)">确认收货</div>
                 </div>
                 <div class="button" v-if="order.shop_id != 0">
-                    <div v-if="order.delivery_way == 1">
+                    <a v-if="order.delivery_way == 1" style="display:inline">
                         <div v-if="order.status == 1"  @click.stop="cancelOrder(order)">取消订单</div>
                         <div class="blue" v-if="order.status == 1">付款</div>
-                        <div v-if="order.status == 2">提醒发货</div>
+                        <div v-if="order.status == 2" @click.stop="remindSend()">提醒发货</div>
                         <div v-if="order.status==3">配送中</div>
-                        <div class="blue" v-if="order.status==3">确认收货</div>
-                        <div class="blue" v-if="order.status==4">评价</div>
-                    </div>
-                    <div v-if="order.delivery_way == 2">
+                        <div class="blue" v-if="order.status==3" @click.stop="receiptOrder(order)">确认收货</div>
+                    </a>
+                    <a v-if="order.delivery_way == 2" style="display:inline">
                         <div v-if="order.status == 1"  @click.stop="cancelOrder(order)">取消订单</div>
                         <div class="blue" v-if="order.status == 1"  >到店付款</div>
-                        <div class="blue" v-if="order.status==4">评价</div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </section>
@@ -192,6 +223,42 @@
                 $api.css($api.byId('modal'), 'opacity:1;');
                 $api.text($api.byId('money'), order.total_money);
                 $api.val($api.byId('password'),'')
+            },
+            remindSend: function(){
+                api.toast({
+                    msg: '已提醒卖家尽快发货',
+                    duration: 2000,
+                    location: 'middle'
+                });
+            },
+            receiptOrder: function(order){
+                api.confirm({
+                    title: '提示',
+                    msg: '确认收货?',
+                    buttons: ['确定', '取消']
+                }, function(ret, err){
+                    if( ret ){
+                         if(ret.buttonIndex == 1){
+                             $api.ajax('POST',$api.host + 'orders/receipt',{
+                                 order_id: order.id
+                             },function(ret){
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 2000,
+                                    location: 'middle'
+                                });
+                                api.sendEvent({
+                                    name: 'order_frm_refreshOrder',
+                                });
+                             })
+                         }
+                    }else{
+                         alert( JSON.stringify( err ) );
+                    }
+                });
+            },
+            commentOrder:function(goods){
+                $api.goWindow('comment_add_win',{goods: goods})
             }
         }
     })
@@ -203,6 +270,11 @@
     cancelAward = function(){
         $api.css($api.byId('shadow'), 'opacity:0;z-index:-100');
         $api.css($api.byId('modal'), 'opacity:0;');
+    }
+    goLocalShop = function(){
+        $api.goWindow('community_local_shop_detail_win',{
+            shopId: app.order.shop_id
+        })
     }
 </script>
 

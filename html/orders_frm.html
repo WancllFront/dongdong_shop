@@ -40,7 +40,8 @@
         <div class="order" tapmode @click="goOrderDetail(order);" v-for="(order,key) in orders" :key="key">
             <div class="title">
                 <span class="time">{{order.create_time}}</span>
-                <span class="status" v-if="order.status == 1">待付款</span>
+                <span class="status" v-if="order.status == 1 && order.delivery_way == 0">待付款</span>
+                <span class="status" v-if="order.status == 1 && order.delivery_way == 2">待自提</span>
                 <span class="status" v-else-if="order.status == 2">待发货</span>
                 <span class="status" v-else-if="order.status == 3">待签收</span>
                 <span class="status" v-else-if="order.status == 4">待评价</span>
@@ -57,32 +58,29 @@
                 <div class="other">
                     <div class="price">￥{{goods.price}}</div>
                     <div class="num">x{{goods.num}}</div>
-                    <!-- <div class="after">申请售后</div> -->
+                    <div class="after" v-if="order.status == 4 && goods.is_comment == 0" @click.stop="commentOrder(goods)" >评价</div>
                 </div>
             </div>
             <div class="total-price">共{{order.goods_info.length}}件商品&nbsp;合计:<span style="color:#df0303">￥{{order.total_money}}</span>&nbsp;(含运费:￥{{order.freight_money}})</div>
             <div class="button" v-if="order.shop_id == 0">
                 <div v-if="order.status == 1" @click.stop="cancelOrder(order)">取消订单</div>
                 <div class="blue" v-if="order.status == 1" @click.stop="pay(order)">立即付款</div>
-                <div v-if="order.status == 2">提醒发货</div>
+                <div v-if="order.status == 2" @click.stop="remindSend()">提醒发货</div>
                 <div class="blue" v-if="order.status==3" tapmode onclick="$api.goWindow('logistics_win')">查看物流</div>
-                <div class="blue" v-if="order.status==3">确认收货</div>
-                <div class="blue" v-if="order.status==4">评价</div>
+                <div class="blue" v-if="order.status==3" @click.stop="receiptOrder(order)">确认收货</div>
             </div>
             <div class="button" v-if="order.shop_id != 0">
-                <div v-if="order.delivery_way == 1">
+                <a v-if="order.delivery_way == 1" style="display:inline">
                     <div v-if="order.status == 1"  @click.stop="cancelOrder(order)">取消订单</div>
                     <div class="blue" v-if="order.status == 1">付款</div>
-                    <div v-if="order.status == 2">提醒发货</div>
+                    <div v-if="order.status == 2" @click.stop="remindSend()">提醒发货</div>
                     <div v-if="order.status==3">配送中</div>
-                    <div class="blue" v-if="order.status==3">确认收货</div>
-                    <div class="blue" v-if="order.status==4">评价</div>
-                </div>
-                <div v-if="order.delivery_way == 2">
+                    <div class="blue" v-if="order.status==3" @click.stop="receiptOrder(order)">确认收货</div>
+                </a>
+                <a v-if="order.delivery_way == 2" style="display:inline">
                     <div v-if="order.status == 1"  @click.stop="cancelOrder(order)">取消订单</div>
                     <div class="blue" v-if="order.status == 1"  >到店付款</div>
-                    <div class="blue" v-if="order.status==4">评价</div>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -161,6 +159,43 @@
                 $api.css($api.byId('modal'), 'opacity:1;');
                 $api.text($api.byId('money'), order.total_money);
                 $api.val($api.byId('password'),'')
+                // this.commentOrder(order);
+            },
+            remindSend: function(){
+                api.toast({
+                    msg: '已提醒卖家尽快发货',
+                    duration: 2000,
+                    location: 'middle'
+                });
+            },
+            receiptOrder: function(order){
+                api.confirm({
+                    title: '提示',
+                    msg: '确认收货?',
+                    buttons: ['确定', '取消']
+                }, function(ret, err){
+                    if( ret ){
+                         if(ret.buttonIndex == 1){
+                             $api.ajax('POST',$api.host + 'orders/receipt',{
+                                 order_id: order.id
+                             },function(ret){
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 2000,
+                                    location: 'middle'
+                                });
+                                api.sendEvent({
+                                    name: 'order_frm_refreshOrder',
+                                });
+                             })
+                         }
+                    }else{
+                         alert( JSON.stringify( err ) );
+                    }
+                });
+            },
+            commentOrder:function(goods){
+                $api.goWindow('comment_add_win',{goods: goods})
             }
         }
     })
@@ -221,6 +256,19 @@
     cancelAward = function(){
         $api.css($api.byId('shadow'), 'opacity:0;z-index:-9');
         $api.css($api.byId('modal'), 'opacity:0;');
+    }
+
+    call = function(){
+        api.call({
+            type: 'tel_prompt',
+            number: app.order.mobile
+        });
+    }
+    map = function(){
+        $api.goWindow('map_win',{
+            lat: app.shop.lat,
+            lng: app.shop.lng
+        })
     }
 </script>
 

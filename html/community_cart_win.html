@@ -24,7 +24,7 @@
             <a class="aui-btn aui-pull-left" tapmode onclick="$api.closeWin()" >
                 <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
             </a>
-            <div class="aui-title" id="title"></div>
+            <div class="aui-title" id="title">社区购物车</div>
             <a class="aui-btn aui-pull-right" v-if="shopId == 0">
                 <span class="aui-iconfont aui-icon-trash" style="color:#000;"></span>
             </a>
@@ -39,7 +39,7 @@
             <div class="price">
                 合计: <span style="color:#f63030;font-size:1rem;">￥{{totalPrice}}</span>
             </div>
-            <div class="submit" tapmode onclick="$api.goWindow('order_confirm_win',{shopId:app.ShopId,goods})">结算</div>
+            <div class="submit" tapmode onclick="checkout()">结算</div>
         </footer>
     </div>
 </body>
@@ -66,19 +66,12 @@
         }
     })
     apiready = function(){
-        app.shopId = api.pageParam.shopId;
-        if(app.shopId){
-            $api.text($api.byId('title'),'社区购物车');
-            api.pageParam.goods.forEach(function(item){
-                item.isSelected = true;
-                item.num = 1;
-            })
-        }else{
-            $api.text($api.byId('title'),'商城购物车');
-            api.pageParam.goods.forEach(function(item){
-                item.isSelected = false;
-            })
-        }
+        app.shopId = api.pageParam.shop.id;
+
+        api.pageParam.goods.forEach(function(item){
+            item.isSelected = true;
+            item.num = 1;
+        })
         computeGoods(api.pageParam.goods);
 
         api.parseTapmode();
@@ -88,8 +81,8 @@
         var body_h = $api.offset($api.dom('body')).h;
         var footerH = $api.offset($api.byId('footer')).h;
         api.openFrame({
-            name: 'cart_frm',
-            url: './cart_frm.html',
+            name: 'community_cart_frm',
+            url: './community_cart_frm.html',
             bounces: true,
             bgColor: '#fff',
             rect: {
@@ -99,7 +92,8 @@
                 h: api.winHeight-headerPos.h-footerH
             },
             pageParam:{
-                goods: api.pageParam.goods
+                goods: api.pageParam.goods,
+                shop:api.pageParam.shop
             }
         });
 
@@ -128,6 +122,11 @@
         app.isSelectedAll = goods.every(function(item){
             return item.isSelected;
         })
+    }
+    checkout = function(){
+        api.sendEvent({
+            name: 'cart_frm_checkout',
+        });
     }
 </script>
 </html>

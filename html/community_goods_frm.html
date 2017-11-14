@@ -54,7 +54,7 @@
                 api.sendEvent({
                     name: 'community_goods_frm_add_cart',
                     extra: {
-                        good: good
+                        good: good,
                     }
                 });
             }
@@ -93,7 +93,7 @@
 
     loadGoods = function(){
         var data = {
-            shop_id: api.pageParam.shopId,
+            shop_id: api.pageParam.shop.id,
             cate_id: cateId || ''
         }
         $api.ajax('POST',$api.host + 'goods/lists',data,function(ret){

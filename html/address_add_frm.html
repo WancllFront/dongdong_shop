@@ -166,13 +166,24 @@
     }
 
     openAddressView = function(){
-        addressView.open({
-            file_addr: 'widget://res/city.txt', //数据源地址
-            selected_color: '#ff0000',
-            pro_id: api.pageParam.address.province_code || 110000, //省id
-            city_id: api.pageParam.address.city_code || 110100, //市id
-            dir_id: api.pageParam.address.county_code || 110101 //区id
-        });
+        if(api.pageParam.address){
+            addressView.open({
+                file_addr: 'widget://res/city.txt', //数据源地址
+                selected_color: '#ff0000',
+                pro_id: api.pageParam.address.province_code || 110000, //省id
+                city_id: api.pageParam.address.city_code || 110100, //市id
+                dir_id: api.pageParam.address.county_code || 110101 //区id
+            });
+        }else{
+            addressView.open({
+                file_addr: 'widget://res/city.txt', //数据源地址
+                selected_color: '#ff0000',
+                pro_id: 110000, //省id
+                city_id: 110100, //市id
+                dir_id: 110101 //区id
+            });
+        }
+
     }
 
     selectContacts = function(){

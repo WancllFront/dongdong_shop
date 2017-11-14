@@ -124,7 +124,7 @@
             },
             hScrollBarEnabled:false,
             pageParam:{
-                shopId: api.pageParam.shopId
+                shop: api.pageParam.shop
             }
         });
 
@@ -150,11 +150,11 @@
             api.toast({
                 msg: '购物车空空如也',
                 duration: 2000,
-                location: 'bottom'
+                location: 'middle'
             });
         }else{
-            $api.goWindow('cart_win',{
-                shopId:api.pageParam.shopId,
+            $api.goWindow('community_cart_win',{
+                shop:api.pageParam.shop,
                 goods: app.cartGoods
             })
         }
@@ -202,7 +202,7 @@
 
     loadCates = function(){
         $api.ajax('POST',$api.host + 'query/shop_goods_cates',{
-            shop_id: api.pageParam.shopId
+            shop_id: api.pageParam.shop.id
         },function(ret){
             ret.data.forEach(function(item,index){
                 item.isSelected = false;

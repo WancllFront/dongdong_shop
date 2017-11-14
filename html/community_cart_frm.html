@@ -85,6 +85,11 @@
         api.parseTapmode();
         app.goods = api.pageParam.goods;
 
+        addEventListener();
+
+    };
+
+    addEventListener = function(){
         api.addEventListener({
             name: 'cart_win_changeSelectedAll'
         }, function(ret, err){
@@ -103,7 +108,27 @@
             }
         });
 
-    };
+        api.addEventListener({
+            name: 'cart_frm_checkout'
+        }, function(ret, err){
+            if(!app.goods.some(function(item){
+                return item.isSelected
+            })){
+                api.toast({
+                    msg: '请先选择商品',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }else{
+                $api.goWindow('order_confirm_community_win',{
+                    goodsList: app.goods.filter(function(item){
+                        return item.isSelected
+                    }),
+                    shop: api.pageParam.shop
+                })
+            }
+        });
+    }
 </script>
 
 </html>

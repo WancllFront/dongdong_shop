@@ -32,30 +32,36 @@
 
 <body>
     <div id="app">
-        <div class="community-dispat-way" v-if="type == 'community'">
+        <div class="community-dispat-way">
             <div class="way">
                 <div v-bind:class="{active:(!isSelfPick)}" tapmode @click="changePick(false)" >骑手派送</div>
                 <div v-bind:class="{active:(isSelfPick)}" tapmode @click="changePick(true)" >到店自提</div>
             </div>
             <div style="height:0.5rem;background-color:#f7f7f7;width:100%;"></div>
             <div class="aui-content" v-show="!isSelfPick" >
-                <div class="aui-tips">
-                    <i class="aui-iconfont aui-icon-info" style="width:10%;"></i>
-                    <div class="aui-tips-title aui-ellipsis-1" style="width:90%;">您第一次在此店购物，待商家确认地址</div>
-                </div>
+                <!-- <div class="aui-tips">
+                    <i class="aui-iconfont aui-icon-info" style="width:3%;"></i>
+                    <div class="aui-tips-title aui-ellipsis-1" style="width:97%;">您第一次在此店使用该地址,下单后需等待商家确认是否可以送达</div>
+                </div> -->
                 <ul class="aui-list aui-media-list" style="background-image:none;">
-                    <li class="aui-list-item aui-list-item-middle" tapmode @click="selectAddress('community')">
+                    <li class="aui-list-item aui-list-item-middle" tapmode @click="selectAddress(address)">
                         <div class="aui-media-list-item-inner">
                             <div class="aui-list-item-media" style="width: 2rem;">
                                 <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
                             </div>
-                            <div class="aui-list-item-inner aui-list-item-arrow">
+                            <div class="aui-list-item-inner aui-list-item-arrow" v-if="!address">
+                                    请选择地址
+                            </div>
+                            <div class="aui-list-item-inner aui-list-item-arrow" v-if="address">
                                 <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;"><div class="aui-label aui-label-info">未认证</div>湖南长沙开源鑫茂大楼902</div>
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">
+                                        <!-- <div class="aui-label aui-label-info">未认证</div> -->
+                                        {{address.province + address.city + address.county + address.address}}
+                                    </div>
                                 </div>
                                 <div class="aui-list-item-text" style="margin-top:0.5rem;">
-                                    韩梅梅
-                                    <div class="aui-list-item-text">18390911268</div>
+                                    {{address.consignee_name}}
+                                    <div class="aui-list-item-text">{{address.mobile}}</div>
                                     <div class="aui-list-item-text"></div>
                                 </div>
                             </div>
@@ -70,12 +76,12 @@
                             <div class="aui-list-item-media" style="width: 2rem;">
                                 <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
                             </div>
-                            <div class="aui-list-item-inner aui-list-item-arrow">
+                            <div class="aui-list-item-inner aui-list-item-arrow" tapmode onclick="map()">
                                 <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">湖南省长沙市 芙蓉区金茂小区8栋5号</div>
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">{{shop.address}}</div>
                                 </div>
                                 <div class="aui-list-item-text" style="margin-top:0.5rem;">
-                                    <div class="aui-list-item-title aui-font-size-16">良食益油（金茂店）</div>
+                                    <div class="aui-list-item-title aui-font-size-16">{{shop.name}}</div>
                                 </div>
                             </div>
                         </div>
@@ -85,9 +91,9 @@
                             <div class="aui-list-item-media" style="width: 2rem;">
                                 <img src="../image/tel_blue.png" class="aui-img-round aui-list-img-sm">
                             </div>
-                            <div class="aui-list-item-inner aui-list-item-arrow">
+                            <div class="aui-list-item-inner aui-list-item-arrow" tapmode onclick="call()">
                                 <div class="aui-list-item-text" tapmode onclick="">
-                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">商家电话:<span>18390911258</span></div>
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">商家电话:<span>{{shop.mobile}}</span></div>
                                 </div>
                             </div>
                         </div>
@@ -98,23 +104,22 @@
         </div>
 
         <div class="order">
-            <div class="goodslist">
+            <div class="goodslist" v-for="(goods,key) in goodsList" :key="key">
                 <div class="goods">
                     <div class="thum">
-                        <img src="http://api.wancll.wygoo.com/data/upload/file/20171025/59f0534ae77fc.png">
+                        <img :src="goods.thum">
                     </div>
                     <div class="other">
                         <div class="title">
-                            美国红提发生
+                            {{goods.name}}
                         </div>
                         <div class="price">
-                            <span>￥39.00</span><span style="float:right;color:#555;">x1</span>
+                            <span>￥{{goods.price}}</span><span style="float:right;color:#555;">x{{goods.num}}</span>
                         </div>
                     </div>
                 </div>
                 <div style="height:0.5rem;background-color:#fff;width:100%;"></div>
             </div>
-
             <!-- <div class="line">
                 <div class="left">购买数量:</div>
                 <div class="right" style="display:flex;padding:0.5rem 0rem;">
@@ -125,16 +130,16 @@
             </div> -->
             <div class="line">
                 <div  class="left">配送费用:</div>
-                <div class="right">3.00</div>
+                <div class="right">{{expressPrice}}</div>
             </div>
-            <div class="line">
+            <!-- <div class="line">
                 <div class="left">新品优惠:</div>
                 <div class="right">-3.00</div>
-            </div>
+            </div> -->
             <div class="line">
                 <div  class="left">买家留言:</div>
                 <div class="right">
-                    <textarea name="name" rows="18" cols="80" style="border:1px solid #f7f7f7;height:5rem;"></textarea>
+                    <textarea name="name" rows="18" cols="80" style="border:1px solid #f7f7f7;height:5rem;" id="message"></textarea>
                 </div>
             </div>
         </div>
@@ -143,26 +148,112 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+
     var app = new Vue({
         el: '#app',
         data:{
             type:'',
-            isSelfPick:false
+            isSelfPick:false,
+            address: false,
+            goodsList:[],
+            shop: {}
         },
         methods:{
             changePick : function(isSelfPick){
                 this.isSelfPick = isSelfPick;
             },
             selectAddress: function(type){
-                $api.goWindow('address_win',{type:type})
+                $api.goWindow('address_win',{shopId: api.pageParam.shop.id})
+            }
+        },
+        computed:{
+            expressPrice: function(){
+                var ePrice = 0
+                this.goodsList.forEach(function(item){
+                    ePrice += item.freight_price * 1
+                })
+                return ePrice;
             }
         }
     })
     apiready = function() {
         api.parseTapmode();
-        app.type = api.pageParam.type;
+        app.goodsList = api.pageParam.goodsList;
+        app.shop = api.pageParam.shop;
+
+        addEventListener();
     };
 
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'order_confirm_community_frm_address'
+        }, function(ret, err){
+            if( ret ){
+                 app.address = ret.value.address
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+    }
+
+    submit = function(){
+        if(!app.isSelfPick && !app.address){
+            api.toast({
+                msg: '请先选择地址',
+                duration: 2000,
+                location: 'middle'
+            });
+            return
+        }
+        var goodsInfo = [];
+        app.goodsList.forEach(function(item){
+            goodsInfo.push({
+                goods_id: item.id,
+                num: item.num || 1
+            })
+        })
+        $api.ajax('POST',$api.host + 'orders',{
+            shop_id: app.shop.id,
+            delivery_way: app.isSelfPick? 2:1,
+            address_id: app.address.id || 0,
+            goods_info: JSON.stringify(goodsInfo),
+            memo: $api.val($api.byId('message'))
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'bottom'
+            });
+            setTimeout(function(){
+                if(!app.isSelfPick){
+                    $api.goWindow('pay_select_win',{
+                        order:ret.data
+                    })
+                }else{
+                    $api.goWindow('orders_win',{
+                        status: 0
+                    })
+                }
+            },500)
+
+        },{
+            token: userinfo.token.token
+        })
+    }
+
+    call = function(){
+        api.call({
+            type: 'tel_prompt',
+            number: app.shop.mobile
+        });
+    }
+    map = function(){
+        $api.goWindow('map_win',{
+            lat: app.shop.lat,
+            lng: app.shop.lng
+        })
+    }
 </script>
 
 </html>

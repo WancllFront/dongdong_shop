@@ -132,7 +132,7 @@
 
     addEventListener = function(){
         api.addEventListener({
-            name: 'order_confirm_business_frm'
+            name: 'order_confirm_business_frm_address'
         }, function(ret, err){
             if( ret ){
                  app.address = ret.value.address
@@ -194,7 +194,6 @@
                         order:ret.data
                     })
                 },500)
-
             },{
                 token: userinfo.token.token
             })

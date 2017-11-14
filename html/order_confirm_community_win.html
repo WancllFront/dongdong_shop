@@ -37,16 +37,14 @@
             <!-- <span>全选</span> -->
         </div>
         <div class="price" style="background-color:#a0a0a0;">
-            <span style="color:#dedddd;">合计: </span><span style="color:#fff;font-size:1rem;">￥39.00</span>
+            <span style="color:#dedddd;">合计: </span><span style="color:#fff;font-size:1rem;" id="totalPrice">￥</span>
         </div>
-        <div class="submit" tapmode onclick="">提交订单</div>
+        <div class="submit" tapmode onclick="submit()">提交订单</div>
     </footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
-    var type;
     apiready = function(){
-        type = api.pageParam.type;
         api.parseTapmode();
         var header = $api.byId('aui-header');
         $api.fixStatusBar(header);
@@ -54,8 +52,8 @@
         var body_h = $api.offset($api.dom('body')).h;
         var footerH = $api.offset($api.byId('footer')).h;
         api.openFrame({
-            name: 'order_confirm_frm',
-            url: './order_confirm_frm.html',
+            name: 'order_confirm_community_frm',
+            url: './order_confirm_community_frm.html',
             bounces: true,
             bgColor: '#fff',
             rect: {
@@ -65,10 +63,25 @@
                 h: api.winHeight-headerPos.h-footerH
             },
             pageParam:{
-                type: type
+                goodsList: api.pageParam.goodsList,
+                shop: api.pageParam.shop
             }
+        });
+        var totalPrice = 0;
+        api.pageParam.goodsList.forEach(function(item){
+            totalPrice += item.price * item.num;
+            totalPrice += item.freight_price * 1;
         })
+        $api.text($api.byId('totalPrice'), '￥' + totalPrice);
     };
+
+    submit = function(){
+        api.execScript({
+            frameName: 'order_confirm_community_frm',
+            script: 'submit();'
+        });
+
+    }
 
 </script>
 </html>

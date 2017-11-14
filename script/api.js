@@ -580,9 +580,9 @@
             }
         );
     };
-    u.tokenPage = ['home_win','about_me_win','address_win','address_add','bank_win','bank_add_win','bill_detial_win','cart_win','chat_win','collection_win','comment_win','comment_add_win','idcard_auth_win','logistics_win','my_bonus_win','my_wallet_win',
+    u.tokenPage = ['home_win','about_me_win','address_win','address_add','bank_win','bank_add_win','bill_detial_win','business_cart_win','chat_win','collection_win','comment_win','comment_add_win','idcard_auth_win','logistics_win','my_bonus_win','my_wallet_win',
 'wy_wallet_detail_win','my_wallet_overview_win','my_wallet_pay_win','my_wallet_pick_win','my_wallet_vip_buy_win','my_wallet_vip_detail_win','my_wallet_vip_list_win',
-'nickname_modify_win','order_confirm_win','order_detail_win','orders_win','pay_select_win','pay_success_win','sms_auth_win'];
+'nickname_modify_win','order_confirm_community_win','order_confirm_business_win','order_detail_win','orders_win','pay_select_win','pay_success_win','sms_auth_win'];
 
     u.closeWin = function(){
         api.closeWin();
