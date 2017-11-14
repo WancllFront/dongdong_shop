@@ -24,11 +24,11 @@
                 <li class="aui-list-item aui-list-item-middle" style="background-image:none;">
                     <div class="aui-media-list-item-inner">
                         <div class="aui-list-item-media" style="width: 3rem;">
-                            <img src="../image/pro1.png" class="aui-img-round aui-list-img-sm" id="avatar">
+                            <img :src="user.avatar" class="aui-img-round aui-list-img-sm" id="avatar">
                         </div>
                         <div class="aui-list-item-inner" style="width:40%;">
                             <div class="aui-list-item-text">
-                                <div class="aui-list-item-title aui-font-size-16">大魔王</div>
+                                <div class="aui-list-item-title aui-font-size-16">{{user.nick_name || user.mobile}}</div>
                             </div>
                             <div class="aui-list-item-text aui-font-size-12">
                                 东东钱包账户
@@ -180,10 +180,12 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+
     var app = new Vue({
         el:'#app',
         data:{
-
+            user: userinfo.user
         },
         methods:{
 
@@ -191,7 +193,6 @@
     })
     apiready = function() {
         api.parseTapmode();
-
         setRefresh();
         fixAvatar();
     };

@@ -73,7 +73,7 @@
                             </div>
                             <div class="aui-list-item-inner" style="width:40%;">
                                 <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-14">{{comment.user_info.name}}</div>
+                                    <div class="aui-list-item-title aui-font-size-14">{{comment.user_info.nick_name || comment.user_info.mobile}}</div>
                                 </div>
                                 <div class="aui-list-item-text aui-font-size-12">
                                     {{comment.create_time}}
@@ -197,10 +197,13 @@
                 ret.data.forEach(function(item){
                     app.comments.push(item);
                 })
+            }else{
+                $api.text($api.byId('more'), ' ');
+
             }
         },{
             auth: $api.auth,
-            'page-num':api.page,
+            'page-num':app.page,
             'page-limit':10
         })
     }

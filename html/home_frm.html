@@ -203,44 +203,46 @@
         });
     }
 
-    authentication = function(){
-        var authState = getAuthState();
-        if(authState == 0){
-            getAuthInfo()
-        }else if(authState == 1){
-            api.toast({
-                msg: '信息审核中',
-                duration: 2000,
-                location: 'bottom'
-            });
+    authentication  = function(){
+        $api.ajax('GET',$api.host+'users/'+userinfo.user.id,{},function(ret){
+            var authState = ret.data.auth_status
+            if(authState == 0){
+                getAuthInfo()
+            }else if(authState == 1){
+                api.toast({
+                    msg: '信息审核中',
+                    duration: 2000,
+                    location: 'bottom'
+                });
 
-        }else if(authState == 2){
-            api.toast({
-                msg: '恭喜您，您的实名认证审核已经通过!',
-                duration: 2000,
-                location: 'bottom'
-            });
-        }else if(authState == 3){
-            api.alert({
-                title: '提示',
-                msg: '对不起，您没有通过审核，请重新提交审核信息',
-            }, function(ret, err){
-                if( ret ){
-                    getAuthInfo()
-                }else{
-                     alert( JSON.stringify( err ) );
-                }
-            });
-        }
-    }
-    getAuthState  = function(){
-        return 0;
+            }else if(authState == 2){
+                api.toast({
+                    msg: '恭喜您，您的实名认证审核已经通过!',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }else if(authState == 3){
+                api.alert({
+                    title: '提示',
+                    msg: '对不起，您没有通过审核，请重新提交审核信息',
+                }, function(ret, err){
+                    if( ret ){
+                        getAuthInfo()
+                    }else{
+                         alert( JSON.stringify( err ) );
+                    }
+                });
+            }
+        },{
+            token:userinfo.token.token
+        })
     }
 
     getAuthInfo = function(){
         var faceImgBase64Data = '';
         var idCard = {};
-        detectFace();
+        // detectFace();
+        ocridcard();
     }
 
     ocridcard = function(){
@@ -251,30 +253,29 @@
             }, function(ret){
                 uiLoading.id = ret.id;
             });
-             $api.apiAjax($api.ocridcardUrl,$api.faceKey,{
-                 image_file:ret.data
-             },function(ret,err){
-                 uiLoading.closeFlower ({id: uiLoading.id});
-                 if(ret){
-                     if(ret.cards.length == 0){
-                         api.alert({
-                             title: '提示',
-                             msg: '未检测到身份证，请重新拍照',
-                         }, function(ret, err){
-                             if( ret ){
-                                 ocridcard()
-                             }else{
-                                 alert( JSON.stringify( err ) );
-                             }
-                         });
-                     }else{
-                         idCard = ret.cards[0];
-                        submitAuthInfo();
-                     }
-                 }else{
-                     alert(err.msg)
-                 }
-             })
+            $api.apiAjax($api.ocridcardUrl,$api.faceKey,{
+                image_file:ret.data
+            },function(ret,err){
+                uiLoading.closeFlower ({id: uiLoading.id});
+                if(ret){
+                    if(ret.cards.length == 0){
+                        api.alert({
+                            title: '提示',
+                            msg: '未检测到身份证，请重新拍照',
+                        }, function(ret, err){
+                            if( ret ){
+                                ocridcard()
+                            }else{
+                                alert( JSON.stringify( err ) );
+                            }
+                        });
+                    }else{
+                        submitAuthInfo(ret);
+                    }
+                }else{
+                    alert(err.msg)
+                }
+            })
         })
     }
 
@@ -286,7 +287,6 @@
             }, function(ret){
                 uiLoading.id = ret.id;
             });
-            faceImgBase64Data = ret.base64Data
              $api.apiAjax($api.detectUrl,$api.faceKey,{
                  image_file:ret.data
              },function(ret,err){
@@ -313,8 +313,33 @@
         })
     }
 
-    submitAuthInfo = function(){
-        console.log(JSON.stringify(idCard));
+    submitAuthInfo = function(ret){
+        var card = ret.cards[0];
+        api.confirm({
+            title: '扫描结果',
+            msg: card.name + ' ' +card.birthday + ' '+card.gender+' '+card.race+' '+card.address+ ' '+ card.id_card_number,
+            buttons: ['确定', '取消']
+        }, function(ret, err){
+            if( ret ){
+                 if(ret.buttonIndex == 1){
+                     $api.ajax('PUT',$api.host + 'users/'+userinfo.user.id,{
+                         auth_data: JSON.stringify(card)
+                     },function(ret){
+                         api.toast({
+                             msg: '提交审核成功',
+                             duration: 2000,
+                             location: 'bottom'
+                         });
+                     },{
+                         token:userinfo.token.token
+                     })
+                 }
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+
+
     }
 
     getPicture = function(fun){
@@ -322,9 +347,9 @@
             sourceType: 'camera',
             encodingType: 'jpg',
             mediaValue: 'pic',
-            destinationType: 'base64',
+            destinationType: 'url',
             allowEdit: true,
-            quality: 100,
+            quality: 25,
             saveToPhotoAlbum: false
         }, function(ret, err){
             if(ret){

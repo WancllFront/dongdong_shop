@@ -60,16 +60,28 @@
     };
 
     loadGoodsByKeywords = function(){
-
+        $api.ajax('POST',$api.host + 'goods/search',{
+            shop_id:0,
+            keywords: api.pageParam.keywords
+        },function(ret){
+            if(ret.data.length != 0){
+                app.page ++;
+                ret.data.forEach(function(item){
+                    app.goods.push(item)
+                })
+            }
+        },{
+            auth: $api.auth,
+            'page-num': app.page,
+            'page-limit': 10
+        })
     }
 
     loadGoodsByCateId = function(){
-
         $api.ajax('POST',$api.host + 'goods/lists',{
             cate_id: api.pageParam.cateId,
             shop_id: 0
         },function(ret){
-
             if(ret.data.length != 0){
                 app.page ++;
                 ret.data.forEach(function(item){

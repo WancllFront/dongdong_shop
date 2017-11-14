@@ -69,7 +69,8 @@
                 h: frameH
             },
             pageParam:{
-                cateId: api.pageParam.cateId || ''
+                cateId: api.pageParam.cateId || '',
+                keywords: api.pageParam.keywords
             }
         });
     };
@@ -104,8 +105,7 @@
         var keywords = searchBarInput.value;
         if(keywords.length){
             searchBarInput.blur();
-            //document.getElementById("search-keywords").textContent = keywords;
-            alert(keywords)
+            
         }else{
             this.style.marginRight = "-"+this.offsetWidth+"px";
             searchBarInput.value = '';

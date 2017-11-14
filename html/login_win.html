@@ -100,20 +100,20 @@
         })
     }
     loginThird = function(type){
-        if(type == 'QQPlus'){
-            qq.installed(function(ret, err) {
-                if (ret.status) {
-                    qq.login(function(ret, err) {
-                        api.alert({
-                            title: 'id和token',
-                            msg: ret.openId + ret.accessToken
-                        });
-                    });
-                } else {
-                    api.toast({ msg: "请安装qq客户端" });
-                }
-            });
-        }
+        // if(type == 'QQPlus'){
+        //     qq.installed(function(ret, err) {
+        //         if (ret.status) {
+        //             qq.login(function(ret, err) {
+        //                 api.alert({
+        //                     title: 'id和token',
+        //                     msg: ret.openId + ret.accessToken
+        //                 });
+        //             });
+        //         } else {
+        //             api.toast({ msg: "请安装qq客户端" });
+        //         }
+        //     });
+        // }
     }
 </script>
 

@@ -175,7 +175,9 @@
         if(keywords.length){
             searchBarInput.blur();
             //document.getElementById("search-keywords").textContent = keywords;
-            alert(keywords)
+            $api.goWindow('business_goods_list_win',{
+                keywords: keywords
+            })
         }else{
             this.style.marginRight = "-"+this.offsetWidth+"px";
             searchBarInput.value = '';

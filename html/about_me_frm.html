@@ -100,7 +100,7 @@
             userinfo = $api.getStorage('userinfo');
             $api.text($api.byId('nickname'), userinfo.user.nick_name);
             $api.text($api.byId('telephone'), userinfo.user.mobile);
-            $api.text($api.byId('gendar'), gendar[userinfo.user.sex]);
+            $api.text($api.byId('gendar'), gendar[userinfo.user.gender]);
             $api.attr($api.byId('avatar'), 'src', userinfo.user.avatar || '../image/avatar.png');
         });
 
@@ -122,6 +122,9 @@
                 cancelTitle: '取消',
                 buttons: ['保密','男','女']
             }, function(ret, err){
+                if(ret.buttonIndex == 4){
+                    return;
+                }
                 updateAjax({
                     gender: ret.buttonIndex - 1
                 })
@@ -197,7 +200,6 @@
             if( ret ){
                  if(ret.buttonIndex == 1){
                      $api.clearStorage();
-                    // api.rebootApp();
                     api.closeToWin({
                         name: 'root'
                     });

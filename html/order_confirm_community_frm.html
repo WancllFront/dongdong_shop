@@ -216,7 +216,7 @@
         $api.ajax('POST',$api.host + 'orders',{
             shop_id: app.shop.id,
             delivery_way: app.isSelfPick? 2:1,
-            address_id: app.address.id || 0,
+            address_id: app.isSelfPick? 0:app.address.id,
             goods_info: JSON.stringify(goodsInfo),
             memo: $api.val($api.byId('message'))
         },function(ret){
