@@ -40,7 +40,7 @@
         <div class="order" tapmode @click="goOrderDetail(order);" v-for="(order,key) in orders" :key="key">
             <div class="title">
                 <span class="time">{{order.create_time}}</span>
-                <span class="status" v-if="order.status == 1 && order.delivery_way == 0">待付款</span>
+                <span class="status" v-if="order.status == 1 && order.delivery_way != 2">待付款</span>
                 <span class="status" v-if="order.status == 1 && order.delivery_way == 2">待自提</span>
                 <span class="status" v-else-if="order.status == 2">待发货</span>
                 <span class="status" v-else-if="order.status == 3">待签收</span>

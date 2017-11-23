@@ -71,9 +71,15 @@
 <script type="text/javascript">
     apiready = function() {
         setRefresh();
+
     };
     setRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#ccc',
+            textColor: '#fff',
+        }, function(ret, err){
 
+        });
     }
 </script>
 
