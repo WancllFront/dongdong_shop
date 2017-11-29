@@ -179,7 +179,12 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
+
     var userinfo = $api.getStorage('userinfo');
     $api.css($api.byId('avatar'), 'height:'+ $api.offset($api.byId('avatar')).w +'px');
 

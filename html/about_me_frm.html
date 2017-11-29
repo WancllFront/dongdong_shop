@@ -178,11 +178,11 @@
 
     updateAjax = function(data){
         $api.ajax('PUT',$api.host + 'users/' + userinfo.user.id,data,function(ret){
-            api.toast({
-                msg: ret.msg,
-                duration: 2000,
-                location: 'middle'
-            });
+            // api.toast({
+            //     msg: ret.msg,
+            //     duration: 2000,
+            //     location: 'middle'
+            // });
             userinfo.user = ret.data;
             $api.setStorage('userinfo', userinfo);
             api.sendEvent({

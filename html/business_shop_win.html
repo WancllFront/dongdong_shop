@@ -144,15 +144,25 @@
                     }else if(ret.content.indexOf('register://') != -1){
                         api.openWin({
                             name: 'reg_win',
-                            url: './html/reg_win.html',
+                            url: './reg_win.html',
                             pageParam: {
                                 recommendTelephone: ret.content.replace('register://','')
+                            }
+                        });
+                    }else if(ret.content.indexOf('pay://') != -1){
+                        console.log(ret.content.replace('pay://',''))
+                        api.openWin({
+                            name: 'pay_select_win',
+                            url: './pay_select_win.html',
+
+                            pageParam: {
+                                order: JSON.parse(ret.content.replace('pay://',''))
                             }
                         });
                     }else{
                         api.openWin({
                             name: 'link_win',
-                            url: './html/link_win.html',
+                            url: './link_win.html',
                             pageParam: {
                                 link:ret.content,
                                 name:ret.content

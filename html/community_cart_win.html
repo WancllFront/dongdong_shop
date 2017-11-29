@@ -31,7 +31,7 @@
         </header>
 
         <footer class="aui-bar aui-bar-tab" id="footer">
-            <div class="selectall" @click="changeSelectedAll()">
+            <div class="selectall" tapmode onclick="changeSelectedAll()">
                 <img v-show="!isSelectedAll" src="../image/circle.png">
                 <img v-show="isSelectedAll" src="../image/select_blue.png">
                 <span>全选</span>
@@ -45,7 +45,11 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var app = new Vue({
         el: '#app',
         data:{
@@ -54,17 +58,18 @@
             totalPrice: 0
         },
         methods:{
-            changeSelectedAll: function(){
-                this.isSelectedAll = !this.isSelectedAll;
-                api.sendEvent({
-                    name: 'cart_win_changeSelectedAll',
-                    extra: {
-                        isSelectedAll:this.isSelectedAll
-                    }
-                });
-            }
+
         }
     })
+    changeSelectedAll = function(){
+        app.isSelectedAll = !app.isSelectedAll;
+        api.sendEvent({
+            name: 'cart_win_changeSelectedAll',
+            extra: {
+                isSelectedAll:app.isSelectedAll
+            }
+        });
+    }
     apiready = function(){
         app.shopId = api.pageParam.shop.id;
 

@@ -47,7 +47,11 @@
 <script type="text/javascript" src="../script/flexible.js"></script>
 <script type="text/javascript" src="../script/iscroll.js"></script>
 <script type="text/javascript" src="../script/navbarscroll.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var app = new Vue({
         el:'#app',
         data:{

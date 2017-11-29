@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         body {}
+        .aui-list .aui-list-item:active{background-color: #fff;}
     </style>
 </head>
 
@@ -32,9 +33,9 @@
                             <div class="aui-list-item-text" style="margin-top:0.5rem;">
                                 <span style="color:#f63030;font-size:0.8rem;">￥{{cart.goods_info.price}}</span>
                                 <div class="aui-list-item-text">
-                                    <img src="../image/jian_blue.png" style="width:1rem;" @click="changeNum(cart,-1)">
+                                    <img src="../image/jian_blue.png" style="width:1.2rem;" @click="changeNum(cart,-1)">
                                     <span style="padding:0rem 0.5rem;color:#333;">{{cart.num}}</span>
-                                    <img src="../image/jia_blue.png" style="width:1rem;"  @click="changeNum(cart,1)">
+                                    <img src="../image/jia_blue.png" style="width:1.2rem;"  @click="changeNum(cart,1)">
                                 </div>
                             </div>
                         </div>
@@ -50,7 +51,11 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var userinfo = $api.getStorage('userinfo');
 
     var app = new Vue({
@@ -168,7 +173,7 @@
                     goodsList.push(item.goods_info);
                 }
             })
-            
+
             if(goodsList.length == 0){
                 api.toast({msg: '请先选择商品!'})
                 return;

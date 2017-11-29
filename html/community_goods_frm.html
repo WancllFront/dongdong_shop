@@ -19,6 +19,8 @@
             .goodslist .goods .right .price .jia{float:right;width:1.5rem;padding-right:0.5rem; transition: .1s opacity; opacity: 0.5}
             .goodslist .goods .right .price .jia:active{opacity: 1;}
 
+            .aui-list .aui-list-item:active{background-color: #fff;}
+
 	</style>
 </head>
 <body>
@@ -41,7 +43,11 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var cateId = '';
     var keywords = '';
     var app = new Vue({
@@ -52,6 +58,12 @@
         },
         methods:{
             addCart: function(good){
+                api.toast({
+                    msg: '已加入购物车',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
                 api.sendEvent({
                     name: 'community_goods_frm_add_cart',
                     extra: {
