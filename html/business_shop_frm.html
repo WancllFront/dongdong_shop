@@ -10,11 +10,11 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-flex.css" />
     <style>
-        body {}
+        body {background-color: #fff;}
         .bg{margin-top: 220px;}
         .aui-bar-tab{position: relative;padding-top: 0.6rem;padding-bottom: 0.6rem;}
         .aui-bar-tab .aui-bar-tab-item img{width:2.5rem;display:inline-block;}
-        .goodslist{background-color: #fff;}
+        .goodslist{background-color: #fff;margin-bottom: 0.5rem;}
         .goodslist .goods{width: 50%;text-align: center;display: inline-block;border: 1px solid #f4f4f4}
         .goodslist .goods .thum{padding: 0.2rem 0.2rem;}
         .goodslist .goods .thum img{display: inline-block;width: 90%;}
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <img src="http://api.wancll.wygoo.com/data/upload/file/20171102/59fad5cacfc64.png" style="width:100%;">
+        <img src="http://api.wancll.wygoo.com/data/upload/file/20171102/59fad5cacfc64.png" style="width:100%;margin-bottom:0.5rem;">
 
         <div class="goodslist">
             <div class="goods" v-for="(good,key) in goods" :key="key" tapmode @click="goGoodsDetail(good)">

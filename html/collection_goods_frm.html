@@ -36,9 +36,9 @@
                 <div class="price">
                     <div>
                         <span style="color:#ff2c2c">￥{{collection.goods_info.price}}</span>
-                        <span style="color:#737373">/份</span>
+                        <span style="color:#737373"></span>
                     </div>
-                    <img src="../image/delete.png" class="jia" tapmode @click="deleteCollection(collection)">
+                    <img src="../image/delete.png" class="jia" tapmode @click.stop="deleteCollection(collection)">
                 </div>
             </div>
         </div>
@@ -46,7 +46,11 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var userinfo = $api.getStorage('userinfo');
 
     var app = new Vue({
@@ -58,7 +62,7 @@
         methods:{
             goGoods: function(collection){
                 $api.goWindow('business_goods_detail_win',{
-                    shopId: collection.goods_info.id
+                    goodsId: collection.goods_info.id
                 })
             },
             deleteCollection:function(collection){

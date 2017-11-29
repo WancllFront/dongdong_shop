@@ -17,32 +17,32 @@
     <div class="advertise-list">
         <div class="advertise">
             <div class="ad" style="margin-right:4px;" tapmode onclick="$api.goWindow('community_local_shop_list_win',{},'none');">
-                <img src="../image/ad4.png" >
+                <img src="../image/shops.png" >
             </div>
             <div class="ad" tapmode onclick="$api.goWindow('my_wallet_win',{},'none');">
-                <img src="../image/ad3.png" >
+                <img src="../image/edai.png" >
             </div>
         </div>
         <div class="advertise">
             <div class="ad">
-                <img src="../image/ad1.png" tapmode onclick="$api.goWindow('link_win',{link:'http://www.ctrip.com/',name:'携程旅行'})" >
+                <img src="../image/xiecheng.png" tapmode onclick="$api.goWindow('link_win',{link:'http://www.ctrip.com/',name:'携程旅行'})" >
             </div>
             <div class="ad">
-                <img src="../image/ad2.png" tapmode onclick="$api.goWindow('link_win',{link:'https://www.qunar.com/',name:'去哪儿网'})" >
+                <img src="../image/qunaerwang.png" tapmode onclick="$api.goWindow('link_win',{link:'https://www.qunar.com/',name:'去哪儿网'})" >
             </div>
         </div>
         <div class="advertise">
             <div class="ad" style="margin-right:4px;"  tapmode onclick="$api.goWindow('link_win',{link:'http://www.xiaojukeji.com/',name:'滴滴出行'})">
-                <img src="../image/ad8.png" >
+                <img src="../image/didi.png" >
             </div>
             <div class="ad" style="margin-right:4px;" tapmode onclick="$api.goWindow('link_win',{link:'http://chs.meituan.com/',name:'美团'})">
-                <img src="../image/ad7.png" >
+                <img src="../image/meituan.png" >
             </div>
             <div class="ad" style="margin-right:4px;" tapmode onclick="$api.goWindow('link_win',{link:'http://www.toutiao.com/',name:'今日头条'})">
-                <img src="../image/ad6.png" >
+                <img src="../image/toutiao.png" >
             </div>
             <div class="ad" tapmode onclick="$api.goWindow('articles_win')">
-                <img src="../image/ad5.png" >
+                <img src="../image/wenhuajiaoyu.png" >
             </div>
         </div>
     </div>
@@ -69,7 +69,7 @@
         loadScrollPicture();
     }
 
-    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 }, data: { paths: [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png'
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 },placeholderImg: 'widget://image/timg.jpg', data: { paths: [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png'
 ], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
 
     reloadScrollPicture = function(){

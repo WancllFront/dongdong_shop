@@ -18,10 +18,10 @@
 
         .content .nav{padding: 0rem 0.6rem;display:flex;border-bottom: 1px solid #f4f4f4;}
         .content .nav div{display: inline-block;width: 50%;text-align: center;color: #333;height:2rem;line-height: 2rem;}
-        .content .nav div .active{border-bottom: 1px solid #358cff;padding-bottom:0.5rem}
-        .content .detail{padding: 0rem 0.6rem;}
+        .content .nav div .active{border-bottom: 1px solid #358cff;padding:0rem 0.5rem 0.5rem 0.5rem;}
+        .content .detail{padding: 0.5rem 0.6rem;}
 
-        .content .comment{}
+        .content .comment{padding-top:0.5rem}
         .content .comment .img {width: 100%;padding-bottom: 1rem;}
         .content .comment .img img{max-width: 23%;border: 1px solid #f4f4f4;display: inline-block;}
         input,button,textarea {
@@ -172,7 +172,7 @@
         })
     }
 
-    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 }, data: { paths: scollPicture, }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 },placeholderImg: 'widget://image/timg.jpg',  data: { paths: scollPicture, }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
 
     changeNav = function(index){
         $api.addCls($api.byId('span' + index), 'active');

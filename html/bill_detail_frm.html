@@ -35,9 +35,9 @@
                 <div class="right">{{asset.intro}}</div>
             </div>
 
-            <div class="line" v-if="asset.type=='consume' || asset.type==''">
+            <div class="line" v-if="asset.order_no">
                 <div class="left">订单号</div>
-                <div class="right">1313213121213221231</div>
+                <div class="right">{{asset.order_no}}</div>
             </div>
             <div class="line">
                 <div class="left">时间</div>
