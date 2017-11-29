@@ -104,7 +104,11 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var addressView;
     var userinfo = $api.getStorage('userinfo');
     var app = new Vue({
@@ -251,7 +255,7 @@
         if(api.pageParam.address){
             $api.ajax('PUT',$api.host + 'addresses/'+api.pageParam.address.id,{
                 'consignee_name': app.consigneeName,
-                'mobile': app.telephone.replace(/[^\d]/g,'')o,
+                'mobile': app.telephone.replace(/[^\d]/g,''),
                 'province':app.cityInfo[0].name,
                 'province_code': app.cityInfo[0].id,
                 'city': app.cityInfo[1].name,
