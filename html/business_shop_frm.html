@@ -14,10 +14,10 @@
         .bg{margin-top: 220px;}
         .aui-bar-tab{position: relative;padding-top: 0.6rem;padding-bottom: 0.6rem;}
         .aui-bar-tab .aui-bar-tab-item img{width:2.5rem;display:inline-block;}
-        .goodslist{background-color: #fff;margin-top: 0.5rem;}
-        .goodslist .goods{width: 49%;text-align: center;display: inline-block;}
+        .goodslist{background-color: #fff;}
+        .goodslist .goods{width: 50%;text-align: center;display: inline-block;border: 1px solid #f4f4f4}
         .goodslist .goods .thum{padding: 0.2rem 0.2rem;}
-        .goodslist .goods .thum img{display: inline-block;width: 95%;}
+        .goodslist .goods .thum img{display: inline-block;width: 90%;}
         .goodslist .goods .title{text-align: left;padding-left: 0.5rem;padding-top: 0.5rem;font-size: 0.75rem;}
         .goodslist .goods .price{text-align: left;padding-left: 0.5rem;color:#ff2c2c;font-size: 0.6rem}
         .goodslist .goods .price span{font-size: 1rem;}
@@ -48,7 +48,7 @@
         <img src="http://api.wancll.wygoo.com/data/upload/file/20171102/59fad5cacfc64.png" style="width:100%;">
 
         <div class="goodslist">
-            <div class="goods" v-for="(good,key) in goods" :key="key" @click="goGoodsDetail(good)">
+            <div class="goods" v-for="(good,key) in goods" :key="key" tapmode @click="goGoodsDetail(good)">
                 <div class="thum">
                     <img :src="good.thum">
                 </div>
