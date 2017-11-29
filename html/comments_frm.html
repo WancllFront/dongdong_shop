@@ -38,10 +38,10 @@
                 </div>
 
                 <div class="right">
-                    <div class="title">{{comment.order_goods_info.name}}</div>
+                    <div class="title" v-text="comment.order_goods_info.name"></div>
                     <div class="price">
-                        <span style="color:#ff2c2c">￥{{comment.order_goods_info.price}}</span>
-                        <span style="color:#737373">/份</span>
+                        <span style="color:#ff2c2c" v-text="'￥' + comment.order_goods_info.price"></span>
+                        <!-- <span style="color:#737373">/份</span> -->
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                     <img src="../image/star_light.png" >
                 </div>
 
-                <div class="text">{{comment.content}}</div>
+                <div class="text" v-text="comment.content"></div>
                 <div class="img">
                     <img v-for="(img,index) in comment.imgs" :key="index" :src="img" @click="preview(comment.imgs,index)">
                 </div>

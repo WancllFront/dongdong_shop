@@ -54,14 +54,13 @@
                             </div>
                             <div class="aui-list-item-inner aui-list-item-arrow" v-if="address">
                                 <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;" v-text="address.province + address.city + address.county + address.address">
                                         <!-- <div class="aui-label aui-label-info">未认证</div> -->
-                                        {{address.province + address.city + address.county + address.address}}
                                     </div>
                                 </div>
                                 <div class="aui-list-item-text" style="margin-top:0.5rem;">
                                     {{address.consignee_name}}
-                                    <div class="aui-list-item-text">{{address.mobile}}</div>
+                                    <div class="aui-list-item-text" v-text="address.mobile"></div>
                                     <div class="aui-list-item-text"></div>
                                 </div>
                             </div>
@@ -78,10 +77,10 @@
                             </div>
                             <div class="aui-list-item-inner aui-list-item-arrow" tapmode onclick="map()">
                                 <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">{{shop.address}}</div>
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;" v-text="shop.address"></div>
                                 </div>
                                 <div class="aui-list-item-text" style="margin-top:0.5rem;">
-                                    <div class="aui-list-item-title aui-font-size-16">{{shop.name}}</div>
+                                    <div class="aui-list-item-title aui-font-size-16" v-text="shop.name"></div>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +92,7 @@
                             </div>
                             <div class="aui-list-item-inner aui-list-item-arrow" tapmode onclick="call()">
                                 <div class="aui-list-item-text" tapmode onclick="">
-                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">商家电话:<span>{{shop.mobile}}</span></div>
+                                    <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;">商家电话:<span v-text="shop.mobile"></span></div>
                                 </div>
                             </div>
                         </div>
@@ -110,11 +109,9 @@
                         <img :src="goods.thum">
                     </div>
                     <div class="other">
-                        <div class="title">
-                            {{goods.name}}
-                        </div>
+                        <div class="title" v-text="goods.name"></div>
                         <div class="price">
-                            <span>￥{{goods.price}}</span><span style="float:right;color:#555;">x{{goods.num}}</span>
+                            <span v-text="'￥' + goods.price"></span><span style="float:right;color:#555;" v-text="'x' + goods.num"></span>
                         </div>
                     </div>
                 </div>
@@ -130,7 +127,7 @@
             </div> -->
             <div class="line">
                 <div  class="left">配送费用:</div>
-                <div class="right">{{expressPrice}}</div>
+                <div class="right" v-text="expressPrice"></div>
             </div>
             <!-- <div class="line">
                 <div class="left">新品优惠:</div>
@@ -147,7 +144,11 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var userinfo = $api.getStorage('userinfo');
 
     var app = new Vue({

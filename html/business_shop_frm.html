@@ -52,8 +52,8 @@
                 <div class="thum">
                     <img :src="good.thum">
                 </div>
-                <div class="title">{{good.name}}</div>
-                <div class="price">￥<span>{{good.price}}</span></div>
+                <div class="title" v-text="good.name"></div>
+                <div class="price">￥<span v-text="good.price"></span></div>
             </div>
         </div>
     </div>

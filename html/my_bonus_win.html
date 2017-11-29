@@ -37,17 +37,11 @@
                 <div class="aui-media-list-item-inner">
                     <div class="aui-list-item-media" style="width: 1rem;"></div>
                     <div class="aui-list-item-inner" style="width:70%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#333;">
-                            {{detail.desc}}
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            {{detail.create_time}}
-                        </div>
+                        <div class="aui-list-item-text aui-font-size-14" style="color:#333;" v-text="detail.desc"></div>
+                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;" v-text="detail.create_time"></div>
                     </div>
                     <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            {{detail.asset_type}}{{detail.change_money}}
-                        </div>
+                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;" v-text=" detail.asset_type + detail.change_money"></div>
                     </div>
                 </div>
             </li>

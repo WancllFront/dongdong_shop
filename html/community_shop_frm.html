@@ -25,12 +25,13 @@
         <div class="shop" v-for="(shop,key) in shops" :key="key" tapmode @click="goGoods(shop)">
             <img class="thum" :src="shop.thum" >
             <div class="text" >
-                <p class="title">{{shop.name}}</p>
-                <p class="describe">{{shop.address}}</p>
+                <p class="title" v-text="shop.name"></p>
+                <p class="describe" v-text="shop.address"></p>
             </div>
             <div class="distance">
                 <img src="../image/location.png">
-                <span>&lt;&nbsp;{{shop.distance}}</span>
+                <span>&lt;&nbsp;</span>
+                <span v-text="shop.distance"></span>
             </div>
         </div>
     </div>
@@ -113,7 +114,7 @@
         },{
             auth: $api.auth,
             'page-num': app.page,
-            'page-limit': 10
+            'page-limit': 5
         })
     }
 

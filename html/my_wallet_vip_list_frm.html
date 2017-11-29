@@ -28,11 +28,11 @@
         <div class="vip" v-for="(card,key) in cards" :key="key" @click="selectMemberCard(card)">
             <img v-if="key % 2 == 0" src="../image/member1.png" style="width:100%;">
             <img v-else src="../image/member2.png" style="width:100%;">
-            <p class="title">会员卡<span style="font-size:0.8rem;">{{card.member_card_no}}</span></p>
+            <p class="title">会员卡<span style="font-size:0.8rem;" v-text="card.member_card_no"></span></p>
             <div class="rest">
                 <p style="font-size:0.6rem;">卡内余额</p>
-                <p style="font-size:1.5rem;">{{card.money}}</p>
-                <p style="font-size:0.6rem;">其中可线上购物资金{{card.usable_money}}元</p>
+                <p style="font-size:1.5rem;" v-text="card.money"></p>
+                <p style="font-size:0.6rem;" v-text="'其中可线上购物资金' + card.usable_money + '元'"></p>
             </div>
             <div class="detail" tapmode @click.stop="goDetail(card,key)">明细</div>
         </div>

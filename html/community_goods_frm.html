@@ -28,11 +28,11 @@
         <div class="goods" v-for="(good,key) in goods" :key="key">
             <img :src="good.thum" class="left">
             <div style="" class="right">
-                <p class="single-paragraph title">{{good.name}}</p>
-                <p class="single-paragraph describe">{{good.intro}}</p>
+                <p class="single-paragraph title" v-text="good.name"></p>
+                <p class="single-paragraph describe" v-text="good.intro"></p>
                 <div class="price">
                     <div>
-                        <span style="color:#ff2c2c">￥{{good.price}}</span>
+                        <span style="color:#ff2c2c" v-text="'￥' + good.price"></span>
                         <span style="color:#737373">/份</span>
                     </div>
                     <img src="../image/jia.png" class="jia" tapmode @click="addCart(good)">

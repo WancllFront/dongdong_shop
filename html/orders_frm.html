@@ -39,7 +39,7 @@
     <section  class="aui-content" id="app">
         <div class="order" tapmode @click="goOrderDetail(order);" v-for="(order,key) in orders" :key="key">
             <div class="title" v-if="order.delivery_way == 0">
-                <span class="time">{{order.create_time}}</span>
+                <span class="time" v-text="order.create_time"></span>
                 <span class="status" v-if="order.status == 1">待付款</span>
                 <span class="status" v-else-if="order.status == 2">待发货</span>
                 <span class="status" v-else-if="order.status == 3">待签收</span>
@@ -48,7 +48,7 @@
                 <span class="status" v-else-if="order.status == 9">已取消</span>
             </div>
             <div class="title" v-if="order.delivery_way == 1">
-                <span class="time">{{order.create_time}}</span>
+                <span class="time" v-text="order.create_time"></span>
                 <span class="status" v-if="order.status == 1">待付款</span>
                 <span class="status" v-else-if="order.status == 2">待配送</span>
                 <span class="status" v-else-if="order.status == 3">待收货</span>
@@ -57,7 +57,7 @@
                 <span class="status" v-else-if="order.status == 9">已取消</span>
             </div>
             <div class="title" v-if="order.delivery_way == 2">
-                <span class="time">{{order.create_time}}</span>
+                <span class="time" v-text="order.create_time"></span>
                 <span class="status" v-if="order.status == 1">待付款</span>
                 <span class="status" v-else-if="order.status == 2">待自提</span>
                 <span class="status" v-else-if="order.status == 3">待签收</span>
@@ -70,15 +70,15 @@
                     <img :src="goods.thum">
                 </div>
                 <div class="text">
-                    <div class="name">{{goods.name}}</div>
+                    <div class="name" v-text="goods.name"></div>
                 </div>
                 <div class="other">
-                    <div class="price">￥{{goods.price}}</div>
-                    <div class="num">x{{goods.num}}</div>
+                    <div class="price">￥<span v-text="goods.price"></span></div>
+                    <div class="num">x <span v-text="goods.num"></span></div>
                     <div class="after" v-if="order.status == 4 && goods.is_comment == 0" @click.stop="commentOrder(goods)" >评价</div>
                 </div>
             </div>
-            <div class="total-price">共{{order.goods_info.length}}件商品&nbsp;合计:<span style="color:#df0303">￥{{order.total_money}}</span>&nbsp;(含运费:￥{{order.freight_money}})</div>
+            <div class="total-price">共<span v-text="order.goods_info.length"></span>件商品&nbsp;合计:<span style="color:#df0303">￥<span v-text="order.total_money"></span></span>&nbsp;(含运费:￥ <span v-text="order.freight_money"></span>)</div>
             <div class="button" v-if="order.shop_id == 0">
                 <div v-if="order.status == 1" @click.stop="cancelOrder(order)">取消订单</div>
                 <div v-if="order.status == 1" @click.stop="pay(order)" class="blue" >立即付款</div>

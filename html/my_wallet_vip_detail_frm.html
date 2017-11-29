@@ -30,8 +30,8 @@
                 <p class="title">会员卡<span style="font-size:0.7rem;">{{card.member_card_no}}</span></p>
                 <div class="rest">
                     <p style="font-size:0.6rem;">卡内余额</p>
-                    <p style="font-size:1.5rem;">{{card.money}}</p>
-                    <p style="font-size:0.6rem;">其中可线上购物资金{{card.usable_money}}元</p>
+                    <p style="font-size:1.5rem;" v-text="card.money"></p>
+                    <p style="font-size:0.6rem;" v-text="'其中可线上购物资金' + card.usable_money + '元'"></p>
                 </div>
             </div>
 
@@ -42,17 +42,11 @@
                     <div class="aui-media-list-item-inner">
                         <div class="aui-list-item-media" style="width: 1rem;"></div>
                         <div class="aui-list-item-inner" style="width:75%;">
-                            <div class="aui-list-item-text aui-font-size-14" style="color:#333;">
-                                {{detail.desc}}
-                            </div>
-                            <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                                {{detail.create_time}}
-                            </div>
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#333;" v-text="detail.desc"></div>
+                            <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;" v-text="detail.create_time}"></div>
                         </div>
                         <div class="aui-list-item-right">
-                            <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                                {{detail.asset_type}}{{detail.change_money}}
-                            </div>
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;" v-text="detail.asset_type + detail.change_money"></div>
                         </div>
                     </div>
                 </li>

@@ -31,11 +31,11 @@
             </div>
 
             <div style="" class="right">
-                <p class="single-paragraph title">{{collection.goods_info.name}}</p>
-                <p class="single-paragraph describe">{{collection.goods_info.intro}}</p>
+                <p class="single-paragraph title" v-text="collection.goods_info.name"></p>
+                <p class="single-paragraph describe" v-text="collection.goods_info.intro"></p>
                 <div class="price">
                     <div>
-                        <span style="color:#ff2c2c">￥{{collection.goods_info.price}}</span>
+                        <span style="color:#ff2c2c" v-text="'￥' + collection.goods_info.price"</span>
                         <span style="color:#737373"></span>
                     </div>
                     <img src="../image/delete.png" class="jia" tapmode @click.stop="deleteCollection(collection)">

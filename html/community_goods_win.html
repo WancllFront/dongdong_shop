@@ -51,7 +51,7 @@
                 </div>
             </div>
             <a class="aui-pull-right aui-btn" tapmode onclick="goCommunityCart()">
-                <div class="aui-badge">{{cartNum}}</div>
+                <div class="aui-badge" v-text="cartNum || 0"></div>
                 <img src="../image/gouwuche.png" style="width:1.3rem;">
                 <!-- <span class="aui-iconfont aui-icon-cart"></span> -->
             </a>
@@ -60,7 +60,7 @@
             <ul class="aui-list aui-list-noborder" id="classify-ul" >
                 <li class="aui-list-item" :class="{active:cate.isSelected}" tapmode @click="changeCate(cate)" v-for="(cate,key) in cates" :key="key" >
                     <div class="aui-list-item-inner">
-                        <div class="aui-list-item-title">{{cate.name}}</div>
+                        <div class="aui-list-item-title" v-text="cate.name"></div>
                     </div>
                 </li>
             </ul>

@@ -28,13 +28,13 @@
                         </div>
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-text">
-                                <div class="aui-list-item-title aui-font-size-14" >{{cart.goods_info.name}}</div>
+                                <div class="aui-list-item-title aui-font-size-14" v-text="cart.goods_info.name"></div>
                             </div>
                             <div class="aui-list-item-text" style="margin-top:0.5rem;">
-                                <span style="color:#f63030;font-size:0.8rem;">￥{{cart.goods_info.price}}</span>
+                                <span style="color:#f63030;font-size:0.8rem;" v-text="'￥' + cart.goods_info.price"></span>
                                 <div class="aui-list-item-text">
                                     <img src="../image/jian_blue.png" style="width:1.2rem;" @click="changeNum(cart,-1)">
-                                    <span style="padding:0rem 0.5rem;color:#333;">{{cart.num}}</span>
+                                    <span style="padding:0rem 0.5rem;color:#333;" v-text="cart.num"></span>
                                     <img src="../image/jia_blue.png" style="width:1.2rem;"  @click="changeNum(cart,1)">
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                 </li>
                 <li class="aui-list-header" style="background-color:#fff;text-align:right;border-bottom:0.5rem solid #f4f4f4;">
                     <span></span>
-                    <span>小计:<span  style="color:#f63030;font-size:1rem;">￥{{cart.goods_info.price * cart.num}}</span></span>
+                    <span>小计:<span  style="color:#f63030;font-size:1rem;" v-text="'￥' + cart.goods_info.price * cart.num"></span></span>
                 </li>
             </div>
         </ul>

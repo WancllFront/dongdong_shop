@@ -42,16 +42,16 @@
         <div class="goods">
             <div class="price">
                 <span style="color:#f63030;font-size:0.8rem;">￥</span>
-                <span style="color:#f63030;font-size:1.5rem;">{{goods.price}}</span>
+                <span style="color:#f63030;font-size:1.5rem;" v-text="goods.price"></span>
                 <!-- <span style="color:#a8a8a8;font-size:0.6rem;text-decoration:line-through">￥{{goods.price}}</span> -->
             </div>
             <div class="title">
-                <div class="aui-label aui-label-info">包邮</div>
-                <span>{{goods.name}}</span>
+                <!-- <div class="aui-label aui-label-info">包邮</div> -->
+                <span v-text="goods.name"></span>
             </div>
             <div class="other">
-                <span style="float:left;">邮费:￥{{goods.freight_price}}</span>
-                <span style="float:right;">销量:{{goods.sell_num}}</span>
+                <span style="float:left;" v-text="'邮费:' + goods.freight_price"></span>
+                <span style="float:right;" v-text="'销量:' + goods.sell_num"></span>
             </div>
         </div>
         <div style="height:0.3rem;background-color:#f4f4f4;width:100%;margin-top:0.2rem;"></div>
@@ -72,11 +72,9 @@
                             </div>
                             <div class="aui-list-item-inner" style="width:40%;">
                                 <div class="aui-list-item-text">
-                                    <div class="aui-list-item-title aui-font-size-14">{{comment.user_info.nick_name || comment.user_info.mobile}}</div>
+                                    <div class="aui-list-item-title aui-font-size-14" v-text="comment.user_info.nick_name || comment.user_info.mobile"></div>
                                 </div>
-                                <div class="aui-list-item-text aui-font-size-12">
-                                    {{comment.create_time}}
-                                </div>
+                                <div class="aui-list-item-text aui-font-size-12" v-text="comment.create_time"></div>
                             </div>
                             <div class="aui-list-item-right" style="width:35%" >
                                 <div class="aui-list-item-text" v-if="comment.score == 1">
@@ -109,9 +107,7 @@
                         </div>
                     </li>
                 </ul>
-                <div class="comment-content" style="padding:0rem 0.75rem;font-size:0.7rem;color#333;">
-                    {{comment.content}}
-                </div>
+                <div class="comment-content" style="padding:0rem 0.75rem;font-size:0.7rem;color#333;" v-text="comment.content"></div>
                 <div class="img" style="padding:0.5rem 0.75rem; ">
                     <img v-for="(img,index) in comment.imgs" :key="index" :src="img" @click="preview(comment.imgs,index)">
                 </div>

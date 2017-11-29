@@ -43,10 +43,10 @@
                     <div class="aui-list-item-media" style="width: 0rem;"></div>
                     <div class="aui-list-item-inner aui-list-item-arrow">
                         <div class="aui-list-item-text">
-                            <div class="aui-list-item-title aui-font-size-14">{{poi.name}}</div>
-                            <div class="aui-list-item-right">{{poi.distance}}m</div>
+                            <div class="aui-list-item-title aui-font-size-14" v-text="poi.name"></div>
+                            <div class="aui-list-item-right" v-text="poi.distance + 'm'"></div>
                         </div>
-                        <div class="aui-list-item-text">{{poi.address}}</div>
+                        <div class="aui-list-item-text" v-text="poi.address"></div>
                     </div>
                 </div>
             </li>

@@ -63,7 +63,7 @@
         <ul class="aui-list aui-list-noborder" id="classify-ul" >
             <li class="aui-list-item" :class="{active:cate.isSelected}" tapmode @click="changeCate(cate)" v-for="(cate,key) in cates" :key="key" >
                 <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">{{cate.name}}</div>
+                    <div class="aui-list-item-title" v-text="cate.name"></div>
                 </div>
             </li>
         </ul>

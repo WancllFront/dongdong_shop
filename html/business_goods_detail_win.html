@@ -59,7 +59,9 @@
                 goodsId: api.pageParam.goodsId
             }
         })
-        isCollection();
+        if(userinfo){
+            isCollection();
+        }
     };
     addCollection = function(){
         if(!userinfo){

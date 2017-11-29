@@ -22,14 +22,11 @@
     <section class="aui-content" id="app">
         <div class="aui-card-list" v-for="(address,key) in addresses" :key="key">
             <div @click="selectAddress(address)">
-                <div class="aui-card-list-header aui-font-size-14">
-                    &nbsp;{{address.consignee_name}}&nbsp;&nbsp;{{address.mobile}}
+                <div class="aui-card-list-header aui-font-size-14" v-text="' ' + address.consignee_name + ' ' + address.mobile">
                     <!-- <div v-if="shopId != 0 && address.isAuth" class="aui-label aui-label-info">已认证</div> -->
                     <!-- <div v-if="shopId != 0 && !address.isAuth" class="aui-label aui-label-danger">未认证</div> -->
                 </div>
-                <div class="aui-card-list-content-padded aui-padded-t-0 text-light">
-                    {{address.province + address.city + address.county + address.address}}
-                </div>
+                <div class="aui-card-list-content-padded aui-padded-t-0 text-light" v-text="address.province + address.city + address.county + address.address"></div>
             </div>
             <div class="aui-card-list-footer aui-border-t">
                 <div tapmode @click="setDefault(address)">
