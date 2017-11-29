@@ -35,13 +35,15 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var cateId = '';
+    var keywords = '';
     var app = new Vue({
         el: '#app',
         data:{
-            goods:[],
+            goods: [],
             page:1
         },
-        methods: {
+        methods:{
             goGoodsDetail: function(good){
                 $api.goWindow('business_goods_detail_win',{
                     goodsId: good.id
@@ -49,44 +51,61 @@
             }
         }
     })
-    apiready = function() {
+    apiready = function(){
         api.parseTapmode();
-        if(api.pageParam.cateId){
-            loadGoodsByCateId();
-        }else if(api.pageParam.keywords){
-            loadGoodsByKeywords();
-        }
+        cateId = api
 
+        addEventListener();
+        loadGoods();
     };
 
-    loadGoodsByKeywords = function(){
-        $api.ajax('POST',$api.host + 'goods/search',{
-            shop_id:0,
-            keywords: api.pageParam.keywords
-        },function(ret){
-            if(ret.data.length != 0){
-                app.page ++;
-                ret.data.forEach(function(item){
-                    app.goods.push(item)
-                })
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'business_goods_list_frm_fresh'
+        }, function(ret, err){
+            if( ret ){
+                 cateId = ret.value.cateId;
+                 keywords = ret.value.keywords;
+                 app.goods = [];
+                 app.page = 1;
+                 loadGoods();
+            }else{
+                 alert( JSON.stringify( err ) );
             }
-        },{
-            auth: $api.auth,
-            'page-num': app.page,
-            'page-limit': 10
-        })
+        });
+
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold: 20
+            }
+        }, function(ret, err){
+            loadGoods();
+        });
     }
 
-    loadGoodsByCateId = function(){
-        $api.ajax('POST',$api.host + 'goods/lists',{
-            cate_id: api.pageParam.cateId,
-            shop_id: 0
-        },function(ret){
+    loadGoods = function(){
+        var data = {};
+        var url = ''
+        if(keywords){
+            data = {
+                shop_id: api.pageParam.shop.id,
+                keywords: keywords
+            }
+            url = 'goods/search'
+        }else{
+            data = {
+                shop_id: api.pageParam.shop.id,
+                cate_id: cateId || ''
+            }
+            url = 'goods/lists'
+        }
+        $api.ajax('POST',$api.host + url,data,function(ret){
             if(ret.data.length != 0){
                 app.page ++;
                 ret.data.forEach(function(item){
                     app.goods.push(item)
-                })
+                });
             }
         },{
             auth: $api.auth,

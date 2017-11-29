@@ -25,13 +25,13 @@
     <div class="area">
         <div class="mix">
             <i class="aui-iconfont aui-icon-mobile"></i>
-            <input type="tel" class="input" id="telephone"  onkeyup="telephoneChange(value)" placeholder="输入手机号码">
+            <input type="tel" class="input" id="telephone"  onkeyup="telephoneChange(value)" pattern="[0-9]*" placeholder="输入手机号码">
             <button class="get-varicode" id="get-varicode" tapmode onclick="sendclick()">发送验证码</button>
         </div>
 
         <div class="mix" >
             <i class="aui-iconfont aui-icon-lock"></i>
-            <input type="tel" class="input" id="varicode" placeholder="输入验证码">
+            <input type="tel" class="input" id="varicode" pattern="[0-9]*" placeholder="输入验证码">
         </div>
         <div class="submit" tapmode onclick="">验证身份</div>
     </div>

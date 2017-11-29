@@ -5,12 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>title</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         body {}
-            .bg{background-color: #fff;margin: 0rem 1rem;border-radius: 0.2rem;position: absolute;top:1rem;padding-top: 1rem;}
+            .bg{background-color: #fff;width: 94%;margin-left: 3%;border-radius: 0.2rem;position: absolute;top:1rem;padding-top: 1.5rem;}
             .bg .money{padding: 1rem 0rem 0rem 0rem;margin: 0rem 1.5rem 0rem 1.5rem;}
             .bg .paybutton{margin: 1rem 0.5rem 0rem 0.5rem;;padding: 0.8rem 0rem 0.7rem 0rem;}
             .bg .paybutton button{width: 100%;line-height: 2.2rem;height:2.2rem;text-align: center;color: #fff;border-radius: 0.3rem;}
@@ -31,7 +30,10 @@
             <div class="money" style="border-bottom: 1px solid #bcbcbc;padding-top:0rem;">
                 <div>购买金额</div>
                 <div style="display:flex;margin-top:1rem;">
-                    <span>￥</span><input type="tel" style="text-align:center;letter-spacing: 0.05rem;font-size:1.5rem;">
+                    <span>￥</span>
+                    <!-- <input type="tel" style="text-align:center;letter-spacing: 0.05rem;font-size:1.5rem;"> -->
+                    <span style="text-align:center;letter-spacing: 0.05rem;font-size:1.5rem;width:100%;text-align:center;" id="money">5000</span>
+                    <span style="font-size:1.5rem;color:#333;" tapmode onclick="add()">+</span>
                 </div>
             </div>
             <p class="rest">购买金额为整数,最低起购金额为5000元</p>
@@ -41,48 +43,53 @@
                 <p style="margin-top: 0.5rem;color:#2c6abe">《会员卡说明》</p>
             </div>
         </div>
-        <div class="shadow" id="shadow">
-            <div class="shadow-modal" id="modal">
-                <div class="title" >
-                    <div tapmode onclick="cancelAward()" class="embed">
-                        <img src="../image/cha.png" style="width:0.7rem;">
-                    </div>
-                    <p>请输入支付密码</p>
-                    <div class="line"></div>
-                </div>
-                <div class="money">
-                    <p class="label">金额</p>
-                    <p class="coin">12000</p>
-                    <div class="line"></div>
-                </div>
-                <div class="pwd">
-                    <p class="label">密码</p>
-                    <input type="password" id="password">
-                    <div class="line"></div>
-                </div>
-                <div class="submit" id="submit" tapmode onclick="">
-                    <p style="color:#fff;">确认支付</p>
-                </div>
-            </div>
-        </div>
     </div>
 
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+    var moneyDom = $api.byId('money');
+
     apiready = function(){
-        
+
     }
     buy = function(){
-        $api.css($api.byId('shadow'), 'opacity:1;z-index:9');
-        $api.css($api.byId('modal'), 'opacity:1;');
-        document.getElementById('password').focus();
-    }
-    cancelAward = function(){
-        $api.css($api.byId('shadow'), 'opacity:0;z-index:-9');
-        $api.css($api.byId('modal'), 'opacity:0;');
+        api.actionSheet({
+            title: '请选择支付方式',
+            cancelTitle: '取消',
+            buttons: ['支付宝','微信']
+        }, function(ret, err){
+            if( ret ){
+                var buttonIndex = ret.buttonIndex;
+                 if(buttonIndex != 3){
+                     $api.ajax('POST',$api.host + 'member_cards',{
+                         money: $api.text(moneyDom)
+                     },function(ret){
+                         $api.printLog(ret)
+                         api.toast({
+                             msg: ret.msg,
+                             duration: 2000,
+                             location: 'bottom'
+                         });
+                         api.sendEvent({
+                             name: 'my_wallet_vip_list_frm_fresh_cards',
+                         });
+                         setTimeout(function(){$api.closeWin()},500);
+                     },{
+                         token: userinfo.token.token
+                     })
+                 }
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
     }
 
+    add = function(){
+        $api.text(moneyDom, parseInt($api.text(moneyDom)) + 500 * 1 );
+
+    }
 </script>
 
 </html>

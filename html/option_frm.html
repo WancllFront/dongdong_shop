@@ -10,6 +10,10 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         body {}
+        .submit{width:60%;margin:1rem 20%;background-color:#358cff;text-align:center;line-height:2rem;height:2rem;color:#fff;border-radius:0.15rem;}
+        .submit:active{background-color: #0e6be4;}
+        #message{background-color:#fff;width:96%;height:6rem;border:1px solid #eee;border-radius0.2rem;margin:0rem 2%;}
+        .option{background-color:#f4f4f4;line-height:2.5rem;height:2.5rem;width:100%;padding-left:0.5rem;}
     </style>
 </head>
 
@@ -17,34 +21,71 @@
     <div style="backgroud-color:#f4f4f4;line-height:2.5rem;height:2.5rem;width:100%;padding-left:0.5rem;">请选择反馈问题的类型</div>
     <div class="aui-content">
         <ul class="aui-list aui-list-in">
-            <li class="aui-list-item">
+            <li class="aui-list-item" tapmode onclick="select(1)">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">功能异常</div>
                     <div class="aui-list-item-right">
-                        <input type="radio" class="aui-radio" name="radio" checked>
+                        <img src="../image/select_blue.png" style="width:1rem;" id="1">
                     </div>
                 </div>
             </li>
-            <li class="aui-list-item">
+            <li class="aui-list-item"  tapmode onclick="select(2)">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">功能改进</div>
                     <div class="aui-list-item-right">
-                        <input type="radio" class="aui-radio"  name="radio">
+                        <img src="../image/select_pray.png" style="width:1rem;" id="2">
                     </div>
                 </div>
             </li>
         </ul>
     </div>
-    <div style="backgroud-color:#f4f4f4;line-height:2.5rem;height:2.5rem;width:100%;padding-left:0.5rem;">问题和意见描述</div>
-    <textarea name="name" rows="8" cols="80" style="background-color:#fff;width:96%;height:6rem;border:1px solid #eee;border-radius0.2rem;margin:0rem 2%;;"></textarea>
-    <div style="width:60%;margin:1rem 20%;background-color:#358cff;text-align:center;line-height:2rem;height:2rem;color:#fff;border-radius:0.15rem;">提交</div>
+    <div class="option">问题和意见描述</div>
+    <textarea id="message" rows="8" cols="80"></textarea>
+    <div class="submit" tapmode onclick="submit()">提交</div>
     <div style="backgroud-color:#f4f4f4;;height:0.8rem;width:100%;"></div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+    var way = 1;
     apiready = function() {
 
     };
+    select = function(type){
+        if(way != type){
+            $api.attr($api.byId(type), 'src', '../image/select_blue.png');
+            $api.attr($api.byId(3 - type), 'src', '../image/select_pray.png');
+            way = type;
+        }
+    }
+    submit = function(){
+        $api.byId('message').blur();
+
+        var message = $api.val($api.byId('message'));
+        if(!message){
+            api.toast({
+                msg: '请填写问题和意见描述',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+        $api.ajax('POST',$api.host + 'feedbacks',{
+            type: way,
+            content: message
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'middle'
+            });
+            setTimeout(function(){
+                $api.closeWin();
+            },500)
+        },{
+            token: userinfo.token.token
+        })
+    }
 </script>
 
 </html>

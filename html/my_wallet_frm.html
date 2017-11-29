@@ -50,19 +50,19 @@
                                 总资产(元)
                             </div>
                             <div class="aui-list-item-text" style="color:#000;font-size:1.5rem;">
-                                21,999,999
+                                {{wallet.member_card_money*1 + wallet.wallet_money*1}}
                             </div>
                         </div>
                         <div class="aui-list-item-right">
                             <div class="aui-list-item-text  aui-font-size-12" style="color:#55555">
                                 <div style="display:inline-block;width:0.2rem;height:0.2rem;background-color:#358cff"></div>
                                 <span style="margin-left:0.2rem;">会员卡</span>
-                                <span style="margin-left:0.6rem;">9999999</span>
+                                <span style="margin-left:0.6rem;">{{wallet.member_card_money}}</span>
                             </div>
                             <div class="aui-list-item-text  aui-font-size-12" style="color:#55555">
                                 <div style="display:inline-block;width:0.2rem;height:0.2rem;background-color:#ffc640"></div>
                                 <span style="margin-left:0.2rem;">东东钱包</span>
-                                <span style="margin-left:0.6rem;">9999999</span>
+                                <span style="margin-left:0.6rem;">{{wallet.wallet_money}}</span>
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                                 <img src="../image/vip.png" style="width:1rem;display:inline-block;margin-right:0.5rem;font-weight:bold;">尊享会员卡
                             </div>
                             <div class="aui-list-item-title aui-font-size-14" style="color:#2e76d7;">
-                                拥有<span>4</span>张会员卡
+                                拥有<span>{{wallet.member_card_num}}</span>张会员卡
                             </div>
                         </div>
                         <div class="aui-list-item-right">
@@ -101,10 +101,10 @@
                                 咚咚钱包
                             </div>
                             <div class="aui-list-item-text" style="color:#000;font-size:1.5rem;">
-                                1,999,999
+                                {{wallet.wallet_money}}
                             </div>
                             <div class="aui-list-item-title aui-font-size-14" style="color:#555555;">
-                                总收益<span style="padding-left:0.3rem;">507,77</span>
+                                总收益<span style="padding-left:0.3rem;">{{wallet.profit_money}}</span>
                             </div>
                         </div>
                         <div class="aui-list-item-right">
@@ -125,11 +125,11 @@
                                 奖金收入
                             </div>
                             <div class="aui-list-item-text" style="color:#000;font-size:1.5rem;">
-                                1,822
+                                {{wallet.bonus_money}}
                             </div>
                         </div>
                         <div class="aui-list-item-right">
-                            <div class="wallet-button" tapmode onclick="$api.goWindow('my_bonus_win')">明细</div>
+                            <div class="wallet-button" tapmode onclick="$api.goWindow('my_bonus_win',{bonus:app.wallet.bonus_money})">明细</div>
                         </div>
                     </div>
                 </li>
@@ -148,24 +148,24 @@
                             </div>
                         </div>
                         <div class="aui-list-item-right">
-                            <div class="wallet-button" tapmode onclick="">查看全部</div>
+                            <!-- <div class="wallet-button" tapmode onclick="">查看全部</div> -->
                         </div>
                     </div>
                 </li>
-                <li class="aui-list-item aui-list-item-middle" style="padding:0.1rem 0rem;" tapmode onclick="$api.goWindow('bill_detail_win')">
+                <li class="aui-list-item aui-list-item-middle" style="padding:0.1rem 0rem;" v-for="(asset,key) in assets" :key="key">
                     <div class="aui-media-list-item-inner">
                         <div class="aui-list-item-media" style="width: 1rem;"></div>
                         <div class="aui-list-item-inner" style="width:70%;">
                             <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                                钱包转账到银行卡
+                                {{asset.intro}}
                             </div>
                             <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                                2014-12-32 12:12:12
+                                {{asset.create_time}}
                             </div>
                         </div>
                         <div class="aui-list-item-right">
                             <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                                -1944
+                                {{asset.asset_type}}{{asset.change_money}}
                             </div>
                         </div>
                     </div>
@@ -181,11 +181,15 @@
 <script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
     var userinfo = $api.getStorage('userinfo');
+    $api.css($api.byId('avatar'), 'height:'+ $api.offset($api.byId('avatar')).w +'px');
 
     var app = new Vue({
         el:'#app',
         data:{
-            user: userinfo.user
+            user: userinfo.user,
+            wallet: {},
+            assets:[],
+            page: 1
         },
         methods:{
 
@@ -194,11 +198,63 @@
     apiready = function() {
         api.parseTapmode();
         setRefresh();
-        fixAvatar();
-    };
+        addEventListener();
 
-    fixAvatar = function(){
-        $api.css($api.byId('avatar'), 'height:'+ $api.offset($api.byId('avatar')).w +'px');
+        initWalletInfo();
+        loadAssetsLog();
+    };
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'updateUser'
+        }, function(ret, err){
+            userinfo = $api.getStorage('userinfo');
+            app.user = userinfo.user;
+        });
+
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:30
+            }
+        }, function(ret, err){
+            loadAssetsLog();
+        });
+
+        api.addEventListener({
+            name: 'my_wallet_frm_refresh_wallet'
+        }, function(ret, err){
+            initWalletInfo();
+            app.assets = [];
+            app.page = 1;
+            loadAssetsLog();
+        });
+
+    }
+
+    //总账单
+    loadAssetsLog = function(){
+        $api.ajax('POST', $api.host + 'assets/logs',{},function(ret){
+            if(ret.data.length != 0){
+                ret.data.forEach(function(item){
+                    app.assets.push(item)
+                })
+                app.page ++;
+            }
+        },{
+            token: userinfo.token.token,
+            'page-num': app.page,
+            'page-limit': 20
+        })
+    }
+
+    //钱包总览
+    initWalletInfo = function(){
+        $api.ajax('POST', $api.host + 'query/user_asset',{},function(ret){
+            app.wallet = ret.data;
+        },{
+            token: userinfo.token.token
+        });
+
     }
 
     setRefresh = function(){
@@ -206,9 +262,10 @@
             bgColor: '#f4f4f4',
             textColor: '#fff',
         }, function(ret, err){
-            setTimeout(function(){
-                api.refreshHeaderLoadDone();
-            },2000)
+            initWalletInfo();
+            app.assets = [];
+            app.page = 1;
+            loadAssetsLog();
         });
     }
 </script>

@@ -139,6 +139,14 @@
                     我的评价
                 </div>
             </li>
+            <li class="aui-list-item" tapmode onclick="$api.goWindow('my_qrcode_win')">
+                <div class="aui-list-item-label-icon">
+                    <img src="../image/qrcode.png" style="width:1rem;">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    我的二维码
+                </div>
+            </li>
             <li class="aui-list-item" tapmode onclick="$api.goWindow('chat_win')">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/kefu.png" style="width:1rem;">
@@ -173,13 +181,10 @@
             bgColor: '#4be4fb',
             textColor: '#fff',
         }, function(ret, err){
-            setTimeout(function(){
-                api.refreshHeaderLoadDone();
-                api.sendEvent({
-                    name: 'updateUser',
-                });
-
-            },1000)
+            api.refreshHeaderLoadDone();
+            api.sendEvent({
+                name: 'updateUser',
+            });
         });
     }
 

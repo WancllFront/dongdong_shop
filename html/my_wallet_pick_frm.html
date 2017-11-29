@@ -30,28 +30,100 @@
                 到账银行卡
             </div>
             <div style="display:inline-block;padding-left:1.5rem;height:3rem;">
-                <div style="color:#2e76d7;font-size:0.7rem;line-height:1.5rem;height:1.5rem;">农业银行(3128)</div>
+                <div style="color:#2e76d7;font-size:0.7rem;line-height:1.5rem;height:1.5rem;" id="bank" tapmode onclick="selectBankCard()">请选择提现银行卡</div>
                 <div style="color:#838383;font-size:0.7rem;line-height:1.5rem;height:1.5rem;">提现手续费0.1%</div>
             </div>
         </div>
         <div class="money" style="border-bottom: 1px solid #bcbcbc;padding-top:0rem;">
             <div>提现到银行卡</div>
             <div style="display:flex;margin-top:1rem;">
-                <span>￥</span><input type="tel" style="text-align:center;letter-spacing: 0.05rem;font-size:1.5rem;">
+                <span>￥</span><input type="tel" style="text-align:center;letter-spacing: 0.05rem;font-size:1.5rem;" pattern="[0-9]*" id="money">
             </div>
         </div>
-        <p class="rest">钱包余额￥2000,000,000</p>
+        <p class="rest" id="rest"></p>
 
         <div class="paybutton">
-            <button class="alipay" tapmode onclick="">提现</button>
+            <button class="alipay" tapmode onclick="pick()">提现</button>
         </div>
     </div>
 </body>
-<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+    var rest = 0;
+    var card = '';
     apiready = function() {
+        rest = api.pageParam.rest;
+        $api.text($api.byId('rest'), '钱包余额￥' + rest);
+
+        api.addEventListener({
+            name: 'my_wallet_pick_frm_select_bank_card'
+        }, function(ret, err){
+            if( ret ){
+                card = ret.value.card;
+                $api.text($api.byId('bank'), card.bank_name + '(' + card.card_number.substr(card.card_number.length - 4, 4) + ')');
+
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
 
     };
+    selectBankCard = function(){
+        $api.goWindow('bank_win',{
+            selectBankCard: true
+        })
+    }
+    pick = function(){
+        var money = $api.val($api.byId('money'));
+        if(!card){
+            api.toast({
+                msg: '请先选择银行卡',
+                duration: 2000,
+                location: 'middle'
+            })
+            return;
+        }
+        if(money){
+            api.prompt({
+                title:'请输入交易密码',
+                buttons: ['确定', '取消'],
+                type: 'password'
+            }, function(ret, err){
+                if( ret ){
+                    if(ret.buttonIndex == 1){
+                        $api.ajax('POST',$api.host + 'assets/drawcash_apply',{
+                            change_money: money,
+                            bank_card_id: card.id,
+                            pay_password: ret.text
+                        },function(ret){
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            api.sendEvent({
+                                name: 'my_wallet_frm_refresh_wallet',
+                            });
+                            setTimeout(function(){
+                                api.closeToWin({
+                                    name: 'my_wallet_win',
+                                    animation:{
+                                        type:'push'
+                                    }
+                                });
+                            })
+                        },{
+                            token: userinfo.token.token
+                        })
+                    }
+                }else{
+                     alert( JSON.stringify( err ) );
+                }
+            });
+
+        }
+    }
 </script>
 
 </html>

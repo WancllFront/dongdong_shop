@@ -12,6 +12,7 @@
         body {background-color: #f4f4f4;}
         .top{width: 100%;background: linear-gradient(to bottom,#3de6ff,#39baff,#358eff);position: relative;}
         .top .button{background-color:#fff;color:#358eff;height:2rem;line-height:2rem;text-align:center;margin:0rem 30%;border-radius: 2rem;}
+        .top .button:active:{background-color:#ddd;}
     </style>
 </head>
 
@@ -21,7 +22,7 @@
             <span class="aui-iconfont aui-icon-left" style="color:#fff;"></span>
         </a>
         <div class="aui-title">我的奖金</div>
-        <div class="" style="margin-top:3rem;font-size:3rem;">200000</div>
+        <div class="" style="margin-top:2.5rem;font-size:2.5rem;" id="bonus"></div>
         <div class="" style="font-size:0.8rem;">总收益(元)</div>
         <div class="" style="font-size:0.8rem;">
             <div class="button">分享得收益</div>
@@ -29,23 +30,23 @@
     </header>
 
 
-    <div class="aui-content">
+    <div class="aui-content" id="app">
         <ul class="aui-list aui-media-list">
 
-            <li class="aui-list-item aui-list-item-middle" style="padding:0.7rem 0rem;">
+            <li class="aui-list-item aui-list-item-middle" style="padding:0.2rem 0rem;" v-for="(detail,key) in details" :key="key">
                 <div class="aui-media-list-item-inner">
                     <div class="aui-list-item-media" style="width: 1rem;"></div>
-                    <div class="aui-list-item-inner" style="width:80%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;font-weight:bold;">
-                            用户丁磊-订单完成
+                    <div class="aui-list-item-inner" style="width:70%;">
+                        <div class="aui-list-item-text aui-font-size-14" style="color:#333;">
+                            {{detail.desc}}
                         </div>
                         <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
+                            {{detail.create_time}}
                         </div>
                     </div>
                     <div class="aui-list-item-right">
                         <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
+                            {{detail.asset_type}}{{detail.change_money}}
                         </div>
                     </div>
                 </div>
@@ -55,26 +56,65 @@
 
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+    var page = 1;
+    var app = new Vue({
+        el: '#app',
+        data:{
+            details: []
+        }
+    })
+
     apiready = function() {
+        $api.text($api.byId('bonus'), api.pageParam.bonus);
+
         fixPage();
         setRefresh();
+
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold: 30
+            }
+        }, function(ret, err){
+            loadDetails();
+        });
+
+        loadDetails();
     };
     setRefresh = function(){
-        api.setStatusBarStyle({ style: 'dark' });
         api.setRefreshHeaderInfo({
-            bgColor: '#4be4fb',
+            bgColor: '#ccc',
             textColor: '#fff',
         }, function(ret, err){
-            setTimeout(function(){
-                api.refreshHeaderLoadDone();
-            },2000)
-        });
+            page = 1;
+            app.details = [];
+            loadDetails();
+        })
     }
 
     fixPage = function(){
         $api.css($api.byId('header'),'height:'+ (api.frameHeight * 0.382) + 'px');
         $api.fixStatusBar($api.byId('header'))
+    }
+
+    loadDetails = function(){
+        $api.ajax('POST', $api.host + 'assets/logs',{
+            search_type: 'bonus'
+        },function(ret){
+            if(ret.data.length != 0){
+                page ++;
+                ret.data.forEach(function(item){
+                    app.details.push(item)
+                })
+            }
+        },{
+            token: userinfo.token.token,
+            'page-num': page,
+            'page-limit': 20
+        })
     }
 </script>
 

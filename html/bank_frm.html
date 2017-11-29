@@ -94,28 +94,37 @@
         },
         methods: {
             deleteCard: function(card){
-                api.confirm({
-                    title: '提示',
-                    msg: '移除此银行卡吗?',
-                    buttons: ['确定', '取消']
-                }, function(ret, err){
-                    if( ret ){
-                         if(ret.buttonIndex == 1){
-                             $api.ajax('DELETE',$api.host + 'bank_cards/'+card.id,{},function(ret){
-                                 api.toast({
-                                     msg: ret.msg,
-                                     duration: 2000,
-                                     location: 'bottom'
-                                 });
-                                 app.cards.splice(app.cards.indexOf(card),1);
-                             },{
-                                 token:userinfo.token.token
-                             })
-                         }
-                    }else{
-                         alert( JSON.stringify( err ) );
-                    }
-                });
+                if(api.pageParam.selectBankCard){
+                    api.sendEvent({
+                        name: 'my_wallet_pick_frm_select_bank_card',
+                        extra: {
+                            card:card
+                        }
+                    });
+                    $api.closeWin();
+                }else{
+                    api.confirm({
+                        title: '移除此银行卡吗',
+                        buttons: ['确定', '取消']
+                    }, function(ret, err){
+                        if( ret ){
+                             if(ret.buttonIndex == 1){
+                                 $api.ajax('DELETE',$api.host + 'bank_cards/'+card.id,{},function(ret){
+                                     api.toast({
+                                         msg: ret.msg,
+                                         duration: 2000,
+                                         location: 'bottom'
+                                     });
+                                     app.cards.splice(app.cards.indexOf(card),1);
+                                 },{
+                                     token:userinfo.token.token
+                                 })
+                             }
+                        }else{
+                             alert( JSON.stringify( err ) );
+                        }
+                    });
+                }
             }
         }
     })

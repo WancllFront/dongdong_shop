@@ -22,15 +22,20 @@
     </header>
 
     <div class="area">
+        <div class="mix" >
+            <i class="aui-iconfont aui-icon-mobile"></i>
+            <!-- <div class="input" style="inline-block;">1825544887</div> -->
+            <input type="tel" class="input" pattern="[0-9]*"  onkeyup="recommendTelephoneChange(value)" placeholder="输入推荐人手机号码(非必填)" id="recommend">
+        </div>
         <div class="mix">
             <i class="aui-iconfont aui-icon-mobile"></i>
-            <input type="tel" class="input" id="telephone"  onkeyup="telephoneChange(value)" placeholder="输入手机号码">
+            <input type="tel" class="input" id="telephone" pattern="[0-9]*"  onkeyup="telephoneChange(value)" placeholder="输入手机号码">
             <button class="get-varicode" id="get-varicode" tapmode onclick="getVaricode()">发送验证码</button>
         </div>
 
         <div class="mix" >
             <i class="aui-iconfont aui-icon-lock"></i>
-            <input type="tel" class="input" id="varicode"  onkeyup="varicodeChange(value)" placeholder="输入验证码">
+            <input type="tel" class="input" id="varicode"  onkeyup="varicodeChange(value)" pattern="[0-9]*" placeholder="输入验证码">
         </div>
         <div class="mix" >
             <i class="aui-iconfont aui-icon-lock"></i>
@@ -59,7 +64,14 @@
         $api.fixStatusBar(header);
         var headerH = $api.offset(header).h;
         var frameH = api.winHeight - headerH;
+
+        isRecommend();
     };
+    isRecommend = function(){
+        if(api.pageParam.recommendTelephone){
+            $api.val($api.byId('recommend'), api.pageParam.recommendTelephone);
+        }
+    }
     telephoneChange = function(value){
         value = value.replace(/[^\d]/g,'')
         value = value.substr(0,11)
@@ -68,6 +80,13 @@
             $api.byId('get-varicode').focus();
         }
         $api.val($api.byId('telephone'), value);
+    }
+
+    recommendTelephoneChange = function(value){
+        if(value.length >= 11){
+            $api.byId('recommend').blur();
+        }
+        $api.val($api.byId('recommend'), api.pageParam.recommendTelephone || value);
     }
 
     reg = function(){
@@ -124,7 +143,8 @@
             mobile:telephone,
             password: password,
             type: 1,
-            code: varicode
+            code: varicode,
+            tjuser: api.pageParam.recommendTelephone || $api.val($api.byId('recommend'))
         },function(ret){
             api.toast({
                 msg: ret.msg,

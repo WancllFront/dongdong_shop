@@ -175,7 +175,25 @@
             if( ret ){
                 if(ret.eventType == 'success'){
                     if(ret.content.indexOf('WancllApi://') != -1){
-                        console.log(ret.content)
+                        alert(ret.content)
+                    }else if(ret.content.indexOf('register://') != -1){
+                        api.openWin({
+                            name: 'reg_win',
+                            url: './html/reg_win.html',
+                            pageParam: {
+                                recommendTelephone: ret.content.replace('register://','')
+                            }
+                        });
+                    }else if(ret.content.indexOf('pay://') != -1){
+                        console.log(ret.content.replace('pay://',''))
+                        api.openWin({
+                            name: 'pay_select_win',
+                            url: './html/pay_select_win.html',
+
+                            pageParam: {
+                                order: JSON.parse(ret.content.replace('pay://',''))
+                            }
+                        });
                     }else{
                         api.openWin({
                             name: 'link_win',

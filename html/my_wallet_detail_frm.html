@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>title</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
@@ -16,143 +15,30 @@
 <body>
 
     <div class="aui-content aui-margin-b-10">
-        <ul class="aui-list aui-media-list" style="background-image:none;">
-            <li class="aui-list-item aui-list-item-middle">
+        <ul class="aui-list aui-media-list" style="background-image:none;" id="app">
+            <li class="aui-list-item aui-list-item-middle" v-for="(detail,key) in details" :key="key">
                 <div class="aui-media-list-item-inner">
                     <div class="aui-list-item-media" style="width: 15%;">
-                        <img src="../image/detail_1.png" class="aui-img-round aui-list-img-sm">
+                        <img src="../image/detail_1.png" class="aui-img-round aui-list-img-sm" v-if="detail.type == 'consume'">
+                        <img src="../image/detail_2.png" class="aui-img-round aui-list-img-sm" v-else-if="detail.type == 'profit'">
+                        <img src="../image/detail_3.png" class="aui-img-round aui-list-img-sm" v-else-if="detail.type == 'drawcash'">
+                        <img src="../image/detail_5.png" class="aui-img-round aui-list-img-sm" v-else-if="detail.type == 'bonus'">
+                        <img src="../image/detail_6.png" class="aui-img-round aui-list-img-sm" v-else-if="detail.type == 'recharge'">
+                        <img src="../image/detail_7.png" class="aui-img-round aui-list-img-sm" v-else-if="detail.type == 'returncash'">
+                        <img src="../image/detail_8.png" class="aui-img-round aui-list-img-sm" v-else-if="detail.type == 'reward'">
+                        <img src="../image/detail_4.png" class="aui-img-round aui-list-img-sm" v-else>
                     </div>
                     <div class="aui-list-item-inner" style="width:65%;">
                         <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有(远大店)
+                            {{detail.desc}}
                         </div>
                         <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
+                            {{detail.create_time}}
                         </div>
                     </div>
                     <div class="aui-list-item-right">
                         <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 15%;">
-                        <img src="../image/detail_2.png" class="aui-img-round aui-list-img-sm">
-                    </div>
-                    <div class="aui-list-item-inner" style="width:65%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有(远大店)消费发射点发射点发射点发射点法大师傅士大夫
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 15%;">
-                        <img src="../image/detail_3.png" class="aui-img-round aui-list-img-sm">
-                    </div>
-                    <div class="aui-list-item-inner" style="width:65%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有(远大店)消费发射点发射点发射点发射点法大师傅士大夫
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 15%;">
-                        <img src="../image/detail_4.png" class="aui-img-round aui-list-img-sm">
-                    </div>
-                    <div class="aui-list-item-inner" style="width:65%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有(远大店)消费发射点发射点发射点发射点法大师傅士大夫
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 15%;">
-                        <img src="../image/detail_5.png" class="aui-img-round aui-list-img-sm">
-                    </div>
-                    <div class="aui-list-item-inner" style="width:65%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有(远大店)消费发射点发射点发射点发射点法大师傅士大夫
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 15%;">
-                        <img src="../image/detail_6.png" class="aui-img-round aui-list-img-sm">
-                    </div>
-                    <div class="aui-list-item-inner" style="width:65%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有(远大店)消费发射点发射点发射点发射点法大师傅士大夫
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 15%;">
-                        <img src="../image/detail_7.png" class="aui-img-round aui-list-img-sm">
-                    </div>
-                    <div class="aui-list-item-inner" style="width:65%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有(远大店)消费发射点发射点发射点发射点法大师傅士大夫
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
+                            {{detail.asset_type}}{{detail.change_money}}
                         </div>
                     </div>
                 </div>
@@ -161,20 +47,55 @@
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+    var page = 1;
+    var app = new Vue({
+        el: '#app',
+        data:{
+            details: []
+        }
+    })
     apiready = function() {
         setRefresh();
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold: 30
+            }
+        }, function(ret, err){
+            loadDetails();
+        });
+
+        loadDetails();
     };
     setRefresh = function(){
         api.setRefreshHeaderInfo({
             bgColor: '#ccc',
             textColor: '#fff',
         }, function(ret, err){
-            setTimeout(function(){
-                api.refreshHeaderLoadDone();
-            },1000)
-        });
+            page = 1;
+            app.details = [];
+            loadDetails();
+        })
+    }
 
+    loadDetails = function(){
+        $api.ajax('POST', $api.host + 'assets/logs',{
+            search_type: 'wallet'
+        },function(ret){
+            if(ret.data.length != 0){
+                page ++;
+                ret.data.forEach(function(item){
+                    app.details.push(item)
+                })
+            }
+        },{
+            token: userinfo.token.token,
+            'page-num': page,
+            'page-limit': 20
+        })
     }
 </script>
 

@@ -27,7 +27,7 @@
         .shadow .shadow-modal .title .line{background:linear-gradient(to right,#eeeeee,#7e7e7e,#eeeeee);width: 100%;height: 1px;margin-top: 0.5rem;}
         .shadow .shadow-modal .money{margin-top: 0.5rem;color: #777}
         .shadow .shadow-modal .money .line{background:linear-gradient(to right,#eeeeee,#7e7e7e,#eeeeee);width: 100%;height: 1px;margin-top: 0.5rem;}
-        .shadow .shadow-modal .money input{margin-left:0.35rem;color:#777;margin-top:0.3rem;letter-spacing: 0.5rem;}
+        .shadow .shadow-modal .money input{margin-left:0.35rem;color:#777;margin-top:0.3rem;letter-spacing: 0.2rem;}
         .shadow .shadow-modal .pwd{margin-top: 1rem;color: #777;}
         .shadow .shadow-modal .pwd .blank{width:100%;height:2.8rem;margin-top:.8rem;position:absolute;z-index:-10}
         .shadow .shadow-modal .pwd input{letter-spacing:0.5rem;width:100%;margin-top:1.5rem;padding-left:0.35rem;text-align: left;}
@@ -65,7 +65,7 @@
             <div class="money">
                 <p>打赏金额</p>
                 <p style="margin-top:0.5rem;">￥</p>
-                <input type="tel" id="money" onkeyup="value=value.replace(/[^\d]/g,'')">
+                <input type="tel" id="money" onkeyup="value=value.replace(/[^\d]/g,'')" pattern="[0-9]*">
                 <div class="line"></div>
             </div>
             <div class="pwd">
@@ -73,7 +73,7 @@
                 <input type="password" id="password">
                 <div class="line"></div>
             </div>
-            <div class="submit" id="submit" tapmode onclick="">
+            <div class="submit" id="submit" tapmode onclick="pay()">
                 <p>打赏</p>
             </div>
         </div>
@@ -82,6 +82,8 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+
     var app = new Vue({
         el: '#app',
         data:{
@@ -107,7 +109,6 @@
 
     }
     goAward = function(){
-        var userinfo = $api.getStorage('userinfo');
         if(!userinfo){
             api.toast({
                 msg: '请先登录',
@@ -124,6 +125,45 @@
     cancelAward = function(){
         $api.css($api.byId('shadow'), 'opacity:0;z-index:-9');
         $api.css($api.byId('modal'), 'opacity:0;');
+    }
+    pay = function(){
+        var money = $api.val($api.byId('money'));
+        var password = $api.val($api.byId('password'));
+        if(!money){
+            api.toast({
+                msg: '请输入打赏金额',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('money').focus();
+            return;
+        }
+        if(!password){
+            api.toast({
+                msg: '请输入密码',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('password').focus();
+            return;
+        }
+        $api.ajax('POST',$api.host + 'pay/reward_article',{
+            article_id: api.pageParam.articleId,
+            pay_password: password,
+            reward_money: money
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'middle'
+            });
+            cancelAward();
+            api.sendEvent({
+                name: 'my_wallet_frm_refresh_wallet',
+            });
+        },{
+            token: userinfo.token.token
+        })
     }
 </script>
 

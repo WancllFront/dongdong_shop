@@ -20,7 +20,7 @@
         <ul class="aui-list aui-list-in">
             <li class="aui-list-item" tapmode onclick="modify('avatar')">
                 <div class="aui-list-item-media">
-                    <img src="../image/avatar.png" class="aui-img-round aui-list-img-sm" id="avatar">
+                    <img src="" class="aui-img-round aui-list-img-sm" id="avatar">
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
                     <div class="aui-list-item-title"></div>
@@ -84,7 +84,7 @@
     var gendar = ['保密','男','女'];
     var userinfo = $api.getStorage('userinfo');
     apiready = function() {
-        $api.text($api.byId('version'), 'v ' + api.version);
+        $api.text($api.byId('version'), 'v ' + api.appVersion);
         fixAvatar();
         addEventListener();
     };
@@ -159,7 +159,9 @@
             });
         }else if(type == 'nickname'){
             api.prompt({
-                buttons: ['确定', '取消']
+                buttons: ['确定', '取消'],
+                title: '请输入新昵称',
+                text: userinfo.user.nick_name || ''
             }, function(ret, err){
                 if( ret ){
                      if(ret.buttonIndex == 1 && ret.text){
@@ -201,7 +203,10 @@
                  if(ret.buttonIndex == 1){
                      $api.clearStorage();
                     api.closeToWin({
-                        name: 'root'
+                        name: 'root',
+                        animation:{
+                            type:'push'
+                        }
                     });
                  }
             }else{

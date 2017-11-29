@@ -192,7 +192,13 @@
         if(keywords.length){
             searchBarInput.blur();
             //document.getElementById("search-keywords").textContent = keywords;
-            alert(keywords)
+            //alert(keywords)
+            api.sendEvent({
+                name: 'community_goods_frm_fresh',
+                extra: {
+                    keywords: keywords
+                }
+            });
         }else{
             this.style.marginRight = "-"+this.offsetWidth+"px";
             searchBarInput.value = '';

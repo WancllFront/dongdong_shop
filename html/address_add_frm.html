@@ -251,7 +251,7 @@
         if(api.pageParam.address){
             $api.ajax('PUT',$api.host + 'addresses/'+api.pageParam.address.id,{
                 'consignee_name': app.consigneeName,
-                'mobile': app.telephone,
+                'mobile': app.telephone.replace(/[^\d]/g,'')o,
                 'province':app.cityInfo[0].name,
                 'province_code': app.cityInfo[0].id,
                 'city': app.cityInfo[1].name,
@@ -282,7 +282,7 @@
         }else{
             $api.ajax('POST',$api.host + 'addresses',{
                 'consignee_name': app.consigneeName,
-                'mobile': app.telephone,
+                'mobile': app.telephone.replace(/[^\d]/g,''),
                 'province':app.cityInfo[0].name,
                 'province_code': app.cityInfo[0].id,
                 'city': app.cityInfo[1].name,

@@ -204,7 +204,7 @@
                 duration: 2000,
                 location: 'middle'
             });
-            return
+            return;
         }
         var goodsInfo = [];
         app.goodsList.forEach(function(item){
@@ -226,15 +226,9 @@
                 location: 'bottom'
             });
             setTimeout(function(){
-                if(!app.isSelfPick){
-                    $api.goWindow('pay_select_win',{
-                        order:ret.data
-                    })
-                }else{
-                    $api.goWindow('orders_win',{
-                        status: 0
-                    })
-                }
+                $api.goWindow('pay_select_win',{
+                    order:ret.data
+                })
             },500)
 
         },{

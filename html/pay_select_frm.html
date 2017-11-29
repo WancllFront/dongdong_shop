@@ -12,42 +12,154 @@
         .orderinfo{background-color: #fff;padding: 1rem 1rem;}
         .button{text-align: center;height:2.2rem;line-height: 2.2rem;border-radius: 0.2rem;background-color: #267df0;color:#fff;margin: 1rem 3%;width: 94%;}
         .button:active{background-color: #1069de}
+
+        .aui-list .aui-list-item:active{background-color: #fff;}
     </style>
 </head>
 
 <body>
     <div style="background-color:#f4f4f4;height:0.5rem"></div>
     <div class="orderinfo">
-        <div style="color:#808080;line-height:1.7rem;" id="orderNum">订单号：123131213123131</div>
-        <div style="color:#808080;line-height:1.7rem;">订单金额：<span style="color:555555;font-size:1rem;font-weight:bold;" id="totalPrice">￥202.8</span></div>
+        <div style="color:#808080;line-height:1.7rem;" id="orderNum">订单号：</div>
+        <div style="color:#808080;line-height:1.7rem;">订单金额：<span style="color:555555;font-size:1rem;font-weight:bold;" id="totalPrice"></span></div>
     </div>
     <div style="background-color:#f4f4f4;height:0.5rem"></div>
     <div class="aui-content aui-margin-b-15" >
-        <ul class="aui-list aui-list-in" >
-            <li class="aui-list-item"  style="height:3rem;">
-                <div class="aui-list-item-label-icon">
+        <ul class="aui-list aui-list-in" style="background-image:none;">
+            <li class="aui-list-item"  style="height:3rem;"  tapmode onclick="select(1)">
+                <div class="aui-list-item-label-icon" >
                     <img src="../image/qianbao.png" style="width:1.5rem;">
                 </div>
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">钱包支付</div>
                     <div class="aui-list-item-right">
-                        <img src="../image/select_blue.png" style="width:1rem;">
+                        <img src="../image/select_blue.png" style="width:1rem;" id="1">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item"  style="height:3rem;"  tapmode onclick="select(2)">
+                <div class="aui-list-item-label-icon" >
+                    <img src="../image/detail_7.png" style="width:1.5rem;">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">会员卡支付<span style="color:#999;font-size:0.6rem;" id="memberCardNumber"></span></div>
+                    <div class="aui-list-item-right">
+                        <img src="../image/select_pray.png" style="width:1rem;" id="2">
                     </div>
                 </div>
             </li>
         </ul>
     </div>
-    <div tapmode onclick="" class="button">确认支付</div>
+    <div tapmode onclick="pay();" class="button">确认支付</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+
     var order = {}
+    var way = 1;
+    var memberCardNumber = '';
     apiready = function() {
         order = api.pageParam.order;
 
         $api.text($api.byId('orderNum'), '订单号：'+order.order_no);
         $api.text($api.byId('totalPrice'), '￥'+order.total_money);
+
+        addEventListener();
     };
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'pay_select_frm_select_member_card'
+        }, function(ret, err){
+            if( ret ){
+                 $api.text($api.byId('memberCardNumber'), '(' + ret.value.card.member_card_no + ')');
+                 memberCardNumber = ret.value.card.member_card_no;
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+
+    }
+    select = function(type){
+        if(way != type){
+            $api.attr($api.byId(type), 'src', '../image/select_blue.png');
+            $api.attr($api.byId(3 - type), 'src', '../image/select_pray.png');
+            way = type;
+        }
+        if(type == 2){
+            $api.goWindow('my_wallet_vip_list_win',{isSelectMemberCard: true})
+        }
+    }
+    pay = function(){
+        if(way == 2 && memberCardNumber == ''){
+            api.toast({
+                msg: '请先选择用于支付的会员卡号',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+        api.prompt({
+            title:'请输入交易密码',
+            buttons: ['确定', '取消'],
+            type: 'password'
+        }, function(ret, err){
+            if( ret ){
+                if(ret.text == ''){
+                    api.toast({
+                        msg: '请输入密码',
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                    return;
+                }
+                if(ret.buttonIndex == 1){
+                    if(way == 1){
+                        $api.ajax('POST',$api.host + 'pay/wallet',{
+                            order_no: order.order_no,
+                            pay_password: ret.text
+                        },function(ret){
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'middle'
+                            });
+                            setTimeout(function(){
+                                $api.goWindow('pay_success_win');
+                                api.sendEvent({
+                                    name: 'my_wallet_frm_refresh_wallet',
+                                });
+                            },500)
+                        },{
+                            token: userinfo.token.token
+                        })
+                    }else{
+                        $api.ajax('POST',$api.host + 'pay/member_card',{
+                            order_no: order.order_no,
+                            member_card_no: memberCardNumber,
+                            pay_password: ret.text
+                        },function(ret){
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 2000,
+                                location: 'middle'
+                            });
+                            setTimeout(function(){
+                                $api.goWindow('pay_success_win');
+                                api.sendEvent({
+                                    name: 'my_wallet_frm_refresh_wallet',
+                                });
+                            },500)
+                        },{
+                            token: userinfo.token.token
+                        })
+                    }
+                }
+            }else{
+                 alert( JSON.stringify( err ) );
+            }
+        });
+    }
 </script>
 
 </html>

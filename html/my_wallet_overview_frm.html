@@ -33,22 +33,22 @@
 <body>
     <div class="bg">
         <p>昨日收益(元)</p>
-        <p class="price">1.66</p>
-        <p class="rest">总金额 22,188,188 元</p>
+        <p class="price" id="yesterday"></p>
+        <p class="rest" id="rest"></p>
 
         <div class="float">
             <div style="left:0rem;" class="div">
                 <div>累计收益</div>
-                <div style="line-height:1.5rem;">618.36 </div>
+                <div style="line-height:1.5rem;" id="totalProfit"></div>
             </div>
             <div style="right:0rem;" class="div">
                 <div>收益利率</div>
-                <div style="line-height:1.5rem;">3.901%</div>
+                <div style="line-height:1.5rem;" id="rate"></div>
             </div>
         </div>
         <div class="button">
             <div class="pay" tapmode onclick="$api.goWindow('my_wallet_pay_win')">充值</div>
-            <div class="pick" tapmode onclick="$api.goWindow('my_wallet_pick_win')">提现</div>
+            <div class="pick" tapmode onclick="$api.goWindow('my_wallet_pick_win',{rest: 2000})">提现</div>
         </div>
     </div>
     <div class="detail" tapmode onclick="$api.goWindow('my_wallet_detail_win')">查看明细</div>
@@ -56,10 +56,33 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
     apiready = function() {
         api.parseTapmode();
-
+        setRefresh();
+        loadInfo();
     };
+
+    setRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#eee',
+            textColor: '#fff',
+        }, function(ret, err){
+            loadInfo()
+        });
+    }
+
+    loadInfo = function(){
+        $api.ajax('POST',$api.host + 'assets/profit',{},function(ret){
+            $api.text($api.byId('yesterday'), ret.data.yesterday);
+            $api.text($api.byId('rest'), '总金额' + ret.data.total_money + '元');
+            $api.text($api.byId('totalProfit'), ret.data.total_profit);
+            $api.text($api.byId('rate'), ret.data.rate);
+
+        },{
+            token: userinfo.token.token
+        })
+    }
 </script>
 
 </html>

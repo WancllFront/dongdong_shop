@@ -42,7 +42,8 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
-    var cateId;
+    var cateId = '';
+    var keywords = '';
     var app = new Vue({
         el: '#app',
         data:{
@@ -73,6 +74,7 @@
         }, function(ret, err){
             if( ret ){
                  cateId = ret.value.cateId;
+                 keywords = ret.value.keywords;
                  app.goods = [];
                  app.page = 1;
                  loadGoods();
@@ -92,11 +94,22 @@
     }
 
     loadGoods = function(){
-        var data = {
-            shop_id: api.pageParam.shop.id,
-            cate_id: cateId || ''
+        var data = {};
+        var url = ''
+        if(keywords){
+            data = {
+                shop_id: api.pageParam.shop.id,
+                keywords: keywords
+            }
+            url = 'goods/search'
+        }else{
+            data = {
+                shop_id: api.pageParam.shop.id,
+                cate_id: cateId || ''
+            }
+            url = 'goods/lists'
         }
-        $api.ajax('POST',$api.host + 'goods/lists',data,function(ret){
+        $api.ajax('POST',$api.host + url,data,function(ret){
             if(ret.data.length != 0){
                 app.page ++;
                 ret.data.forEach(function(item){

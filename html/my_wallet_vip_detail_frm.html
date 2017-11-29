@@ -22,105 +22,102 @@
     </style>
 </head>
 <body>
-    <div class="bg">
-        <div class="vip">
-            <img src="../image/member1.png" style="width:100%;">
-            <p class="title">尊享会员卡</p>
-            <div class="rest">
-                <p style="font-size:0.6rem;">卡内余额</p>
-                <p style="font-size:1.5rem;">19,000</p>
-                <p style="font-size:0.6rem;">其中可线上购物资金10000元</p>
+    <div id="app">
+        <div class="bg">
+            <div class="vip">
+                <img v-if="key % 2 == 0" src="../image/member1.png" style="width:100%;">
+                <img v-else src="../image/member2.png" style="width:100%;">
+                <p class="title">会员卡<span style="font-size:0.7rem;">{{card.member_card_no}}</span></p>
+                <div class="rest">
+                    <p style="font-size:0.6rem;">卡内余额</p>
+                    <p style="font-size:1.5rem;">{{card.money}}</p>
+                    <p style="font-size:0.6rem;">其中可线上购物资金{{card.usable_money}}元</p>
+                </div>
             </div>
+
         </div>
-
+        <div class="aui-content">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle" style="padding:0.2rem 0rem;" v-for="(detail,key) in details" :key="key">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" style="width: 1rem;"></div>
+                        <div class="aui-list-item-inner" style="width:75%;">
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#333;">
+                                {{detail.desc}}
+                            </div>
+                            <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
+                                {{detail.create_time}}
+                            </div>
+                        </div>
+                        <div class="aui-list-item-right">
+                            <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
+                                {{detail.asset_type}}{{detail.change_money}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="aui-content">
-        <ul class="aui-list aui-media-list">
-            <li class="aui-list-item aui-list-item-middle" style="padding:0.7rem 0rem;">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 1rem;"></div>
-                    <div class="aui-list-item-inner" style="width:75%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有发射点发生犯得上发广泛豆腐干是否规范说个法规发射点发生发射点发射点发射点犯得上发生射点发射点（农大店）
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle" style="padding:0.7rem 0rem;">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 1rem;"></div>
-                    <div class="aui-list-item-inner" style="width:75%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有发射点发生犯得上发射点发射点（农大店）
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle" style="padding:0.7rem 0rem;">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 1rem;"></div>
-                    <div class="aui-list-item-inner" style="width:75%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有发射点发生犯得上发射点发射点（农大店）
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item aui-list-item-middle" style="padding:0.7rem 0rem;">
-                <div class="aui-media-list-item-inner">
-                    <div class="aui-list-item-media" style="width: 1rem;"></div>
-                    <div class="aui-list-item-inner" style="width:75%;">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
-                            粮食已有发射点发生犯得上发射点发射点（农大店）
-                        </div>
-                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;">
-                            2014-12-32 12:12:12
-                        </div>
-                    </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;">
-                            -1944
-                        </div>
-                    </div>
-                </div>
-            </li>
-
-        </ul>
-    </div>
-
-
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var userinfo = $api.getStorage('userinfo');
+    var page = 1;
+    var app = new Vue({
+        el: '#app',
+        data:{
+            details: [],
+            card:{},
+            key:1
+        }
+    })
+
     apiready = function() {
+
         setRefresh();
+
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold: 30
+            }
+        }, function(ret, err){
+            loadDetails();
+        });
+
+        loadDetails();
+        app.key = api.pageParam.key
+        app.card = api.pageParam.card;
     };
     setRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#ccc',
+            textColor: '#fff',
+        }, function(ret, err){
+            page = 1;
+            app.details = [];
+            loadDetails();
+        })
+    }
 
+    loadDetails = function(){
+        $api.ajax('POST', $api.host + 'assets/logs',{
+            search_type: 'member_card',
+            member_card_no: api.pageParam.card.member_card_no
+        },function(ret){
+            if(ret.data.length != 0){
+                page ++;
+                ret.data.forEach(function(item){
+                    app.details.push(item)
+                })
+            }
+        },{
+            token: userinfo.token.token,
+            'page-num': page,
+            'page-limit': 20
+        });
     }
 </script>
 

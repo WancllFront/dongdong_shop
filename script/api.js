@@ -641,8 +641,10 @@
     u.detectUrl = 'https://api-cn.faceplusplus.com/facepp/v3/detect'
     u.ocridcardUrl = 'https://api-cn.faceplusplus.com/cardpp/v1/ocridcard'
 
-    // u.host = 'http://192.168.1.110/index.php/api/';
-    u.host = 'http://api_v3.wx.wygoo.com/index.php/api/'
+    u.host = 'http://192.168.1.111/index.php/api/';
+    // u.host = 'http://PC-20170101XIAO/index.php/api/';
+
+    // u.host = 'http://api_v3.wx.wygoo.com/index.php/api/'
     u.auth = 'Basic_Ivj6eZRxMTx2yiyunZvnG8R65';
 
     u.ajax = function(method,url,values,fun,headers){

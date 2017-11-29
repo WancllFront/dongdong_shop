@@ -132,6 +132,7 @@
         }
     }
 
+    //二维码
     qrcodeScanner = function(){
         fnScanner.openScanner({
             autorotation: true
@@ -139,11 +140,19 @@
             if( ret ){
                 if(ret.eventType == 'success'){
                     if(ret.content.indexOf('WancllApi://') != -1){
-                        console.log(ret.content)
+                        alert(ret.content)
+                    }else if(ret.content.indexOf('register://') != -1){
+                        api.openWin({
+                            name: 'reg_win',
+                            url: './html/reg_win.html',
+                            pageParam: {
+                                recommendTelephone: ret.content.replace('register://','')
+                            }
+                        });
                     }else{
                         api.openWin({
                             name: 'link_win',
-                            url: './link_win.html',
+                            url: './html/link_win.html',
                             pageParam: {
                                 link:ret.content,
                                 name:ret.content
