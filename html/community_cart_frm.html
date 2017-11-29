@@ -32,7 +32,7 @@
                             <div class="aui-list-item-text" style="margin-top:0.5rem;">
                                 <span style="color:#f63030;font-size:0.8rem;">￥{{good.price}}</span>
                                 <div class="aui-list-item-text">
-                                    <img src="../image/jian_blue.png" style="width:1rem;" @click="sub(good)">
+                                    <img src="../image/jian_blue.png" style="width:1rem;" tapmode @click="sub(good)">
                                     <span style="padding:0rem 0.5rem;color:#333;">{{good.num}}</span>
                                     <img src="../image/jia_blue.png" style="width:1rem;"  @click="add(good)">
                                 </div>
@@ -80,7 +80,8 @@
                 });
             }
         }
-    })
+    });
+
     apiready = function() {
         api.parseTapmode();
         app.goods = api.pageParam.goods;

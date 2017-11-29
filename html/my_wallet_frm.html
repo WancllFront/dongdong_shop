@@ -153,7 +153,7 @@
                     </div>
                 </li>
                 <li class="aui-list-item aui-list-item-middle" style="padding:0.1rem 0rem;" v-for="(asset,key) in assets" :key="key">
-                    <div class="aui-media-list-item-inner">
+                    <div class="aui-media-list-item-inner aui-list-item-arrow" tapmode @click="goDetail(asset)">
                         <div class="aui-list-item-media" style="width: 1rem;"></div>
                         <div class="aui-list-item-inner" style="width:70%;">
                             <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
@@ -192,7 +192,11 @@
             page: 1
         },
         methods:{
-
+            goDetail: function(asset){
+                $api.goWindow('bill_detail_win',{
+                    asset:asset
+                })
+            }
         }
     })
     apiready = function() {

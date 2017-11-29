@@ -20,31 +20,44 @@
 </head>
 
 <body>
-    <div class="money">
-        <p style="color:#555;">金额(元)</p>
-        <p style="font-size:2rem;color:#000;">300,000.00</p>
-        <p style="color:#fca816;">处理中</p>
-    </div>
-    <div class="content">
-        <div class="line">
-            <div class="left">说明</div>
-            <div class="right">钱包金额提现到银行卡</div>
+    <div id="app">
+        <div class="money">
+            <p style="color:#555;">金额(元)</p>
+            <p style="font-size:2rem;color:#000;">{{asset.asset_type}}{{asset.change_money}}</p>
+            <p style="color:#fca816;" v-if="asset.type == 'drawcash' && asset.status == 1">处理中</p>
+            <p style="color:#fca816;" v-if="asset.type == 'drawcash' && asset.status == 3">未通过</p>
+            <p style="color:#fca816;" v-if="asset.type == 'drawcash' && asset.status == 2">通过</p>
+            <p style="color:#fca816;" v-if="asset.type != 'drawcash'">已完成</p>
         </div>
+        <div class="content">
+            <div class="line">
+                <div class="left">说明</div>
+                <div class="right">{{asset.intro}}</div>
+            </div>
 
-        <div class="line">
-            <div class="left">订单号</div>
-            <div class="right">1313213121213221231</div>
-        </div>
-        <div class="line">
-            <div class="left">时间</div>
-            <div class="right">2017-12-31 12:12:45</div>
+            <div class="line" v-if="asset.type=='consume' || asset.type==''">
+                <div class="left">订单号</div>
+                <div class="right">1313213121213221231</div>
+            </div>
+            <div class="line">
+                <div class="left">时间</div>
+                <div class="right">{{asset.create_time}}</div>
+            </div>
         </div>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
 <script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data:{
+            asset:{}
+        }
+    })
     apiready = function() {
 
+        app.asset = api.pageParam.asset
     };
 </script>
 
