@@ -103,14 +103,12 @@
             lng:lng,
             lat:lat
         },function(ret){
-            setTimeout(function(){
-                if(ret.data.length != 0){
-                    app.page ++;
-                    ret.data.forEach(function(item){
-                        app.shops.push(item);
-                    })
-                }
-            },1000)
+            if(ret.data.length != 0){
+                app.page ++;
+                ret.data.forEach(function(item){
+                    app.shops.push(item);
+                })
+            }
         },{
             auth: $api.auth,
             'page-num': app.page,

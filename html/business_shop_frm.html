@@ -27,23 +27,23 @@
 <body>
     <div class="bg" id="app">
         <div class="aui-bar aui-bar-tab">
-            <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:''})">
+            <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:'is_best'})">
                 <img src="../image/good_best.png">
                 <div class="aui-bar-tab-label">精品</div>
             </div>
-                <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:''})">
+                <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:'is_new'})">
                 <img src="../image/good_new.png">
                 <div class="aui-bar-tab-label">新品</div>
             </div>
-            <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:''})">
+            <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:'is_hot'})">
                 <img src="../image/good_hot.png">
                 <div class="aui-bar-tab-label">热销</div>
             </div>
-                <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:''})">
+                <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:'is_free_shipping'})">
                 <img src="../image/good_free.png">
                 <div class="aui-bar-tab-label">包邮</div>
             </div>
-                <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:''})">
+                <div class="aui-bar-tab-item" tapmode onclick="$api.goWindow('business_goods_list_win',{sortType:'is_clearance'})">
                 <img src="../image/good_clearance.png">
                 <div class="aui-bar-tab-label">清仓</div>
             </div>
@@ -86,23 +86,35 @@
 
         setRefresh();
         addEventListener();
+        loadScrollPicture();
         loadBusinessGoods();
+        loadBanner();
     };
     setRefresh = function(){
         api.setRefreshHeaderInfo({
             bgColor: '#eee',
             textColor: '#fff',
         }, function(ret, err){
-            setTimeout(function(){
-                reloadScrollPicture();
-                api.refreshHeaderLoadDone();
-                app.goods = [];
-                app.page = 1;
-                loadBusinessGoods();
-            },2000)
+            app.goods = [];
+            app.page = 1;
+            loadBanner();
+            loadBusinessGoods();
         });
+    }
 
-        loadScrollPicture();
+    loadBanner = function(){
+        $api.ajax('POST',$api.host + 'query/datadict',{
+            kid: 2
+        },function(ret){
+            api.refreshHeaderLoadDone();
+            var imgs = [];
+            JSON.parse(ret.data[0].content).forEach(function(item){
+                imgs.push($api.imgPath + item.src)
+            })
+            reloadScrollPicture(imgs)
+        },{
+            auth: $api.auth
+        })
     }
 
     addEventListener = function(){
@@ -117,13 +129,12 @@
 
     }
 
-    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 185 }, data: { paths: [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png'
-    ], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 185 }, placeholderImg: 'widget://image/timg.jpg', data: { paths: ['widget://image/timg.jpg'], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
 
-    reloadScrollPicture = function(){
+    reloadScrollPicture = function(imgs){
         uiScrollPictureModule.reloadData({
             data: {
-                paths: ['http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f7725feb.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f77887b3.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f77c961d.png'],
+                paths: imgs,
             }
         });
     }

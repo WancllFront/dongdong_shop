@@ -60,31 +60,32 @@
             bgColor: '#eee',
             textColor: '#fff',
         }, function(ret, err){
-            setTimeout(function(){
-                reloadScrollPicture();
-                api.refreshHeaderLoadDone();
-            },2000)
+            loadIndexBanner()
         });
 
         loadIndexBanner();
+        loadScrollPicture();
     }
     loadIndexBanner = function(){
         $api.ajax('POST',$api.host + 'query/datadict',{
             kid: 1
         },function(ret){
-            //console.log(JSON.stringify(ret));
-            loadScrollPicture()
+            var imgs = []
+            JSON.parse(ret.data[0].content).forEach(function(item){
+                imgs.push($api.imgPath + item.src)
+            })
+            reloadScrollPicture(imgs)
         },{
             auth: $api.auth
         })
     }
 
-    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 },placeholderImg: 'widget://image/timg.jpg', data: { paths: [], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 },placeholderImg: 'widget://image/timg.jpg', data: { paths: ['widget://image/timg.jpg'], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
 
-    reloadScrollPicture = function(){
+    reloadScrollPicture = function(imgs){
         uiScrollPictureModule.reloadData({
             data: {
-                paths: ['http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f7725feb.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f77887b3.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f77c961d.png'],
+                paths: imgs,
             }
         });
     }

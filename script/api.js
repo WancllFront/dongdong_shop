@@ -645,6 +645,7 @@
     // u.host = 'http://PC-20170101XIAO/index.php/api/';
 
     u.host = 'http://api_v3.wx.wygoo.com/index.php/api/'
+    u.imgPath = 'http://api_v3.wx.wygoo.com/public/static/'
     u.auth = 'Basic_Ivj6eZRxMTx2yiyunZvnG8R65';
 
     u.ajax = function(method,url,values,fun,headers){
