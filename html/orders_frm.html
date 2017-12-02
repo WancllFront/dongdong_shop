@@ -17,27 +17,36 @@
         .order .title .status{float: right;color: #999;}
 
         .order .goodslist{background-color: #f4f4f4;display: flex;margin-bottom: 0.5rem;}
-        .order .goodslist .thum{width: 20%;height: 100%;padding: 0.4rem 0.3rem;}
+        .order .goodslist .thum{width: 22%;height: 100%;padding: 0.4rem 0.3rem;}
         .order .goodslist .thum img{max-width: 100%;vertical-align: middle;}
-        .order .goodslist .text{width: 55%;padding-top: 0.5rem;padding-bottom: 0.5rem;}
+        .order .goodslist .text{width: 53%;padding-top: 0.4rem;padding-bottom: 0.5rem;}
         .order .goodslist .text .name{font-size: 0.75rem;color:#333;}
-        .order .goodslist .other{padding-top: 0.5rem;width: 23%;padding-bottom: 0.5rem;}
-        .order .goodslist .other .price{color:#df0303;text-align: right;}
-        .order .goodslist .other .num{color:#555;text-align: right;}
+        .order .goodslist .text .desc{font-size: 0.6rem;color:#777;}
+        .order .goodslist .other{padding-top: 0.4rem;width: 23%;padding-bottom: 0.5rem;}
+        .order .goodslist .other .price{color:#df0303;text-align: right;font-size: 0.7rem;}
+        .order .goodslist .other .num{color:#555;text-align: right;font-size: 0.7rem;}
         .order .goodslist .other .after{font-size: 0.75rem;height:1.5rem;line-height: 1.5rem;border-radius: 1.5rem;background-color: #fff;text-align: center;border: 1px solid #c3c3c3; max-width: 100%;width: 5rem;color:#555;display: inline-block;}
 
-        .order .total-price{font-size: 0.75rem;text-align: right;color: #999;padding-bottom: 0.5rem;border-bottom: 1px solid #f4f4f4;}
+        .order .total-price{font-size: 0.7rem;text-align: right;color: #999;padding-bottom: 0.5rem;border-bottom: 1px solid #f4f4f4;}
         .order .button{text-align: right;margin-top: 0.5rem;padding-bottom: 0.5rem;}
-        .order .button div{font-size: 0.75rem;height:1.5rem;line-height: 1.5rem;border-radius: 1.5rem;text-align: center;border: 1px solid #c3c3c3; color:#555;max-width: 26%;width:5rem;display: inline-block;}
+        .order .button div{font-size: 0.7rem;height:1.5rem;line-height: 1.5rem;border-radius: 1.5rem;text-align: center;border: 1px solid #c3c3c3; color:#555;max-width: 26%;width:5rem;display: inline-block;}
         .order .button .blue{color:#358cff;border-color:#358cff}
 
     </style>
 </head>
 
 <body>
-    <div style="background-color:#f4f4f4;height:0.5rem;width:100%;"></div>
+
     <section  class="aui-content" id="app">
-        <div class="order" tapmode @click="goOrderDetail(order);" v-for="(order,key) in orders" :key="key">
+        <!-- <div v-if="isNoNet">
+            <img src="../image/loading.gif" style="width:50%;display:inline">
+        </div> -->
+        <div v-if="isNoOrder" style="text-align:center;background-color:#fff;padding-top:5rem;">
+            <img src="../image/no_order.png" style="width:50%;display:inline">
+            <!-- <img src="../image/loading.gif" style="width:50%;display:inline"> -->
+        </div>
+        <!-- <div style="background-color:#f4f4f4;height:0.5rem;width:100%;"></div> -->
+        <div v-else class="order" tapmode @click="goOrderDetail(order);" v-for="(order,key) in orders" :key="key">
             <div class="title" v-if="order.delivery_way == 0">
                 <span class="time" v-text="order.create_time"></span>
                 <span class="status" v-if="order.status == 1">待付款</span>
@@ -71,6 +80,7 @@
                 </div>
                 <div class="text">
                     <div class="name" v-text="goods.name"></div>
+                    <div class="desc" v-text="goods.intro"></div>
                 </div>
                 <div class="other">
                     <div class="price">￥<span v-text="goods.price"></span></div>
@@ -86,7 +96,7 @@
                 <div v-if="order.status==3" @click.stop="goLogistics(order)" class="blue" >查看物流</div>
                 <div v-if="order.status==3" @click.stop="receiptOrder(order)"  class="blue">确认收货</div>
             </div>
-            <div class="button" v-if="order.shop_id != 0">
+            <div class="button" v-if="order.shop_id != 0" style="font-size:0.7rem;">
                 <a v-if="order.delivery_way == 1" style="display:inline">
                     <div v-if="order.status == 1"  @click.stop="cancelOrder(order)">取消订单</div>
                     <div v-if="order.status == 1" @click.stop="pay(order)" class="blue" >立即付款</div>
@@ -111,12 +121,13 @@
     window.addEventListener('load', function() {
       FastClick.attach(document.body);
     }, false);
+    var page = 1;
     var userinfo = $api.getStorage('userinfo');
     var app = new Vue({
         el: '#app',
         data:{
             orders:[],
-            page:1
+            isNoOrder:false
         },
         methods:{
             goOrderDetail: function(order){
@@ -211,7 +222,7 @@
             textColor: '#fff',
         }, function(ret, err){
             app.orders = [];
-            app.page = 1;
+            page = 1;
             loadOrders();
         });
     }
@@ -229,25 +240,29 @@
             name: 'order_frm_refreshOrder'
         }, function(ret, err){
             app.orders = [];
-            app.page = 1;
+            page = 1;
             loadOrders();
         });
 
     }
 
     loadOrders = function(){
+
         $api.ajax('POST', $api.host + 'orders/lists', {
             status: api.pageParam.status
         },function(ret){
             if(ret.data.length != 0){
-                app.page ++;
+                page ++;
                 ret.data.forEach(function(item){
                     app.orders.push(item);
-                })
+                });
+                app.isNoOrder = false;
+            }else if(page == 1){
+                app.isNoOrder = true;
             }
         },{
             token: userinfo.token.token,
-            'page-num':app.page,
+            'page-num': page,
             'page-limit':10
         })
     }

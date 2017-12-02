@@ -12,7 +12,7 @@
         .goodslist{margin:0rem .5rem;}
         .goodslist .goods{display:flex;padding:0.8rem 0rem;border-bottom:1px solid #f4f4f4;}
         .goodslist .goods .left{width:28%;}
-        .goodslist .goods .left img{max-width: 100%;}
+        .goodslist .goods .left img{max-width: 100%;border: 1px solid #f4f4f4;}
         .goodslist .goods .right{display:inline-block;width:72%;margin-left:0.5rem;position:relative;}
         .goodslist .goods .right .title{font-weight:bold;}
         .goodslist .goods .right .describe{color:#737373;font-size:0.8rem;}
@@ -35,7 +35,7 @@
                 <p class="single-paragraph describe" v-text="collection.goods_info.intro"></p>
                 <div class="price">
                     <div>
-                        <span style="color:#ff2c2c" v-text="'￥' + collection.goods_info.price"</span>
+                        <span style="color:#ff2c2c" v-text="'￥' + collection.goods_info.price"></span>
                         <span style="color:#737373"></span>
                     </div>
                     <img src="../image/delete.png" class="jia" tapmode @click.stop="deleteCollection(collection)">
@@ -67,8 +67,7 @@
             },
             deleteCollection:function(collection){
                 api.confirm({
-                    title: '提示',
-                    msg: '确定从收藏夹移除吗?',
+                    title: '确定从收藏夹移除吗?',
                     buttons: ['确定', '取消']
                 }, function(ret, err){
                     if( ret ){
@@ -112,7 +111,7 @@
 
     setRefresh = function(){
         api.setRefreshHeaderInfo({
-            bgColor: '#ccc',
+            bgColor: '#eee',
             textColor: '#fff',
         }, function(ret, err){
             app.collections = [];

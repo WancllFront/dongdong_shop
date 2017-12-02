@@ -17,18 +17,21 @@
     <div class="aui-content aui-margin-b-10" id="app">
         <ul class="aui-list aui-media-list" style="background-image:none;">
             <div v-for="(cart,key) in carts" :key="key">
-                <li class="aui-list-item aui-list-item-middle">
+                <li class="aui-list-item">
                     <div class="aui-media-list-item-inner">
-                        <div class="aui-list-item-media" style="width: 1.7rem;" tapmode @click="changeSelected(cart)">
+                        <div class="aui-list-item-media " style="width: 1.7rem;align-items:center;" tapmode @click="changeSelected(cart)">
                             <img v-show="cart.isSelected" src="../image/select_blue.png" class="aui-img-round aui-list-img-sm">
                             <img v-show="!cart.isSelected" src="../image/circle.png" class="aui-img-round aui-list-img-sm">
                         </div>
                         <div class="aui-list-item-media" style="width: 5rem;">
                             <img :src="cart.goods_info.thum" class="aui-list-img-sm" style="border:1px solid #f4f4f4;">
                         </div>
-                        <div class="aui-list-item-inner">
+                        <div class="aui-list-item-inner" style="align-items:flex-start;">
                             <div class="aui-list-item-text">
-                                <div class="aui-list-item-title aui-font-size-14" v-text="cart.goods_info.name"></div>
+                                <div class="aui-list-item-title aui-font-size-16" v-text="cart.goods_info.name"></div>
+                            </div>
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title aui-font-size-12" style="color:#777;" v-text="cart.goods_info.intro"></div>
                             </div>
                             <div class="aui-list-item-text" style="margin-top:0.5rem;">
                                 <span style="color:#f63030;font-size:0.8rem;" v-text="'￥' + cart.goods_info.price"></span>
@@ -43,7 +46,7 @@
                 </li>
                 <li class="aui-list-header" style="background-color:#fff;text-align:right;border-bottom:0.5rem solid #f4f4f4;">
                     <span></span>
-                    <span>小计:<span  style="color:#f63030;font-size:1rem;" v-text="'￥' + cart.goods_info.price * cart.num"></span></span>
+                    <span>小计:<span  style="color:#f63030;font-size:0.8rem;" v-text="'￥' + cart.goods_info.price * cart.num"></span></span>
                 </li>
             </div>
         </ul>
@@ -186,7 +189,7 @@
 
     setRefresh = function(){
         api.setRefreshHeaderInfo({
-            bgColor: '#ccc',
+            bgColor: '#eee',
             textColor: '#fff',
         }, function(ret, err){
             app.carts = [];
@@ -199,6 +202,7 @@
 
     loadCarts = function(){
         $api.ajax('GET',$api.host + 'carts',{},function(ret){
+            // console.log(JSON.stringify(ret.data))
             ret.data.forEach(function(item){
                 item.isSelected = false;
             })

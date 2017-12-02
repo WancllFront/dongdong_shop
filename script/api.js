@@ -665,7 +665,7 @@
                 values: values,
             },
             headers:headers,
-            timeout:10
+            timeout:7
         },function(ret, err){
             uiLoading.closeFlower ({id: uiId});
             api.refreshHeaderLoadDone();
@@ -690,7 +690,7 @@
             } else {
                 console.log(err.msg)
                 api.toast({
-                    msg: '网络错误',
+                    msg: '网络错误,请稍后再试',
                     duration: 2000,
                     location: 'middle'
                 });

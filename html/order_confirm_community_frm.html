@@ -10,12 +10,13 @@
     <style>
         body {}
         .order{padding: 0.5rem;background-color: #fff;}
-        .order .goods{display: flex;align-items: center;background-color: #f7f7f7;}
-        .order .goods .thum{width: 30%;padding: 0.5rem 0.5rem;;}
+        .order .goods{display: flex;background-color: #f7f7f7;}
+        .order .goods .thum{width: 30%;padding: 0.5rem 0.5rem;align-items: center;}
         .order .goods .thum img{width: 100%;}
         .order .goods .other{width: 70%;padding: 0.5rem 0.5rem 0.5rem 0.3rem;;}
-        .order .goods .other .title{margin-bottom: 1rem;}
-        .order .goods .other .price{color:#fe4545}
+        .order .goods .other .title{}
+        .order .goods .other .desc{font-size: 0.6rem;color:#777;}
+        .order .goods .other .price{color:#fe4545;margin-top: 1rem;}
         .order .goods .other .price:after{display:block;content:"";clear:both;}
 
         .order .line:after{display:block;content:"";clear:both;}
@@ -43,16 +44,16 @@
                     <i class="aui-iconfont aui-icon-info" style="width:3%;"></i>
                     <div class="aui-tips-title aui-ellipsis-1" style="width:97%;">您第一次在此店使用该地址,下单后需等待商家确认是否可以送达</div>
                 </div> -->
-                <ul class="aui-list aui-media-list" style="background-image:none;">
+                <ul class="aui-list aui-media-list" style="background-image:none;" v-if="address">
                     <li class="aui-list-item aui-list-item-middle" tapmode @click="selectAddress(address)">
                         <div class="aui-media-list-item-inner">
                             <div class="aui-list-item-media" style="width: 2rem;">
                                 <img src="../image/location_blue.png" class="aui-img-round aui-list-img-sm">
                             </div>
-                            <div class="aui-list-item-inner aui-list-item-arrow" v-if="!address">
+                            <!-- <div class="aui-list-item-inner aui-list-item-arrow" v-if="!address">
                                     请选择地址
-                            </div>
-                            <div class="aui-list-item-inner aui-list-item-arrow" v-if="address">
+                            </div> -->
+                            <div class="aui-list-item-inner aui-list-item-arrow" >
                                 <div class="aui-list-item-text">
                                     <div class="aui-list-item-title aui-font-size-16" style="font-weight:bold;" v-text="address.province + address.city + address.county + address.address">
                                         <!-- <div class="aui-label aui-label-info">未认证</div> -->
@@ -67,6 +68,9 @@
                         </div>
                     </li>
                 </ul>
+                <div style="display:flex;align-items:center;height:4.5rem;text-align:center;background-color:#fff;" v-if="!address">
+                    <img src="../image/add_address.png" style="width:6rem;margin:0 auto;" tapmode @click="selectAddress(address)">
+                </div>
             </div>
             <div class="aui-content " v-show="isSelfPick" >
                 <ul class="aui-list aui-media-list">
@@ -110,6 +114,7 @@
                     </div>
                     <div class="other">
                         <div class="title" v-text="goods.name"></div>
+                        <div class="desc" v-text="goods.intro"></div>
                         <div class="price">
                             <span v-text="'￥' + goods.price"></span><span style="float:right;color:#555;" v-text="'x' + goods.num"></span>
                         </div>

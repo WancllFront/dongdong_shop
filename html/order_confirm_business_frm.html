@@ -10,12 +10,13 @@
     <style>
         body {}
         .order{padding: 0.5rem;background-color: #fff;}
-        .order .goods{display: flex;align-items: center;background-color: #f7f7f7;}
-        .order .goods .thum{width: 30%;padding: 0.5rem 0.5rem;;}
+        .order .goods{display: flex;background-color: #f7f7f7;}
+        .order .goods .thum{width: 30%;padding: 0.5rem 0.5rem;align-items: center;}
         .order .goods .thum img{width: 100%;}
         .order .goods .other{width: 70%;padding: 0.5rem 0.5rem 0.5rem 0.3rem;;}
-        .order .goods .other .title{margin-bottom: 1rem;}
-        .order .goods .other .price{color:#fe4545}
+        .order .goods .other .title{}
+        .order .goods .other .desc{font-size: 0.6rem;color:#777;}
+        .order .goods .other .price{color:#fe4545;margin-top: 1rem;}
         .order .goods .other .price:after{display:block;content:"";clear:both;}
 
         .order .line:after{display:block;content:"";clear:both;}
@@ -47,7 +48,7 @@
                             </div>
                             <div class="aui-list-item-text" style="margin-top:0.5rem;">
                                 {{address.consignee_name}}
-                                <div class="aui-list-item-text" v-text="address.mobile"></div>
+                                <div class="aui-list-item-text" v-text="address.mobile || ''"></div>
                                 <div class="aui-list-item-text"></div>
                             </div>
                         </div>
@@ -65,8 +66,15 @@
                     </div>
                     <div class="other">
                         <div class="title" v-text="goods.name"></div>
+                        <div class="desc" v-text="goods.intro"></div>
                         <div class="price">
-                            <span v-text="'￥' + goods.price"></span><span style="float:right;color:#555;" v-text="'x' + goods.num"></span>
+                            <!-- <span v-text="'￥' + goods.price"></span><span style="float:right;color:#555;" v-text="'x' + goods.num"></span> -->
+                            <span v-text="'￥' + goods.price"></span>
+                            <span style="float:right;">
+                                <img src="../image/jian_blue.png" style="width:1.2rem;display:inline;vertical-align:middle;" @click="sub(goods)" >
+                                <span style="line-height:1.2rem;padding:0rem 0.5rem;" v-text="goods.num || 1"></span>
+                                <img src="../image/jia_blue.png" style="width:1.2rem;display:inline;vertical-align:middle;" @click="add(goods)">
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -76,7 +84,7 @@
                 <div class="left">购买数量:</div>
                 <div class="right" style="display:flex;padding:0.5rem 0rem;">
                     <img src="../image/jian_blue.png" style="width:1rem;display:inline-block;">
-                    <span style="line-height:1rem;padding:0rem 0.5rem;">1</span>
+                    <span style="line-height:1rem;padding:0rem 0.5rem;" v-text="goods.num || 1"></span>
                     <img src="../image/jia_blue.png" style="width:1rem;display:inline-block;">
                 </div>
             </div> -->
@@ -99,7 +107,11 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var userinfo = $api.getStorage('userinfo');
 
     var app = new Vue({
@@ -109,7 +121,24 @@
             address:{}
         },
         methods:{
-
+            add: function(goods){
+                goods.num ++;
+                this.refresh();
+            },
+            sub: function(goods){
+                if(goods.num > 1){
+                    goods.num --;
+                    this.refresh();
+                }
+            },
+            refresh: function(){
+                api.sendEvent({
+                    name: 'order_confirm_business_win_refresh_totalprice',
+                    extra: {
+                        goodsList: this.goodsList
+                    }
+                });
+            }
         },
         computed:{
             expressPrice: function(){
@@ -144,7 +173,11 @@
     loadDefaultAddress = function(){
         $api.ajax('POST',$api.host + 'query/default_address',{},function(ret){
             if(!ret.data){
-                api.toast({msg:'请先添加地址'})
+                api.toast({
+                    msg: '请先添加地址',
+                    duration: 2000,
+                    location: 'middle'
+                });
                 setTimeout(function(){
                     $api.goWindow('address_win',{shopId:0})
                 },500)

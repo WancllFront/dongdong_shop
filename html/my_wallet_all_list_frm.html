@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {}
+    </style>
+</head>
+
+<body>
+    <div class="aui-content" id="app">
+        <ul class="aui-list aui-media-list">
+            <li class="aui-list-item aui-list-item-middle" style="padding:0.1rem 0rem;" v-for="(asset,key) in assets" :key="key">
+                <div class="aui-media-list-item-inner aui-list-item-arrow" tapmode @click="goDetail(asset)">
+                    <div class="aui-list-item-media" style="width: 1rem;"></div>
+                    <div class="aui-list-item-inner" style="width:70%;">
+                        <div class="aui-list-item-text aui-font-size-14" style="color:#555555;" v-text="asset.intro"></div>
+                        <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;" v-text="asset.create_time"></div>
+                    </div>
+                    <div class="aui-list-item-right">
+                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;" v-text="asset.asset_type + asset.change_money"></div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
+<script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
+    var userinfo = $api.getStorage('userinfo');
+    var page = 1;
+    var app = new Vue({
+        el:'#app',
+        data:{
+            assets:[],
+        },
+        methods:{
+            goDetail: function(asset){
+                $api.goWindow('bill_detail_win',{
+                    asset:asset
+                })
+            }
+        }
+    })
+    apiready = function() {
+        api.parseTapmode();
+        addEventListener();
+        setRefresh();
+        loadAssetsLog();
+    };
+    //总账单
+    loadAssetsLog = function(){
+        $api.ajax('POST', $api.host + 'assets/logs',{},function(ret){
+            if(ret.data.length != 0){
+                ret.data.forEach(function(item){
+                    app.assets.push(item)
+                })
+                page ++;
+            }
+        },{
+            token: userinfo.token.token,
+            'page-num': page,
+            'page-limit': 20
+        })
+    }
+    addEventListener = function(){
+
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:30
+            }
+        }, function(ret, err){
+            loadAssetsLog();
+        });
+
+    }
+    setRefresh = function(){
+        api.setRefreshHeaderInfo({
+            bgColor: '#eee',
+            textColor: '#fff',
+        }, function(ret, err){
+            initWalletInfo();
+            app.assets = [];
+            page = 1;
+            loadAssetsLog();
+        });
+    }
+    </script>
+
+</html>

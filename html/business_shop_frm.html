@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../css/aui-flex.css" />
     <style>
         body {background-color: #fff;}
-        .bg{margin-top: 220px;}
+        .bg{margin-top: 190px;}
         .aui-bar-tab{position: relative;padding-top: 0.6rem;padding-bottom: 0.6rem;}
         .aui-bar-tab .aui-bar-tab-item img{width:2.5rem;display:inline-block;}
         .goodslist{background-color: #fff;margin-bottom: 0.5rem;}
@@ -86,7 +86,7 @@
     };
     setRefresh = function(){
         api.setRefreshHeaderInfo({
-            bgColor: '#ccc',
+            bgColor: '#eee',
             textColor: '#fff',
         }, function(ret, err){
             setTimeout(function(){
@@ -113,7 +113,7 @@
 
     }
 
-    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 }, data: { paths: [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png'
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 185 }, data: { paths: [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png'
     ], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
 
     reloadScrollPicture = function(){

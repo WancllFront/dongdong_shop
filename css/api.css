@@ -88,8 +88,8 @@ td,th {
 /* form */
 .area .tips{margin-bottom: 0.8rem;color:#696969;}
 .area{margin: 0.5rem 0.5rem;}
-.area .input{height: 2.2rem;background-color: #fff;margin-bottom: 0.5rem; padding-left: 1.3rem;border-radius: 0.15rem;letter-spacing: 0.05rem;}
-.area .submit{height: 2.2rem;background-color: #358cff;text-align: center;line-height: 2.2rem;color:#fff;letter-spacing: 0.2rem;border-radius: 0.2rem;}
+.area .input{height: 2.4rem;background-color: #fff;margin-bottom: 0.5rem; padding-left: 1.3rem;border-radius: 0.15rem;letter-spacing: 0.05rem;}
+.area .submit{height: 2.4rem;background-color: #358cff;text-align: center;line-height: 2.4rem;color:#fff;letter-spacing: 0.2rem;border-radius: 0.2rem;border: 1px solid #2c83f5;}
 .area .submit:active{background-color: #0e6be4}
 
 .area .mix{position:relative;display:flex;}

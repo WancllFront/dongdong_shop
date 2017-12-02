@@ -32,9 +32,9 @@
                         <div class="aui-list-item-text aui-font-size-14" style="color:#333;" v-text="detail.desc"></div>
                         <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;" v-text="detail.create_time">/div>
                     </div>
-                    <div class="aui-list-item-right">
-                        <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;" v-text="detail.asset_type + detail.change_money"></div>
-                    </div>
+                </div>
+                <div class="aui-list-item-right" style="width:20%;">
+                    <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;" v-text="detail.asset_type + detail.change_money"></div>
                 </div>
             </li>
         </ul>
@@ -66,7 +66,7 @@
     };
     setRefresh = function(){
         api.setRefreshHeaderInfo({
-            bgColor: '#ccc',
+            bgColor: '#eee',
             textColor: '#fff',
         }, function(ret, err){
             page = 1;
@@ -88,7 +88,7 @@
         },{
             token: userinfo.token.token,
             'page-num': page,
-            'page-limit': 20
+            'page-limit': 10
         })
     }
 </script>

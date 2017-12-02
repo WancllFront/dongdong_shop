@@ -27,14 +27,13 @@
             <div class="vip">
                 <img v-if="key % 2 == 0" src="../image/member1.png" style="width:100%;">
                 <img v-else src="../image/member2.png" style="width:100%;">
-                <p class="title">会员卡<span style="font-size:0.7rem;">{{card.member_card_no}}</span></p>
+                <p class="title">会员卡<span style="font-size:0.7rem;" v-text="card.member_card_no"></span></p>
                 <div class="rest">
                     <p style="font-size:0.6rem;">卡内余额</p>
                     <p style="font-size:1.5rem;" v-text="card.money"></p>
                     <p style="font-size:0.6rem;" v-text="'其中可线上购物资金' + card.usable_money + '元'"></p>
                 </div>
             </div>
-
         </div>
         <div class="aui-content">
             <ul class="aui-list aui-media-list">
@@ -43,7 +42,7 @@
                         <div class="aui-list-item-media" style="width: 1rem;"></div>
                         <div class="aui-list-item-inner" style="width:75%;">
                             <div class="aui-list-item-text aui-font-size-14" style="color:#333;" v-text="detail.desc"></div>
-                            <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;" v-text="detail.create_time}"></div>
+                            <div class="aui-list-item-text aui-font-size-12" style="color:#a5a5a5;" v-text="detail.create_time"></div>
                         </div>
                         <div class="aui-list-item-right">
                             <div class="aui-list-item-text aui-font-size-14" style="color:#000;font-weight:bold;" v-text="detail.asset_type + detail.change_money"></div>
@@ -82,6 +81,7 @@
         });
 
         loadDetails();
+        console.log(JSON.stringify(api.pageParam))
         app.key = api.pageParam.key
         app.card = api.pageParam.card;
     };
@@ -101,6 +101,7 @@
             search_type: 'member_card',
             member_card_no: api.pageParam.card.member_card_no
         },function(ret){
+            // console.log(JSON.stringify(ret))
             if(ret.data.length != 0){
                 page ++;
                 ret.data.forEach(function(item){

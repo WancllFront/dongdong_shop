@@ -27,14 +27,17 @@
         .aui-list .aui-list-item-title {
             font-size: 0.7rem;
         }
-        .aui-list .aui-list-item {background-color: #f4f4f4;}
+        .aui-list .aui-list-item {background-color: #f4f4f4;padding-left: 0rem;}
         .aui-list .aui-list-item:active{background-color: #fff;}
         .aui-list .active{background-color: #fff;}
+
+        .aui-list .aui-list-item .aui-list-item-inner .aui-list-item-title{padding-left: 0.75rem;}
+        .aui-list .active .aui-list-item-inner .aui-list-item-title{border-left: 2px solid #4b8aee;}
     </style>
 </head>
 <body>
     <div id="app">
-        <header class="aui-bar aui-bar-nav" id="aui-header">
+        <header class="aui-bar aui-bar-nav aui-bar-light" id="aui-header">
             <a class="aui-pull-left aui-btn" tapmode onclick="$api.closeWin()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>

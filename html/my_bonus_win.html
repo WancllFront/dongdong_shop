@@ -22,9 +22,9 @@
             <span class="aui-iconfont aui-icon-left" style="color:#fff;"></span>
         </a>
         <div class="aui-title">我的奖金</div>
-        <div class="" style="margin-top:2.5rem;font-size:2.5rem;" id="bonus"></div>
-        <div class="" style="font-size:0.8rem;">总收益(元)</div>
-        <div class="" style="font-size:0.8rem;">
+        <div style="margin-top:2.5rem;font-size:2.5rem;" id="bonus"></div>
+        <div style="font-size:0.8rem;">总收益(元)</div>
+        <div style="font-size:0.8rem;">
             <div class="button">分享得收益</div>
         </div>
     </header>
@@ -32,7 +32,6 @@
 
     <div class="aui-content" id="app">
         <ul class="aui-list aui-media-list">
-
             <li class="aui-list-item aui-list-item-middle" style="padding:0.2rem 0rem;" v-for="(detail,key) in details" :key="key">
                 <div class="aui-media-list-item-inner">
                     <div class="aui-list-item-media" style="width: 1rem;"></div>
@@ -80,7 +79,7 @@
     };
     setRefresh = function(){
         api.setRefreshHeaderInfo({
-            bgColor: '#ccc',
+            bgColor: '#4be4fb',
             textColor: '#fff',
         }, function(ret, err){
             page = 1;

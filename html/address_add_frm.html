@@ -27,7 +27,7 @@
                             收货人
                         </div>
                         <div class="aui-list-item-input">
-                            <input type="text" placeholder="" v-model="consigneeName" id="consigneeName">
+                            <input type="text" placeholder="" v-model="consigneeName" id="consigneeName" style="color:#777">
                         </div>
                         <div class="aui-list-item-label-icon">
 
@@ -39,11 +39,12 @@
                         <div class="aui-list-item-label">
                             联系电话
                         </div>
-                        <div class="aui-list-item-input">
-                            <input type="tel" placeholder="" v-model="telephone" id="telephone">
+                        <div class="aui-list-item-input" style="padding-left:0.52rem;">
+                            <input type="tel" placeholder="" v-model="telephone" id="telephone" style="color:#777;">
                         </div>
-                        <div class="aui-list-item-label-icon"  tapmode onclick="selectContacts()">
-                            <i class="aui-iconfont aui-icon-right"></i>
+                        <!-- <div class="aui-list-item-label" style="width:25%;color:#0056c6;" tapmode onclick="selectContacts()">通讯录</div> -->
+                        <div class="aui-list-item-label"  tapmode onclick="selectContacts()" style="color:#257bf0;">
+                            +通讯录
                         </div>
                     </div>
                 </li>
@@ -53,7 +54,7 @@
                             省市县
                         </div>
                         <div class="aui-list-item-input">
-                            <span id="address" v-text="proCityCounty"></span>
+                            <span id="address" v-text="proCityCounty" style="color:#777"></span>
                         </div>
                         <div class="aui-list-item-label-icon">
                             <i class="aui-iconfont aui-icon-right"></i>
@@ -66,7 +67,7 @@
                             街道/建筑
                         </div>
                         <div class="aui-list-item-input">
-                            <span id="address" v-text="poi.name"></span>
+                            <span id="address" v-text="poi.name" style="color:#777"></span>
                         </div>
                         <div class="aui-list-item-label-icon">
                             <i class="aui-iconfont aui-icon-right"></i>
@@ -79,7 +80,7 @@
                             详细地址
                         </div>
                         <div class="aui-list-item-input">
-                            <textarea placeholder="" v-model="detail"></textarea>
+                            <textarea placeholder="" v-model="detail" style="color:#777"></textarea>
                         </div>
                         <div class="aui-list-item-label-icon">
                         </div>

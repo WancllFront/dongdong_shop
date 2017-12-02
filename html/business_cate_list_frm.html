@@ -10,9 +10,9 @@
     <style>
         body {}
         .cates{padding: 0.5rem 0.3rem;align-items: center;background-color: #fff;}
-        .cates .cate{width:48%;padding:0.2rem 0.2rem;display: inline-block;}
-        .cates .cate .img{border: 1px solid #f4f4f4;max-width: 100%;height:5rem;overflow: hidden;line-height: 4rem;text-align: center;}
-        .cates .cate .img img{max-width: 100%;display: inline-block;vertical-align: middle;padding: 0.2rem;}
+        .cates .cate{width:50%;padding:0.2rem 0.2rem;display: inline-block;}
+        .cates .cate .img{border: 1px solid #f4f4f4;max-width: 100%;overflow: hidden;text-align: center;border-radius: 0.3rem;display: flex;align-items: center;justify-content:center;}
+        .cates .cate .img img{max-width: 100%;padding: 0.2rem;}
         .cates .cate .title{font-size: 0.7rem;color:#676767;text-align: center;width: 100%;padding-top: 0.3rem;}
     </style>
 </head>
@@ -45,6 +45,9 @@
                     cateId: cate.id
                 })
             }
+        },
+        updated: function(){
+            fixPage();
         }
     })
     apiready = function() {
@@ -59,8 +62,14 @@
                  alert( JSON.stringify( err ) );
             }
         });
-
     };
+    fixPage = function(){
+        var domList = $api.domAll('.img');
+        domList.forEach(function(item){
+            $api.css(item, 'height:' + $api.offset(item).w + 'px');
+            // $api.css(item, 'line-height:' + $api.offset(item).w + 'px');
+        })
+    }
 </script>
 
 </html>

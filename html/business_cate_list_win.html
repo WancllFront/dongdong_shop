@@ -21,8 +21,9 @@
         #classify-list {
             width: 5rem;
             height: 100%;
-            background-color: #f4f4f4;
+            background-color: #fff;
             overflow-x: hidden;
+            border-right: 1px solid #f4f4f4;
         }
         #classify-list .aui-list {
             overflow-y: scroll;
@@ -30,9 +31,9 @@
         .aui-list .aui-list-item-title {
             font-size: 0.7rem;
         }
-        .aui-list .aui-list-item {background-color: #f4f4f4;}
-        .aui-list .aui-list-item:active{background-color: #fff;}
-        .aui-list .active{background-color: #fff;}
+        .aui-list .aui-list-item {background-color: #fff;background-image:none;padding-left:0.5rem;min-height:2.4rem;}
+        .aui-list .active .aui-list-item-inner .aui-list-item-title{background-color: #358cff;border-radius: 2.2rem;}
+        .aui-list .active .aui-list-item-inner .aui-list-item-title{color:#fff;}
         </style>
     </style>
 </head>
@@ -62,8 +63,8 @@
     <section class="aui-content" id="classify-list">
         <ul class="aui-list aui-list-noborder" id="classify-ul" >
             <li class="aui-list-item" :class="{active:cate.isSelected}" tapmode @click="changeCate(cate)" v-for="(cate,key) in cates" :key="key" >
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title" v-text="cate.name"></div>
+                <div class="aui-list-item-inner" style="padding-right:0.5rem;">
+                    <div class="aui-list-item-title" v-text="cate.name" style="text-align:center;width: 100%;line-height:1.45rem;"></div>
                 </div>
             </li>
         </ul>

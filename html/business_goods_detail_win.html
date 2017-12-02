@@ -6,7 +6,6 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style media="screen">
-
     </style>
 </head>
 <body>
@@ -18,17 +17,18 @@
     </header>
 
     <footer class="aui-bar aui-bar-tab aui-margin-t-15" id="footer" style="border-top:1px solid #f1f1f1;">
-        <div class="aui-bar-tab-item" tapmode style="width: 3rem;" onclick="chat()">
-            <i class="aui-iconfont aui-icon-comment aui-text-info"></i>
-            <div class="aui-bar-tab-label aui-text-info">咨询</div>
-        </div>
+
         <div class="aui-bar-tab-item" tapmode style="width: 3rem;height:" onclick="addCollection()">
-            <i class="aui-iconfont aui-icon-star aui-text-warning"></i>
-            <!-- <img src="../image/star_warn.png" style="width:1.2rem;margin:0 auto;"> -->
-            <div class="aui-bar-tab-label aui-text-warning" id="collection">收藏</div>
+            <!-- <i class="aui-iconfont aui-icon-star aui-text-warning"></i> -->
+            <img src="../image/star_pray.png" style="width:1.2rem;margin:0 auto;">
+            <div class="aui-bar-tab-label" id="collection" style="color:#777">收藏</div>
         </div>
-        <div class="aui-bar-tab-item aui-bg-warning aui-text-white" tapmode style="width: auto;" onclick="addCart()">加入购物车</div>
-        <div class="aui-bar-tab-item aui-bg-danger aui-text-white" tapmode style="width: auto;" onclick="buy()">立即购买</div>
+        <div class="aui-bar-tab-item" style="width: 3rem;"  tapmode onclick="$api.goWindow('business_cart_win')">
+            <img src="../image/gouwuche.png" style="width:1.2rem;margin:0 auto;">
+            <div class="aui-bar-tab-label" style="color:#777">购物车</div>
+        </div>
+        <div class="aui-bar-tab-item aui-text-white" tapmode style="width: auto;background-color:#555;" onclick="addCart()">加入购物车</div>
+        <div class="aui-bar-tab-item aui-text-white" tapmode style="width: auto;background-color:#358cff;" onclick="buy()">立即购买</div>
     </footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>

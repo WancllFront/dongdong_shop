@@ -12,18 +12,18 @@
             .goodslist{}
             .goodslist .comment{border-bottom: 0.5rem solid #f4f4f4;margin-bottom: 0.5rem;}
             .goodslist .comment .goods{display:flex;padding:0.8rem 0rem;background-color: #f4f4f4;margin: 0rem 0.5rem;}
-            .goodslist .comment .goods .left{width:26%;margin-left: 2%;}
+            .goodslist .comment .goods .left{width:26%;margin-left: 2%;overflow: hidden;text-align: center;display: flex;align-items: center;justify-content:center;}
             .goodslist .comment .goods .left img{max-width: 100%;}
             .goodslist .comment .goods .right{display:inline-block;width:72%;margin-left:0.5rem;position:relative;}
-            .goodslist .comment .goods .right .title{padding-bottom: 1.5rem;color: #333;}
+            .goodslist .comment .goods .right .title{color: #333;}
             .goodslist .comment .goods .right .describe{color:#737373;font-size:0.8rem;}
-            .goodslist .comment .goods .right .price{}
+            .goodslist .comment .goods .right .price{position: absolute;bottom: 0rem;}
             .goodslist .comment .goods .right .price span{display:inline-block;}
 
             .goodslist .comment .content{padding: 0rem 1rem;}
             .goodslist .comment .content .star{padding: 1rem 0rem;}
-            .goodslist .comment .content .star img{width: 8%;}
-            .goodslist .comment .content .text{color: #333;padding-bottom: 1rem;font-size: 0.9rem;}
+            .goodslist .comment .content .star img{width: 8%;margin-right: 0.5rem;}
+            .goodslist .comment .content .text{color: #333;padding-bottom: 1rem;font-size: 1rem;}
             .goodslist .comment .content .img {width: 100%;padding-bottom: 1rem;}
             .goodslist .comment .content .img img{max-width: 23%;border: 1px solid #f4f4f4;}
     </style>
@@ -33,12 +33,13 @@
     <div class="goodslist" id="app">
         <div class="comment" v-for="(comment,key) in comments" :key="key">
             <div class="goods">
-                <div class="left">
+                <div class="left" id="left">
                     <img :src="comment.order_goods_info.thum">
                 </div>
 
                 <div class="right">
                     <div class="title" v-text="comment.order_goods_info.name"></div>
+                    <div class="title" v-text="comment.order_goods_info.intro" style="color:#777;font-size:0.8rem;"></div>
                     <div class="price">
                         <span style="color:#ff2c2c" v-text="'￥' + comment.order_goods_info.price"></span>
                         <!-- <span style="color:#737373">/份</span> -->
@@ -118,6 +119,9 @@
                     }
                 });
             }
+        },
+        updated: function(){
+            $api.css($api.byId('left'), 'height:'+ $api.offset($api.byId('left')).w + 'px;');
         }
     })
     var photoBrowser;
@@ -135,7 +139,7 @@
         });
 
         api.setRefreshHeaderInfo({
-            bgColor: '#ccc',
+            bgColor: '#eee',
             textColor: '#fff',
         }, function(ret, err){
             app.page = 1;

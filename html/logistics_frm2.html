@@ -55,16 +55,12 @@
                 <div class="aui-timeline-item"></div>
                 <div class="aui-timeline-item" v-for="(m,key) in info.data" :key="key">
                     <div class="aui-timeline-item-label-icon">
-                        <img src="../image/select_blue.png" alt="">
+                        <img src="../image/select_blue.png" style="width:1.5rem;">
                     </div>
                     <div class="aui-timeline-item-inner">
                         <div class="aui-card-list">
-                            <div class="aui-card-list-content-padded" style="color:#358eff">
-                                {{m.time}}
-                            </div>
-                            <div class="aui-card-list-content-padded" style="color:#358eff">
-                                {{m.context}}
-                            </div>
+                            <div class="aui-card-list-content-padded" style="color:#358eff" v-text="m.time"></div>
+                            <div class="aui-card-list-content-padded" style="color:#358eff" v-text="m.context"></div>
                         </div>
                     </div>
                 </div>

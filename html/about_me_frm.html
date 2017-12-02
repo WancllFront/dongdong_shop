@@ -10,13 +10,14 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         body {height: 100%;background-color: #f4f4f4;}
-        .logout{border-radius: 0.15rem;border:2px solid #358cff; background-color:#f4f4f4;margin-top:1.5rem;line-height:2.5rem;height:2.5rem;color:#358cff; text-align:center;width:40%;margin-left:30%;}
+        .logout{border-radius: 0.15rem;border:2px solid #358cff; background-color:#f4f4f4;margin-top:1.5rem;line-height:2.5rem;height:2.5rem;color:#358cff; text-align:center;width:50%;margin-left:25%;}
         .logout:active{background-color: #e8e8e8}
+        .aui-list .aui-list-item{min-height: 2.4rem;}
     </style>
 </head>
 
 <body>
-    <div class="aui-content aui-margin-b-15">
+    <div class="aui-content" style="margin-bottom:0.4rem;">
         <ul class="aui-list aui-list-in">
             <li class="aui-list-item" tapmode onclick="modify('avatar')">
                 <div class="aui-list-item-media">
@@ -47,7 +48,7 @@
             </li>
         </ul>
     </div>
-    <div class="aui-content aui-margin-b-15">
+    <div class="aui-content" style="margin-bottom:0.4rem;">
         <ul class="aui-list aui-list-in">
             <li class="aui-list-item" tapmode onclick="$api.goWindow('bind_setting_win')">
                 <div class="aui-list-item-inner aui-list-item-arrow">
@@ -195,8 +196,7 @@
 
     logout = function(){
         api.confirm({
-            title: '提示',
-            msg: '确定退出登录?',
+            title: '确定退出登录?',
             buttons: ['确定', '取消']
         }, function(ret, err){
             if( ret ){
