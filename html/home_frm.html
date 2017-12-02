@@ -354,15 +354,15 @@
             mediaValue: 'pic',
             destinationType: 'url',
             allowEdit: true,
-            quality: 25,
+            quality: 50,
             saveToPhotoAlbum: false
         }, function(ret, err){
             if(ret){
                 fun(ret);
             }else{
-
+                 //alert(JSON.stringify(err));
             }
-        })
+        });
     }
 </script>
 

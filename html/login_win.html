@@ -95,6 +95,7 @@
             password: password,
             type: 1
         },function(ret){
+            ret.data.user.avatar = ret.data.user.avatar || '../image/avatar.png';
             $api.setStorage('userinfo',ret.data);
             setTimeout(function(){
                 $api.goWindow('home_win')

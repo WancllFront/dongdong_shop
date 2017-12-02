@@ -23,7 +23,7 @@
     <div id="app">
         <div class="money">
             <p style="color:#555;">金额(元)</p>
-            <p style="font-size:2rem;color:#000;">{{asset.asset_type}}{{asset.change_money}}</p>
+            <p style="font-size:2rem;color:#000;" v-text="asset.asset_type + asset.change_money"></p>
             <p style="color:#fca816;" v-if="asset.type == 'drawcash' && asset.status == 1">处理中</p>
             <p style="color:#fca816;" v-if="asset.type == 'drawcash' && asset.status == 3">未通过</p>
             <p style="color:#fca816;" v-if="asset.type == 'drawcash' && asset.status == 2">通过</p>
@@ -32,16 +32,16 @@
         <div class="content">
             <div class="line">
                 <div class="left">说明</div>
-                <div class="right">{{asset.intro}}</div>
+                <div class="right" v-text="asset.intro"></div>
             </div>
 
             <div class="line" v-if="asset.order_no">
                 <div class="left">订单号</div>
-                <div class="right">{{asset.order_no}}</div>
+                <div class="right" v-text="asset.order_no"></div>
             </div>
             <div class="line">
                 <div class="left">时间</div>
-                <div class="right">{{asset.create_time}}</div>
+                <div class="right" v-text="asset.create_time"></div>
             </div>
         </div>
     </div>

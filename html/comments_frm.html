@@ -121,7 +121,10 @@
             }
         },
         updated: function(){
-            $api.css($api.byId('left'), 'height:'+ $api.offset($api.byId('left')).w + 'px;');
+            var domList = $api.domAll('.left');
+            Array.prototype.forEach.call(domList,function(item){
+                $api.css(item, 'height:'+ $api.offset(item).w + 'px;');
+            })
         }
     })
     var photoBrowser;
