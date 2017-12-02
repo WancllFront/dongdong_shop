@@ -66,11 +66,20 @@
             },2000)
         });
 
-        loadScrollPicture();
+        loadIndexBanner();
+    }
+    loadIndexBanner = function(){
+        $api.ajax('POST',$api.host + 'query/datadict',{
+            kid: 1
+        },function(ret){
+            //console.log(JSON.stringify(ret));
+            loadScrollPicture()
+        },{
+            auth: $api.auth
+        })
     }
 
-    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 },placeholderImg: 'widget://image/timg.jpg', data: { paths: [ 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f755dcab.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f75be060.png', 'http://api.wancll.wygoo.com/data/upload/file/20171023/59ed4f762604b.png'
-], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 215 },placeholderImg: 'widget://image/timg.jpg', data: { paths: [], }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
 
     reloadScrollPicture = function(){
         uiScrollPictureModule.reloadData({

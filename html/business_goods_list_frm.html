@@ -35,6 +35,7 @@
 <script type="text/javascript">
     var cateId = '';
     var keywords = '';
+    var sortType = '';
     var app = new Vue({
         el: '#app',
         data:{
@@ -51,7 +52,9 @@
     })
     apiready = function(){
         api.parseTapmode();
-        cateId = api.pageParam.cateId
+        cateId = api.pageParam.cateId;
+        keywords = api.pageParam.keywords;
+        sortType = api.pageParam.sortType;
 
         addEventListener();
         loadGoods();
@@ -83,6 +86,8 @@
     }
 
     loadGoods = function(){
+        console.log(keywords)
+        console.log(sortType)
         var data = {};
         var url = ''
         if(keywords){
@@ -91,6 +96,11 @@
                 keywords: keywords
             }
             url = 'goods/search'
+        }else if(sortType){
+            data = {
+                tag: sortType
+            }
+            url = 'query/goods_by_tag'
         }else{
             data = {
                 shop_id: 0,
