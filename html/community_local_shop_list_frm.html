@@ -97,7 +97,8 @@
     loadShops = function(){
         $api.ajax('POST',$api.host + 'shops/lists',{
             lng:lng,
-            lat:lat
+            lat:lat,
+            is_local_city:1
         },function(ret){
             if(ret.data.length != 0){
                 app.page ++;

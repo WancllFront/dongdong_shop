@@ -46,7 +46,7 @@
                 </li>
                 <li class="aui-list-header" style="background-color:#fff;text-align:right;border-bottom:0.5rem solid #f4f4f4;">
                     <span></span>
-                    <span>小计:<span  style="color:#f63030;font-size:0.8rem;" v-text="'￥' + good.price * good.num"></span></span>
+                    <span>小计:<span  style="color:#f63030;font-size:0.8rem;" v-text="'￥' + (good.price * good.num).toFixed(2)"></span></span>
                 </li>
             </div>
         </ul>

@@ -123,7 +123,7 @@
                 totalPrice += (item.price * item.num)
             }
         });
-        app.totalPrice = totalPrice;
+        app.totalPrice = totalPrice.toFixed(2);
         app.isSelectedAll = goods.every(function(item){
             return item.isSelected;
         })

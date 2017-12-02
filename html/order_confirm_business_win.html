@@ -57,7 +57,7 @@
             totalPrice += item.price * item.num;
             totalPrice += item.freight_price * 1;
         })
-        $api.text($api.byId('price'), '￥'+totalPrice);
+        $api.text($api.byId('price'), '￥'+totalPrice.toFixed(2));
 
         api.parseTapmode();
         var header = $api.byId('aui-header');
@@ -89,7 +89,7 @@
                 totalPrice += item.price * item.num;
                 totalPrice += item.freight_price * 1;
             })
-            $api.text($api.byId('price'), '￥'+totalPrice);
+            $api.text($api.byId('price'), '￥'+totalPrice.toFixed(2));
         });
 
     };

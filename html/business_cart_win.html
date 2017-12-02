@@ -109,7 +109,7 @@
                         totalPrice += item.goods_info.price * item.num;
                     }
                 })
-                app.totalPrice = totalPrice;
+                app.totalPrice = totalPrice.toFixed(2);
             }else{
                  alert( JSON.stringify( err ) );
             }

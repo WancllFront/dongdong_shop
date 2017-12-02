@@ -72,7 +72,7 @@
             totalPrice += item.price * item.num;
             totalPrice += item.freight_price * 1;
         })
-        $api.text($api.byId('totalPrice'), '￥' + totalPrice);
+        $api.text($api.byId('totalPrice'), '￥' + totalPrice.toFixed(2));
     };
 
     submit = function(){
@@ -80,7 +80,6 @@
             frameName: 'order_confirm_community_frm',
             script: 'submit();'
         });
-
     }
 
 </script>
