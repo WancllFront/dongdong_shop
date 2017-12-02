@@ -204,6 +204,14 @@
     }
 
     submit = function(){
+        if(!time){
+            var time = new Date().getTime();
+        }else{
+            if(new Date().getTime() - time < 2000){
+                return;
+                time = new Date().getTime();
+            }
+        }
         if(!app.isSelfPick && !app.address){
             api.toast({
                 msg: '请先选择地址',

@@ -215,7 +215,7 @@
 
     loadCates = function(){
         $api.ajax('POST',$api.host + 'query/shop_goods_cates',{
-            shop_id: api.pageParam.shop.id
+            shop_id: 1//api.pageParam.shop.id
         },function(ret){
             ret.data.forEach(function(item,index){
                 item.isSelected = false;

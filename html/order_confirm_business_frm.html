@@ -190,7 +190,16 @@
         })
     }
 
+    var time = ''
     submitOrder = function(){
+        if(!time){
+            time = new Date().getTime();
+        }else{
+            if(new Date().getTime() - time < 2000){
+                return;
+                time = new Date().getTime();
+            }
+        }
         var message = $api.val($api.byId('message'));
         var goodsInfo = [];
         app.goodsList.forEach(function(item){
@@ -220,11 +229,9 @@
                     duration: 2000,
                     location: 'bottom'
                 });
-                setTimeout(function(){
-                    $api.goWindow('pay_select_win',{
-                        order:ret.data
-                    })
-                },500)
+                $api.goWindow('pay_select_win',{
+                    order:ret.data
+                })
             },{
                 token: userinfo.token.token
             })

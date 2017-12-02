@@ -43,7 +43,11 @@
     </footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
 
     apiready = function(){
         var goodsList = api.pageParam.goodsList || [];

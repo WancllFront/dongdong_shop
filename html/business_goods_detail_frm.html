@@ -9,7 +9,7 @@
     <!-- <link rel="stylesheet" type="text/css" href="../css/api.css" /> -->
     <style>
         body {background-color: #fff;}
-        .content{margin-top: 255px;}
+        /*.content{margin-top: 255px;}*/
         .aui-label-info{background-color: #358cff !important;}
         .content .goods {padding:0.3rem 0.6rem 0.3rem 0.6rem;}
         .content .goods .other:after{display:block;content:"";clear:both;}
@@ -156,6 +156,26 @@
 
         loadGoods();
         loadComments();
+
+        $api.css($api.byId('content'), 'margin-top:' + api.frameWidth + 'px');
+        api.openFrame({
+            name: 'business_goods_detail_top_frm',
+            url: './business_goods_detail_top_frm.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: api.pageParam.headerPosH
+            },
+            pageParam: {
+                name: 'test'
+            },
+            bounces: true,
+            bgColor: 'rgba(255,255,255,0)',
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false
+        });
+
     };
     loadGoods = function(){
         // console.log(api.pageParam.goodsId)
@@ -168,7 +188,7 @@
         })
     }
 
-    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: 255 },placeholderImg: 'widget://image/timg.jpg',  data: { paths: scollPicture, }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
+    loadScrollPicture = function(){ uiScrollPictureModule.open({ rect: { h: api.frameWidth },placeholderImg: 'widget://image/timg.jpg',  data: { paths: scollPicture, }, styles: { indicator: { color: '#FFFFFF', activeColor: '#369eff' } }, interval: 3, fixedOn: api.frameName, fixed: false }); }
 
     changeNav = function(index){
         $api.addCls($api.byId('span' + index), 'active');
@@ -194,7 +214,6 @@
                 })
             }else{
                 $api.text($api.byId('more'), ' ');
-
             }
         },{
             auth: $api.auth,
