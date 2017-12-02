@@ -193,11 +193,12 @@
 
     selectContacts = function(){
         api.openContacts(function(ret, err){
+            // console.log(JSON.stringify(ret))
             if(ret.status){
                  app.consigneeName = ret.name;
                  app.telephone = ret.phone;
             }else{
-                alert(JSON.stringify(err))
+                //alert(JSON.stringify(err))
             }
         });
     }
