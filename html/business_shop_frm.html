@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <img src="http://api.wancll.wygoo.com/data/upload/file/20171102/59fad5cacfc64.png" style="width:100%;">
+        <img src="" id="ad" style="width:100%;">
 
         <div class="goodslist">
             <div class="goods" v-for="(good,key) in goods" :key="key" tapmode @click="goGoodsDetail(good)">
@@ -112,6 +112,19 @@
                 imgs.push($api.imgPath + item.src)
             })
             reloadScrollPicture(imgs)
+        },{
+            auth: $api.auth
+        });
+
+        $api.ajax('POST',$api.host + 'query/datadict',{
+            kid: 3
+        },function(ret){
+            api.refreshHeaderLoadDone();
+            var imgs = [];
+            JSON.parse(ret.data[0].content).forEach(function(item){
+                // console.log($api.imgPath + item.src)
+                $api.attr($api.byId('ad'), 'src', $api.imgPath + item.src);
+            })
         },{
             auth: $api.auth
         })
