@@ -695,9 +695,6 @@
                     duration: 2000,
                     location: 'middle'
                 });
-                setTimeout(function(){
-                    $api.closeWin()
-                },500)
             }
         });
     }
