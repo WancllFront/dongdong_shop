@@ -110,35 +110,31 @@
         var classifyListH = $api.offset($api.byId('classify-list')).w;
         document.getElementById("classify-list").style.height = api.winHeight-headerPos.h+"px";
 
-        api.openFrame({
-            name: 'business_cate_list_frm',
-            url: './business_cate_list_frm.html',
-            bounces: true,
-            rect: {
-                x: classifyListH,
-                y: headerPos.h,
-                w: api.winWidth-classifyListH-5,
-                h: 'auto'
-            },
-            hScrollBarEnabled:false
-        });
-        loadCates();
+        var rect = {
+            x: classifyListH,
+            y: headerPos.h,
+            w: api.winWidth-classifyListH-5,
+            h: 'auto'
+        }
+        loadCates(rect);
     };
-    loadCates = function(){
+    loadCates = function(rect){
         $api.ajax('POST',$api.host + 'goods_cates/lists',{
             shop_id: 0
         },function(ret){
             ret.data.forEach(function(item,index){
                 if(index == 0){
                     item.isSelected = true;
-                    setTimeout(function(){
-                        api.sendEvent({
-                            name: 'business_cate_list_frm_loadSubCates',
-                            extra: {
-                                subCates: item._child || []
-                            }
-                        });
-                    },500)
+                    api.openFrame({
+                        name: 'business_cate_list_frm',
+                        url: './business_cate_list_frm.html',
+                        bounces: true,
+                        rect: rect,
+                        hScrollBarEnabled:false,
+                        pageParam:{
+                            subCates: item._child || []
+                        }
+                    });
                 }else{
                     item.isSelected = false;
                 }

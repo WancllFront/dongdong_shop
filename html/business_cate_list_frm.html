@@ -52,6 +52,7 @@
     })
     apiready = function() {
         api.parseTapmode();
+        app.subCates = api.pageParam.subCates
 
         api.addEventListener({
             name: 'business_cate_list_frm_loadSubCates'
@@ -65,9 +66,8 @@
     };
     fixPage = function(){
         var domList = $api.domAll('.img');
-        domList.forEach(function(item){
+        Array.prototype.forEach.call(domList,function(item){
             $api.css(item, 'height:' + $api.offset(item).w + 'px');
-            // $api.css(item, 'line-height:' + $api.offset(item).w + 'px');
         })
     }
 </script>
