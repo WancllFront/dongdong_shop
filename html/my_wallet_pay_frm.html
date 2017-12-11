@@ -40,6 +40,44 @@
     apiready = function() {
 
     };
+    payByService = function(){
+        $api.ajax('POST', $api.host + 'pay/ali',{
+
+        })
+        api.ajax({
+            url: $api.host + 'pay/sign',
+            method: 'post',
+            data: {
+                values: {
+                    bill_num: order.bill_num
+                }
+            }
+        },function(ret, err){
+            if (ret) {
+                aliPayPlus.payOrder({
+                  orderInfo:ret.data
+                },function(ret,err) {
+                    if(ret.code == 9000){
+                        api.alert({
+                            title: '支付成功',
+                            msg: '',
+                        }, function(ret, err){
+                            api.sendEvent({
+                                name: 'orderStatusChanged',
+                            });
+                            setTimeout(function(){api.closeWin();},500)
+                        });
+                    }
+                });
+            } else {
+                api.toast({
+                    msg: err.msg,
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
 </script>
 
 </html>

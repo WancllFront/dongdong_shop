@@ -119,6 +119,17 @@
         //         }
         //     });
         // }
+        if(type == 'wx'){
+            wx.auth({
+                apiKey: 'wx5cd83565d0e1aea3'
+            }, function(ret, err){
+                if(ret.status){
+                    console(JSON.stringify(ret));
+                }else{
+                    console(err.code);
+                }
+            });
+        }
     }
 </script>
 

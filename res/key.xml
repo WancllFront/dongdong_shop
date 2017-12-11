@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<security>
+  <item name="wxPay_appId" value="wx5cd83565d0e1aea3"/>
+  <item name="wxPay_mchId" value="1489867802"/>
+  <item name="wxPay_partnerKey" value="d548fb608b659b81ff364f458ffcbf79"/>
+  <item name="wxPay_notifyUrl" value="http://http://api_v3.wx.wygoo.com/index.php"/>
+   <!-- <item name="wxPay_notifyUrl" value="http://locktools.wancll.wygoo.com/"/> -->
+
+</security>
