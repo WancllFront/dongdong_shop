@@ -32,7 +32,9 @@
         $api.fixStatusBar(header);
         var headerPos = $api.offset(header);
         var body_h = $api.offset($api.dom('body')).h;
-        var footerH = $api.offset($api.byId('footer')).h;
+        var footer = $api.byId('footer');
+        $api.fixTabBar(footer);
+        var footerH = $api.offset(footer).h;
         api.openFrame({
             name: 'address_frm',
             url: 'address_frm.html',

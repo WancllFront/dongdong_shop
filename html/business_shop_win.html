@@ -76,7 +76,9 @@
         var header = $api.byId('header');
         $api.fixStatusBar(header);
         var headerH = $api.offset(header).h;
-        var footerH = $api.offset($api.byId('footer')).h;
+        var footer = $api.byId('footer');
+        $api.fixTabBar(footer);
+        var footerH = $api.offset(footer).h;
         var frameH = api.winHeight - headerH - footerH;
         api.openFrame({
             name: 'business_shop_frm',

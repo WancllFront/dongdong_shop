@@ -82,7 +82,9 @@
 		//其中，IOS状态栏高度为20px，Android为25px
         var headerH = $api.offset(header).h;
 		//footer高度为css样式中声明的30px
-		var footerH = $api.offset($api.byId('footer')).h;
+        var footer = $api.byId('footer');
+        $api.fixTabBar(footer);
+		var footerH = $api.offset(footer).h;
 		//frame的高度为当前window高度减去header和footer的高度
 		var frameH = api.winHeight - headerH - footerH;
         api.openFrame({

@@ -54,11 +54,10 @@
       FastClick.attach(document.body);
     }, false);
     var uiLoading;
-    var qq,wx,weibo
+    var qq,wx
     apiready = function() {
         uiLoading = api.require("UILoading");
         qq = api.require("QQPlus");
-        weibo = api.require("weibo");
         wx = api.require("wx");
 
         api.parseTapmode();
@@ -96,6 +95,7 @@
             type: 1
         },function(ret){
             ret.data.user.avatar = ret.data.user.avatar || '../image/avatar.png';
+            console.log(JSON.stringify(ret))
             $api.setStorage('userinfo',ret.data);
             setTimeout(function(){
                 $api.goWindow('home_win')
@@ -124,12 +124,56 @@
                 apiKey: 'wx5cd83565d0e1aea3'
             }, function(ret, err){
                 if(ret.status){
-                    console(JSON.stringify(ret));
+                    var uiId = '';
+                    var code = ret.code;
+                    uiLoading.flower({
+                        size: 30,
+                        fixed: true
+                    }, function(ret){
+                        getToken(ret.id, code)
+                    });
                 }else{
-                    console(err.code);
+                    alert(JSON.stringify(err))
                 }
             });
         }
+    }
+    getToken = function(uiId, code){
+        wx.getToken({
+            apiKey: 'wx5cd83565d0e1aea3',
+            apiSecret: 'd548fb608b659b81ff364f458ffcbf79',
+            code: code
+        },function(ret, err){
+            uiLoading.closeFlower ({id: uiId});
+            if(ret.status){
+                var openId = ret.openId;
+                var accessToken = ret.accessToken;
+                uiLoading.flower({
+                    size: 30,
+                    fixed: true
+                }, function(ret){
+                    getUserInfo(ret.id, accessToken, openId)
+                });
+            }else{
+                alert(err.code);
+            }
+        });
+    }
+
+    getUserInfo = function(uiId,accessToken, openId){
+        wx.getUserInfo({
+            accessToken: accessToken,
+            openId: openId
+        }, function(ret,err){
+            uiLoading.closeFlower ({id: uiId});
+            if(ret.status){
+                alert(JSON.stringify(ret));
+                console.log(JSON.stringify(ret))
+            }else{
+                alert(err.code);
+            }
+        });
+
     }
 </script>
 

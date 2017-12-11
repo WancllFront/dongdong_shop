@@ -45,7 +45,9 @@
     apiready = function() {
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
-        var footerH = $api.offset($api.byId('footer')).h;
+        var footer = $api.byId('footer');
+        $api.fixTabBar(footer);
+        var footerH = $api.offset(footer).h;
         var frameH = api.winHeight - footerH;
         api.openFrame({
             name: 'home_frm',

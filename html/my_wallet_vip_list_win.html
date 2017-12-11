@@ -24,7 +24,7 @@
     </header>
     <footer class="aui-bar aui-bar-tab" id="footer"  tapmode onclick="$api.goWindow('my_wallet_vip_buy_win')">
         <div class="aui-bar-tab-item aui-padded-l-15 aui-padded-r-15">
-            <div class="aui-btn aui-btn-block aui-btn-info" style="height:2.4rem;"></i>购买会员卡</div>
+            <div class="aui-btn aui-btn-block aui-btn-sm aui-btn-info"></i>购买会员卡</div>
         </div>
     </footer>
 </body>
@@ -37,7 +37,9 @@
         $api.fixStatusBar(header);
         var headerPos = $api.offset(header);
         var body_h = $api.offset($api.dom('body')).h;
-        var footerH = $api.offset($api.byId('footer')).h;
+        var footer = $api.byId('footer');
+        $api.fixTabBar(footer);
+        var footerH = $api.offset(footer).h;
         api.openFrame({
             name: 'my_wallet_vip_list_frm',
             url: './my_wallet_vip_list_frm.html',
