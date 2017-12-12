@@ -46,24 +46,61 @@
     };
 
     pay = function(type){
-        // var money = $api.val($api.byId('money'));
-        // if(!money){
-        //     api.toast({
-        //         msg: '请填写充值金额',
-        //         duration: 2000,
-        //         location: 'middle'
-        //     });
-        //     return;
-        // }
+        var money = $api.val($api.byId('money'));
+        if(!money){
+            api.toast({
+                msg: '请填写充值金额',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
         $api.ajax('POST', $api.host + 'pay/wallet_recharge',{
-            money: 0.01
+            money: money
         }, function(ret){
             if(type == 'alipay'){
                 payByAliPayPlus(ret.data.member_card_no)
+            }else{
+                payByWxPay(ret.data.member_card_no, money)
             }
         }, {
             token: userinfo.token.token
         })
+    }
+    payByWxPay = function(no, money){
+        wxPay.config({
+             apiKey: 'wx5cd83565d0e1aea3',
+             mchId: '1494132712',
+             partnerKey: 'ltn9XtyOxAtm0k2qWwUB74dDJ3ojrPSH',
+             notifyUrl: 'http://api_v3.wx.wygoo.com/index.php/api/pay/wechat_return'
+        }, function(ret, err){
+             if(ret.status){
+                wxPay.pay({
+                     description: '钱包充值',
+                     totalFee: money * 100,
+                     tradeNo: no,
+                },function(ret, err){
+                     if(ret.status){
+                        api.alert({
+                            title: ret.result,
+                        }, function(ret, err){
+                            api.sendEvent({
+                                name: 'my_wallet_frm_refresh_wallet',
+                            });
+                            setTimeout(function(){api.closeWin();},300)
+                        });
+                     }else{
+                         if(err.code == -2){
+                             alert('取消支付')
+                         }else{
+                             alert(err.code)
+                         }
+                     }
+                });
+             }else{
+                 alert(err.code);
+             }
+        });
     }
 
     payByAliPayPlus = function(no){

@@ -22,7 +22,7 @@
     </header>
     <div class="aui-content aui-margin-b-15">
         <ul class="aui-list aui-list-in">
-            <li class="aui-list-item" tapmode onclick="">
+            <li class="aui-list-item">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/wechat.png" style="width:1.5rem;">
                 </div>
@@ -54,11 +54,9 @@
     var userinfo = $api.getStorage('userinfo');
     var wxBindDom = $api.byId('wxBind');
     if(userinfo.account.wechat_openid){
-            $api.printLog(userinfo)
         $api.text(wxBindDom, '解绑');
         $api.css(wxBindDom, 'color:#333;');
     }else{
-            $api.printLog(userinfo)
         $api.text(wxBindDom, '未绑定');
         $api.css(wxBindDom, 'color:#999;');
     }
@@ -76,21 +74,32 @@
     bindWx = function(){
         if(userinfo.account.wechat_openid){
             //解绑
-            $api.ajax('POST', 'accounts/unbinding',{
-                login_type:'wechat'
-            },function(ret){
-                api.toast({
-                    msg: ret.msg,
-                    duration: 2000,
-                    location: 'midlle'
-                });
-                userinfo.account = ret.data;
-                $api.setStorage('userinfo', userinfo);
-                $api.text(wxBindDom, '未绑定');
-                $api.css(wxBindDom, 'color:#999;');
-            },{
-                token: userinfo.token.token
-            })
+            api.confirm({
+                title: '确定解绑微信?',
+                buttons: ['确定', '取消']
+            }, function(ret, err){
+                if( ret ){
+                     if(ret.buttonIndex == 1){
+                         $api.ajax('POST', $api.host + 'accounts/unbinding',{
+                             login_type:'wechat'
+                         },function(ret){
+                             api.toast({
+                                 msg: ret.msg,
+                                 duration: 2000,
+                                 location: 'midlle'
+                             });
+                             userinfo.account = ret.data;
+                             $api.setStorage('userinfo', userinfo);
+                             $api.text(wxBindDom, '未绑定');
+                             $api.css(wxBindDom, 'color:#999;');
+                         },{
+                             token: userinfo.token.token
+                         })
+                     }
+                }else{
+                     alert( JSON.stringify( err ) );
+                }
+            });
         }else{
             //绑定
             loginThird('wx');
@@ -146,9 +155,10 @@
         }, function(ret,err){
             uiLoading.closeFlower ({id: uiId});
             if(ret.status){
-                $api.ajax('POST', 'accounts/binding',{
+                // alert(JSON.stringify(ret))
+                $api.ajax('POST', $api.host + 'accounts/binding',{
                     openid: ret.openid,
-                    login_type: 'wechat'
+                    login_type: 'wechat',
                 },function(ret){
                     api.toast({
                         msg: ret.msg,

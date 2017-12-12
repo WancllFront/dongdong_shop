@@ -54,9 +54,10 @@
     }, false);
     var userinfo = $api.getStorage('userinfo');
     var moneyDom = $api.byId('money');
-    var aliPayPlus;
+    var aliPayPlus, wxPay;
     apiready = function(){
         aliPayPlus = api.require("aliPayPlus");
+        wxPay = api.require("wxPay");
     }
     buy = function(){
         api.actionSheet({
@@ -70,28 +71,13 @@
                      $api.ajax('POST',$api.host + 'member_cards',{
                          money: $api.text(moneyDom)
                      },function(ret){
-                        $api.ajax('POST', $api.host + 'pay/ali',{
-                            member_card_no: ret.data.member_card_no
-                        }, function(ret){
-                            // $api.printLog(ret);
-                            aliPayPlus.payOrder({
-                              orderInfo:ret.data
-                            },function(ret,err) {
-                                if(ret.code == 9000){
-                                    api.alert({
-                                        title: '支付成功',
-                                        msg: '',
-                                    }, function(ret, err){
-                                         api.sendEvent({
-                                             name: 'my_wallet_vip_list_frm_fresh_cards',
-                                         });
-                                        setTimeout(function(){api.closeWin();},500)
-                                    });
-                                }
-                            });
-                        },{
-                            token: userinfo.token.token
-                        })
+                         if(buttonIndex == 1){
+                             //支付宝
+                             payByAliPayPlus(ret.data.member_card_no)
+                         }else{
+                             //微信
+                             payByWxPay(ret.data.member_card_no,  $api.text(moneyDom))
+                         }
                      },{
                          token: userinfo.token.token
                      })
@@ -105,6 +91,66 @@
     add = function(){
         $api.text(moneyDom, parseInt($api.text(moneyDom)) + 500 * 1 );
 
+    }
+
+    payByAliPayPlus = function(no){
+        $api.ajax('POST', $api.host + 'pay/ali',{
+            member_card_no: no
+        }, function(ret){
+            aliPayPlus.payOrder({
+              orderInfo:ret.data
+            },function(ret,err) {
+                if(ret.code == 9000){
+                    api.alert({
+                        title: '支付成功',
+                        msg: '',
+                    }, function(ret, err){
+                         api.sendEvent({
+                             name: 'my_wallet_vip_list_frm_fresh_cards',
+                         });
+                        setTimeout(function(){api.closeWin();},300)
+                    });
+                }
+            });
+        },{
+            token: userinfo.token.token
+        })
+    }
+
+    payByWxPay = function(no, money){
+        wxPay.config({
+             apiKey: 'wx5cd83565d0e1aea3',
+             mchId: '1494132712',
+             partnerKey: 'ltn9XtyOxAtm0k2qWwUB74dDJ3ojrPSH',
+             notifyUrl: 'http://api_v3.wx.wygoo.com/index.php/api/pay/wechat_return'
+        }, function(ret, err){
+             if(ret.status){
+                wxPay.pay({
+                     description: '购买会员卡',
+                     totalFee: parseFloat(money) * 100,
+                     tradeNo: no,
+                },function(ret, err){
+                     if(ret.status){
+                        api.alert({
+                            title: ret.result,
+                        }, function(ret, err){
+                            api.sendEvent({
+                                name: 'my_wallet_frm_refresh_wallet',
+                            });
+                            setTimeout(function(){api.closeWin();},300)
+                        });
+                     }else{
+                         if(err.code == -2){
+                             alert('取消支付')
+                         }else{
+                             alert(err.code)
+                         }
+                     }
+                });
+             }else{
+                 alert(err.code);
+             }
+        });
     }
 </script>
 
