@@ -127,7 +127,6 @@
                 password: password,
                 type: 1,
                 code: varicode,
-                tjuser: api.pageParam.recommendTelephone || $api.val($api.byId('recommend')),
                 wechat_openid: api.pageParam.openId
             }
         }else if(api.pageParam.type == 'qq'){
@@ -136,7 +135,6 @@
                 password: password,
                 type: 1,
                 code: varicode,
-                tjuser: api.pageParam.recommendTelephone || $api.val($api.byId('recommend')),
                 qq_openid: api.pageParam.openId
             }
         }
