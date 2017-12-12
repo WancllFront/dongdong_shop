@@ -649,7 +649,6 @@
     u.auth = 'Basic_Ivj6eZRxMTx2yiyunZvnG8R65';
 
     u.ajax = function(method,url,values,fun,headers){
-
         var uiLoading = api.require("UILoading");
         var uiId = '';
         uiLoading.flower({

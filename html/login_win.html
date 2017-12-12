@@ -88,14 +88,12 @@
             });
             return;
         }
-
         $api.ajax('POST',$api.host + 'accounts/login',{
             guid: telephone,
             password: password,
             type: 1
         },function(ret){
             ret.data.user.avatar = ret.data.user.avatar || '../image/avatar.png';
-            console.log(JSON.stringify(ret))
             $api.setStorage('userinfo',ret.data);
             setTimeout(function(){
                 $api.goWindow('home_win')
@@ -105,20 +103,6 @@
         })
     }
     loginThird = function(type){
-        // if(type == 'QQPlus'){
-        //     qq.installed(function(ret, err) {
-        //         if (ret.status) {
-        //             qq.login(function(ret, err) {
-        //                 api.alert({
-        //                     title: 'id和token',
-        //                     msg: ret.openId + ret.accessToken
-        //                 });
-        //             });
-        //         } else {
-        //             api.toast({ msg: "请安装qq客户端" });
-        //         }
-        //     });
-        // }
         if(type == 'wx'){
             wx.auth({
                 apiKey: 'wx5cd83565d0e1aea3'
@@ -167,13 +151,28 @@
         }, function(ret,err){
             uiLoading.closeFlower ({id: uiId});
             if(ret.status){
-                alert(JSON.stringify(ret));
-                console.log(JSON.stringify(ret))
+                $api.ajax('POST', $api.host + 'accounts/third_login',{
+                    openid: ret.openid,
+                    login_type: 'wechat'
+                }, function(ret){
+                    if(ret.data){
+                        ret.data.user.avatar = ret.data.user.avatar || '../image/avatar.png';
+                        $api.setStorage('userinfo',ret.data);
+                        setTimeout(function(){
+                            $api.goWindow('home_win')
+                        },500)
+                    }else{
+                        $api.goWindow('bind_telephone_win',{
+                            openId: openId
+                        })
+                    }
+                },{
+                    auth: $api.auth
+                })
             }else{
                 alert(err.code);
             }
         });
-
     }
 </script>
 

@@ -64,7 +64,9 @@
         $api.fixStatusBar(header);
         var headerPos = $api.offset(header);
         var body_h = $api.offset($api.dom('body')).h;
-        var footerH = $api.offset($api.byId('footer')).h;
+        var footer = $api.byId('footer');
+        $api.fixTabBar(footer)
+        var footerH = $api.offset(footer).h;
         api.openFrame({
             name: 'order_confirm_business_frm',
             url: './order_confirm_business_frm.html',

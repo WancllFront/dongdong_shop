@@ -48,7 +48,7 @@
                             <div class="aui-list-item-text aui-font-size-14" style="color:#555555;">
                                 总资产(元)
                             </div>
-                            <div class="aui-list-item-text" style="color:#000;font-size:1.5rem;" v-text="(wallet.member_card_money*1 + wallet.wallet_money*1) || ''"></div>
+                            <div class="aui-list-item-text" style="color:#000;font-size:1.5rem;" v-text="((wallet.member_card_money*1 + wallet.wallet_money*1) || 0).toFixed(2)"></div>
                         </div>
                         <div class="aui-list-item-right">
                             <div class="aui-list-item-text  aui-font-size-12" style="color:#55555">

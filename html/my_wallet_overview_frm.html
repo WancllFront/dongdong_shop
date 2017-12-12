@@ -24,7 +24,6 @@
         .bg .button .pick{float: right;height:2.4rem;line-height: 2.4rem;text-align: center;border-radius: 2.5rem;background: linear-gradient(to bottom,#fefefe,#f3f2f2,#f6f5f5);color:#000;width: 47%}
         .bg .button .pick:active{background: linear-gradient(to bottom,#f3f2f2,#f3f2f2,#f3f2f2)}
 
-
         .detail{height: 2.2rem;line-height: 2.2rem;margin: 0.5rem 5%;;text-align: center;width: 90%;background-color: #ffc640;border-radius: 2.2rem;;}
         .detail:active{background-color: #edc15a;}
     </style>
@@ -61,6 +60,7 @@
         api.parseTapmode();
         setRefresh();
         loadInfo();
+        addEventListener();
     };
 
     setRefresh = function(){
@@ -72,13 +72,20 @@
         });
     }
 
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'my_wallet_frm_refresh_wallet'
+        }, function(ret, err){
+            loadInfo()
+        });
+    }
+
     loadInfo = function(){
         $api.ajax('POST',$api.host + 'assets/profit',{},function(ret){
             $api.text($api.byId('yesterday'), ret.data.yesterday);
-            $api.text($api.byId('rest'), '总金额' + ret.data.total_money + '元');
+            $api.text($api.byId('rest'), '总金额 ' + ret.data.total_money + ' 元');
             $api.text($api.byId('totalProfit'), ret.data.total_profit);
             $api.text($api.byId('rate'), ret.data.rate);
-
         },{
             token: userinfo.token.token
         })

@@ -166,14 +166,12 @@
 <script type="text/javascript">
     var uiLoading;
     var userinfo = $api.getStorage('userinfo');
-
     apiready = function() {
         uiLoading = api.require("UILoading");
 
         fixPage();
         setRefresh();
         addEventListener()
-
     };
     setRefresh = function(){
         api.setStatusBarStyle({ style: 'dark' });

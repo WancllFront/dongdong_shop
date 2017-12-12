@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         body {background-color: #f4f4f4;height:100%}
-        
+
     </style>
 </head>
 
@@ -23,11 +23,11 @@
     </header>
 
     <div class="area">
-        <div class="tips">绑定手机号，可以提高账号安全等级</div>
+        <div class="tips"请先绑定手机号</div>
         <div class="mix">
             <i class="aui-iconfont aui-icon-mobile" style=""></i>
-            <input type="tel" class="input" id="telephone"  onkeyup="telephoneChange(value)" placeholder="输入手机号码">
-            <button class="get-varicode" id="get-varicode" tapmode onclick="sendclick()">发送验证码</button>
+            <input type="tel" class="input" id="telephone"  onkeyup="telephoneChange(value)" placeholder="输入手机号码" pattern="[0-9]*">
+            <button class="get-varicode" id="get-varicode" tapmode onclick="getVaricode()">发送验证码</button>
         </div>
 
         <div class="mix" >
@@ -42,22 +42,15 @@
             <i class="aui-iconfont aui-icon-lock"></i>
             <input type="password" class="input" id="repassword" placeholder="确认密码">
         </div>
-        <div class="submit" tapmode onclick="">验证并绑定</div>
+        <div class="submit" tapmode onclick="submit()">验证并绑定</div>
 
-        <div class="tips" style="margin-top:2rem;">
+        <!-- <div class="tips" style="margin-top:2rem;">
             <p>东东商城提示:</p>
             <p>1、一个手机号仅限绑定一个商城账号</p>
             <p>2、一个手机号仅限绑定一个商城账号</p>
             <p>3、一个手机号仅限绑定一个商城账号</p>
-        </div>
+        </div> -->
     </div>
-
-    <!-- <div class="third">第三方账号登录</div>
-    <div class="icon">
-        <img src="../image/sina.png">
-        <img src="../image/qq.png">
-        <img src="../image/wechat.png">
-    </div> -->
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
@@ -73,10 +66,81 @@
         value = value.replace(/[^\d]/g,'')
         value = value.substr(0,11)
         if(value.length >= 11){
-            //$api.byId('telephone').blur();
-            $api.byId('varicode').focus();
+            $api.byId('telephone').blur();
+            // $api.byId('varicode').focus();
         }
         $api.val($api.byId('telephone'), value);
+    }
+
+    submit = function(){
+        var telephone = $api.val($api.byId('telephone'));
+        var password = $api.val($api.byId('password'));
+        var repassword = $api.val($api.byId('repassword'));
+        var varicode = $api.val($api.byId('varicode'));
+
+        if(!telephone || !$api.variTelephone(telephone)){
+            api.toast({
+                msg: '请填写正确的手机号码',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('telephone').focus();
+            return;
+        }
+
+        if(!varicode){
+            api.toast({
+                msg: '请填写验证码',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.byId('varicode').focus();
+            return;
+        }
+
+        if(password != repassword){
+            api.toast({
+                msg: '两次输入密码不一致',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.val($api.byId('repassword'),'')
+            $api.byId('repassword').focus();
+            return;
+        }
+
+        if(!$api.variPassword(password)){
+            api.toast({
+                msg: '密码为6-20位字母或者数字',
+                duration: 2000,
+                location: 'middle'
+            });
+            $api.val($api.byId('repassword'),'')
+            $api.val($api.byId('password'),'')
+            $api.byId('password').focus();
+            return;
+        }
+
+        $api.ajax('POST',$api.host + 'accounts/register',{
+            mobile:telephone,
+            password: password,
+            type: 1,
+            code: varicode,
+            tjuser: api.pageParam.recommendTelephone || $api.val($api.byId('recommend')),
+            wechat_openid: api.pageParam.openId
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'middle'
+            });
+            setTimeout(function(){
+                api.closeWin();
+            },500)
+        },{
+            auth: $api.auth
+        })
+
     }
 
     wait = 60;
@@ -98,6 +162,32 @@
             },
             1000);
         }
+    }
+
+    getVaricode = function(){
+        var telephone = $api.val($api.byId('telephone'));
+        if(!telephone || !$api.variTelephone(telephone)){
+            api.toast({
+                msg: '请填写正确的手机号码',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+
+        $api.ajax('POST',$api.host + 'systems/code',{
+            mobile: telephone,
+            type: 1
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'middle'
+            });
+            sendclick();
+        },{
+            auth: $api.auth
+        })
     }
 </script>
 

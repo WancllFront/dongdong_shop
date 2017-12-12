@@ -22,29 +22,19 @@
     </header>
     <div class="aui-content aui-margin-b-15">
         <ul class="aui-list aui-list-in">
-            <li class="aui-list-item">
+            <li class="aui-list-item" tapmode onclick="">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/wechat.png" style="width:1.5rem;">
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
                     <div class="aui-list-item-title">微信</div>
                     <div class="aui-list-item-right">
-                        <div style="font-size:0.7rem;" class="nobind">解绑</div>
+                        <div style="font-size:0.7rem;" class="nobind" id="wxBind" tapmode onclick="bindWx()"></div>
                     </div>
                 </div>
             </li>
-            <li class="aui-list-item">
-                <div class="aui-list-item-label-icon">
-                    <img src="../image/sina.png" style="width:1.5rem;">
-                </div>
-                <div class="aui-list-item-inner aui-list-item-arrow">
-                    <div class="aui-list-item-title">微博</div>
-                    <div class="aui-list-item-right">
-                        <div style="font-size:0.7rem;color:#999;">未绑定</div>
-                    </div>
-                </div>
-            </li>
-            <li class="aui-list-item">
+
+            <!-- <li class="aui-list-item" tapmode onclick="">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/qq.png" style="width:1.5rem;">
                 </div>
@@ -54,20 +44,131 @@
                         <div style="font-size:0.7rem;color:#999;">未绑定</div>
                     </div>
                 </div>
-            </li>
+            </li> -->
         </ul>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var wx, uiLoading;
+    var userinfo = $api.getStorage('userinfo');
+    var wxBindDom = $api.byId('wxBind');
+    if(userinfo.account.wechat_openid){
+            $api.printLog(userinfo)
+        $api.text(wxBindDom, '解绑');
+        $api.css(wxBindDom, 'color:#333;');
+    }else{
+            $api.printLog(userinfo)
+        $api.text(wxBindDom, '未绑定');
+        $api.css(wxBindDom, 'color:#999;');
+    }
+
     apiready = function() {
+        wx = api.require("wx");
+        uiLoading = api.require("UILoading");
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
         var header = $api.byId('header');
         $api.fixStatusBar(header);
         var headerH = $api.offset(header).h;
-        var frameH = api.winHeight - headerH;
     };
+
+    bindWx = function(){
+        if(userinfo.account.wechat_openid){
+            //解绑
+            $api.ajax('POST', 'accounts/unbinding',{
+                login_type:'wechat'
+            },function(ret){
+                api.toast({
+                    msg: ret.msg,
+                    duration: 2000,
+                    location: 'midlle'
+                });
+                userinfo.account = ret.data;
+                $api.setStorage('userinfo', userinfo);
+                $api.text(wxBindDom, '未绑定');
+                $api.css(wxBindDom, 'color:#999;');
+            },{
+                token: userinfo.token.token
+            })
+        }else{
+            //绑定
+            loginThird('wx');
+        }
+    }
+
+    loginThird = function(type){
+        if(type == 'wx'){
+            wx.auth({
+                apiKey: 'wx5cd83565d0e1aea3'
+            }, function(ret, err){
+                if(ret.status){
+                    var uiId = '';
+                    var code = ret.code;
+                    uiLoading.flower({
+                        size: 30,
+                        fixed: true
+                    }, function(ret){
+                        getToken(ret.id, code)
+                    });
+                }else{
+                    alert(JSON.stringify(err))
+                }
+            });
+        }
+    }
+    getToken = function(uiId, code){
+        wx.getToken({
+            apiKey: 'wx5cd83565d0e1aea3',
+            apiSecret: 'd548fb608b659b81ff364f458ffcbf79',
+            code: code
+        },function(ret, err){
+            uiLoading.closeFlower ({id: uiId});
+            if(ret.status){
+                var openId = ret.openId;
+                var accessToken = ret.accessToken;
+                uiLoading.flower({
+                    size: 30,
+                    fixed: true
+                }, function(ret){
+                    getUserInfo(ret.id, accessToken, openId)
+                });
+            }else{
+                alert(err.code);
+            }
+        });
+    }
+
+    getUserInfo = function(uiId,accessToken, openId){
+        wx.getUserInfo({
+            accessToken: accessToken,
+            openId: openId
+        }, function(ret,err){
+            uiLoading.closeFlower ({id: uiId});
+            if(ret.status){
+                $api.ajax('POST', 'accounts/binding',{
+                    openid: ret.openid,
+                    login_type: 'wechat'
+                },function(ret){
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                    userinfo.account = ret.data;
+                    $api.setStorage('userinfo', userinfo);
+                    $api.text(wxBindDom, '解绑');
+                    $api.css(wxBindDom, 'color:#333;');
+                },{
+                    token: userinfo.token.token
+                })
+            }else{
+                alert(err.code);
+            }
+        });
+    }
+
+
 </script>
 
 </html>

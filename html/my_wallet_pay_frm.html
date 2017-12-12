@@ -26,58 +26,70 @@
         <div class="money">
             <div>钱包充值(元)</div>
             <div style="display:flex;margin-top:1rem;">
-                <span>￥</span><input type="tel" style="text-align:center;letter-spacing: 0.05rem;font-size:1.5rem;" pattern="[0-9]*">
+                <span>￥</span><input type="text" style="text-align:center;letter-spacing: 0.05rem;font-size:1.5rem;" pattern="[0-9]*" id="money">
             </div>
         </div>
         <div class="paybutton">
-            <button class="wechat" tapmode onclick="">微信支付</button>
-            <button class="alipay" tapmode onclick="">支付宝支付</button>
+            <button class="wechat" tapmode onclick="pay('wxpay')">微信支付</button>
+            <button class="alipay" tapmode onclick="pay('alipay')">支付宝支付</button>
         </div>
     </div>
 </body>
-<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var aliPayPlus;
+    var wxPay;
+    var userinfo = $api.getStorage('userinfo');
     apiready = function() {
-
+        aliPayPlus = api.require("aliPayPlus");
+        wxPay = api.require("wxPay");
     };
-    payByService = function(){
-        $api.ajax('POST', $api.host + 'pay/ali',{
 
+    pay = function(type){
+        // var money = $api.val($api.byId('money'));
+        // if(!money){
+        //     api.toast({
+        //         msg: '请填写充值金额',
+        //         duration: 2000,
+        //         location: 'middle'
+        //     });
+        //     return;
+        // }
+        $api.ajax('POST', $api.host + 'pay/wallet_recharge',{
+            money: 0.01
+        }, function(ret){
+            if(type == 'alipay'){
+                payByAliPayPlus(ret.data.member_card_no)
+            }
+        }, {
+            token: userinfo.token.token
         })
-        api.ajax({
-            url: $api.host + 'pay/sign',
-            method: 'post',
-            data: {
-                values: {
-                    bill_num: order.bill_num
-                }
-            }
-        },function(ret, err){
-            if (ret) {
-                aliPayPlus.payOrder({
-                  orderInfo:ret.data
-                },function(ret,err) {
-                    if(ret.code == 9000){
-                        api.alert({
-                            title: '支付成功',
-                            msg: '',
-                        }, function(ret, err){
-                            api.sendEvent({
-                                name: 'orderStatusChanged',
-                            });
-                            setTimeout(function(){api.closeWin();},500)
-                        });
-                    }
-                });
-            } else {
-                api.toast({
-                    msg: err.msg,
-                    duration: 2000,
-                    location: 'bottom'
-                });
-            }
-        });
     }
+
+    payByAliPayPlus = function(no){
+        $api.ajax('POST', $api.host + 'pay/ali',{
+            member_card_no: no
+        }, function(ret){
+            aliPayPlus.payOrder({
+              orderInfo:ret.data
+            },function(ret,err) {
+                if(ret.code == 9000){
+                    api.alert({
+                        title: '支付成功',
+                        msg: '',
+                    }, function(ret, err){
+                        api.sendEvent({
+                            name: 'my_wallet_frm_refresh_wallet',
+                        });
+                        setTimeout(function(){api.closeWin();},500)
+                    });
+                }
+            });
+        },{
+            token: userinfo.token.token
+        })
+    }
+
 </script>
 
 </html>
