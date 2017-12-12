@@ -272,7 +272,7 @@
                      sendPicture(ret.index)
                  }else if(ret.eventType == 'send'){
                      sendText(ret.msg);
-                     uiChatBox.closeKeyboard();
+                    //  uiChatBox.closeKeyboard();
                  }
             }else{
                  //alert( JSON.stringify( err ) );
@@ -284,7 +284,12 @@
             name: 'move'
         }, function(ret, err){
             if( ret ){
-                
+                api.setFrameAttr({
+                    rect: {
+                        h: api.pageParam.frameH - ret.panelHeight
+                    },
+                });
+                $('html,body').animate({scrollTop: $('#bottom').offset().top}, 500);
             }else{
                  alert( JSON.stringify( err ) );
             }

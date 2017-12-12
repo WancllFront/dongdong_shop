@@ -40,7 +40,7 @@
 
             <div class="paybutton">
                 <button class="alipay" tapmode onclick="buy()">确认购买</button>
-                <p style="margin-top: 0.5rem;color:#2c6abe">《会员卡说明》</p>
+                <p style="margin-top: 0.5rem;color:#2c6abe" tapmode onclick="goArticle()">《会员卡说明》</p>
             </div>
         </div>
     </div>
@@ -59,6 +59,13 @@
         aliPayPlus = api.require("aliPayPlus");
         wxPay = api.require("wxPay");
     }
+
+    goArticle = function(article){
+        $api.goWindow('article_win',{
+            articleId: 15
+        })
+    }
+
     buy = function(){
         api.actionSheet({
             title: '请选择支付方式',
