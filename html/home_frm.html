@@ -247,38 +247,51 @@
         // detectFace();
         ocridcard();
     }
-
     ocridcard = function(){
         alert('请将身份证置于相框内')
         getPicture(function(ret){
+            var base64Data = ret.base64Data
             uiLoading.flower({
+                size: 30,
                 fixed: true
             }, function(ret){
-                uiLoading.id = ret.id;
-            });
-            $api.apiAjax($api.ocridcardUrl,$api.faceKey,{
-                image_file:ret.data
-            },function(ret,err){
-                uiLoading.closeFlower ({id: uiLoading.id});
-                if(ret){
-                    if(ret.cards.length == 0){
-                        api.alert({
-                            title: '提示',
-                            msg: '未检测到身份证，请重新拍照',
-                        }, function(ret, err){
-                            if( ret ){
-                                ocridcard()
-                            }else{
-                                alert( JSON.stringify( err ) );
-                            }
-                        });
-                    }else{
-                        submitAuthInfo(ret);
+                var uiId = ret.id;
+                // console.log(base64Data.substr(0,50))
+                var formatBase64Data = base64Data.substr(base64Data.indexOf('base64,') + 7);
+                api.ajax({
+                    url: $api.ocridcardUrl,
+                    method: 'post',
+                    data: {
+                        values: {
+                            api_key: 'Ubx28gOdHnyo6_YVpZ6-NDUMDgc8YfjJ',
+                            api_secret: '08mDSQ4DIxEi5WTR_shfid2KDaNOqbNG',
+                            image_base64: formatBase64Data
+                        },
                     }
-                }else{
-                    alert(err.msg)
-                }
-            })
+                },function(ret, err){
+                    uiLoading.closeFlower ({
+                        id: uiId
+                    });
+                    if (ret) {
+                        if(ret.cards.length == 0){
+                            api.alert({
+                                title: '提示',
+                                msg: '未检测到身份证，请重新拍照',
+                            }, function(ret, err){
+                                if( ret ){
+                                    ocridcard()
+                                }else{
+                                    alert( JSON.stringify( err ) );
+                                }
+                            });
+                        }else{
+                            submitAuthInfo(ret);
+                        }
+                    } else {
+                        alert(err.msg)
+                    }
+                });
+            });
         })
     }
 
@@ -321,7 +334,7 @@
         api.confirm({
             title: '扫描结果',
             msg: card.name + ' ' +card.birthday + ' '+card.gender+' '+card.race+' '+card.address+ ' '+ card.id_card_number,
-            buttons: ['确定', '取消']
+            buttons: ['确定提交', '取消']
         }, function(ret, err){
             if( ret ){
                  if(ret.buttonIndex == 1){
@@ -350,9 +363,9 @@
             sourceType: 'camera',
             encodingType: 'jpg',
             mediaValue: 'pic',
-            destinationType: 'url',
-            allowEdit: true,
-            quality: 50,
+            destinationType: 'base64',
+            allowEdit: false,
+            quality: 20,
             saveToPhotoAlbum: false
         }, function(ret, err){
             if(ret){

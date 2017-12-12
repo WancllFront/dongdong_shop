@@ -622,18 +622,6 @@
             });
         }
     }
-    u.apiAjax = function(url,values,files,fun){
-        api.ajax({
-            url: url,
-            method: 'post',
-            data: {
-                values: values,
-                files:files
-            }
-        },function(ret, err){
-            fun(ret,err);
-        });
-    }
     u.faceKey = {
         api_key: 'Ubx28gOdHnyo6_YVpZ6-NDUMDgc8YfjJ',
         api_secret: '08mDSQ4DIxEi5WTR_shfid2KDaNOqbNG'
