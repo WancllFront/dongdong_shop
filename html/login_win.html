@@ -43,8 +43,8 @@
     <div class="third">第三方账号登录</div>
     <div class="icon">
         <!-- <img src="../image/sina.png" tapmode onclick="loginThird('weibo')"> -->
-        <!-- <img src="../image/qq.png" tapmode onclick="loginThird('QQPlus')"> -->
-        <img src="../image/wechat.png" tapmode onclick="loginThird('wx')">
+        <img src="../image/qq.png" tapmode onclick="third('qq')">
+        <img src="../image/wechat.png" tapmode onclick="third('wx')">
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -102,7 +102,7 @@
             auth: $api.auth
         })
     }
-    loginThird = function(type){
+    third = function(type){
         if(type == 'wx'){
             wx.auth({
                 apiKey: 'wx5cd83565d0e1aea3'
@@ -120,6 +120,18 @@
                     alert(JSON.stringify(err))
                 }
             });
+        }else if(type == 'qq'){
+            qq.login({
+                apiKey: '1106492833'
+            }, function(ret, err){
+                if(ret){
+                    if(ret.status){
+                        loginThird(ret.openId, 'qq')
+                    }
+                }else{
+                    alert(err.msg)
+                }
+            })
         }
     }
     getToken = function(uiId, code){
@@ -132,47 +144,33 @@
             if(ret.status){
                 var openId = ret.openId;
                 var accessToken = ret.accessToken;
-                uiLoading.flower({
-                    size: 30,
-                    fixed: true
-                }, function(ret){
-                    getUserInfo(ret.id, accessToken, openId)
-                });
+                loginThird(openId, 'wechat')
             }else{
                 alert(err.code);
             }
         });
     }
 
-    getUserInfo = function(uiId,accessToken, openId){
-        wx.getUserInfo({
-            accessToken: accessToken,
-            openId: openId
-        }, function(ret,err){
-            uiLoading.closeFlower ({id: uiId});
-            if(ret.status){
-                $api.ajax('POST', $api.host + 'accounts/third_login',{
-                    openid: ret.openid,
-                    login_type: 'wechat'
-                }, function(ret){
-                    if(ret.data){
-                        ret.data.user.avatar = ret.data.user.avatar || '../image/avatar.png';
-                        $api.setStorage('userinfo',ret.data);
-                        setTimeout(function(){
-                            $api.goWindow('home_win')
-                        },100)
-                    }else{
-                        $api.goWindow('bind_telephone_win',{
-                            openId: openId
-                        })
-                    }
-                },{
-                    auth: $api.auth
-                })
+    loginThird = function(openId, type){
+        $api.ajax('POST', $api.host + 'accounts/third_login',{
+            openid: openId,
+            login_type: type
+        }, function(ret){
+            if(ret.data){
+                ret.data.user.avatar = ret.data.user.avatar || '../image/avatar.png';
+                $api.setStorage('userinfo',ret.data);
+                setTimeout(function(){
+                    $api.goWindow('home_win')
+                },100)
             }else{
-                alert(err.code);
+                $api.goWindow('bind_telephone_win',{
+                    openId: openId,
+                    type: type
+                })
             }
-        });
+        },{
+            auth: $api.auth
+        })
     }
 </script>
 

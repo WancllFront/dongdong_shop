@@ -120,15 +120,27 @@
             $api.byId('password').focus();
             return;
         }
-
-        $api.ajax('POST',$api.host + 'accounts/register',{
-            mobile:telephone,
-            password: password,
-            type: 1,
-            code: varicode,
-            tjuser: api.pageParam.recommendTelephone || $api.val($api.byId('recommend')),
-            wechat_openid: api.pageParam.openId
-        },function(ret){
+        var data = {};
+        if(api.pageParam.type == 'wechat'){
+            data = {
+                mobile:telephone,
+                password: password,
+                type: 1,
+                code: varicode,
+                tjuser: api.pageParam.recommendTelephone || $api.val($api.byId('recommend')),
+                wechat_openid: api.pageParam.openId
+            }
+        }else if(api.pageParam.type == 'qq'){
+            data = {
+                mobile:telephone,
+                password: password,
+                type: 1,
+                code: varicode,
+                tjuser: api.pageParam.recommendTelephone || $api.val($api.byId('recommend')),
+                qq_openid: api.pageParam.openId
+            }
+        }
+        $api.ajax('POST',$api.host + 'accounts/register',data,function(ret){
             api.toast({
                 msg: ret.msg,
                 duration: 2000,
@@ -140,7 +152,6 @@
         },{
             auth: $api.auth
         })
-
     }
 
     wait = 60;

@@ -34,25 +34,26 @@
                 </div>
             </li>
 
-            <!-- <li class="aui-list-item" tapmode onclick="">
+            <li class="aui-list-item" tapmode onclick="">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/qq.png" style="width:1.5rem;">
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
                     <div class="aui-list-item-title">QQ</div>
                     <div class="aui-list-item-right">
-                        <div style="font-size:0.7rem;color:#999;">未绑定</div>
+                        <div style="font-size:0.7rem;" id="qqBind" tapmode onclick="bindQQ()"></div>
                     </div>
                 </div>
-            </li> -->
+            </li>
         </ul>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
-    var wx, uiLoading;
+    var wx, uiLoading, qq;
     var userinfo = $api.getStorage('userinfo');
     var wxBindDom = $api.byId('wxBind');
+    var qqBindDom = $api.byId('qqBind');
     if(userinfo.account.wechat_openid){
         $api.text(wxBindDom, '解绑');
         $api.css(wxBindDom, 'color:#333;');
@@ -60,54 +61,65 @@
         $api.text(wxBindDom, '未绑定');
         $api.css(wxBindDom, 'color:#999;');
     }
+    if(userinfo.account.qq_openid){
+        $api.text(qqBindDom, '解绑');
+        $api.css(qqBindDom, 'color:#333;');
+    }else{
+        $api.text(qqBindDom, '未绑定');
+        $api.css(qqBindDom, 'color:#999;');
+    }
 
     apiready = function() {
         wx = api.require("wx");
+        qq = api.require("QQPlus");
         uiLoading = api.require("UILoading");
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
         var header = $api.byId('header');
         $api.fixStatusBar(header);
-        var headerH = $api.offset(header).h;
     };
+
+    bindQQ = function(){
+        if(userinfo.account.qq_openid){
+            api.confirm({
+                title: '确定解绑qq?',
+                buttons: ['确定', '取消']
+            }, function(ret, err){
+                if( ret ){
+                     if(ret.buttonIndex == 1){
+                         unbind('qq')
+                     }
+                }else{
+                     alert( JSON.stringify( err ) );
+                }
+            });
+
+        }else{
+            loginThird('qq');
+        }
+    }
 
     bindWx = function(){
         if(userinfo.account.wechat_openid){
-            //解绑
             api.confirm({
                 title: '确定解绑微信?',
                 buttons: ['确定', '取消']
             }, function(ret, err){
                 if( ret ){
                      if(ret.buttonIndex == 1){
-                         $api.ajax('POST', $api.host + 'accounts/unbinding',{
-                             login_type:'wechat'
-                         },function(ret){
-                             api.toast({
-                                 msg: ret.msg,
-                                 duration: 2000,
-                                 location: 'midlle'
-                             });
-                             userinfo.account = ret.data;
-                             $api.setStorage('userinfo', userinfo);
-                             $api.text(wxBindDom, '未绑定');
-                             $api.css(wxBindDom, 'color:#999;');
-                         },{
-                             token: userinfo.token.token
-                         })
+                         unbind('wechat')
                      }
                 }else{
                      alert( JSON.stringify( err ) );
                 }
             });
         }else{
-            //绑定
-            loginThird('wx');
+            loginThird('wechat');
         }
     }
 
     loginThird = function(type){
-        if(type == 'wx'){
+        if(type == 'wechat'){
             wx.auth({
                 apiKey: 'wx5cd83565d0e1aea3'
             }, function(ret, err){
@@ -124,6 +136,18 @@
                     alert(JSON.stringify(err))
                 }
             });
+        }else if(type == 'qq'){
+            qq.login({
+                apiKey: '1106492833'
+            }, function(ret, err){
+                if(ret){
+                    if(ret.status){
+                        bind(ret.openId, 'qq')
+                    }
+                }else{
+                    alert(err.msg)
+                }
+            })
         }
     }
     getToken = function(uiId, code){
@@ -134,50 +158,59 @@
         },function(ret, err){
             uiLoading.closeFlower ({id: uiId});
             if(ret.status){
-                var openId = ret.openId;
-                var accessToken = ret.accessToken;
-                uiLoading.flower({
-                    size: 30,
-                    fixed: true
-                }, function(ret){
-                    getUserInfo(ret.id, accessToken, openId)
-                });
+                bind(ret.openId, 'wechat')
             }else{
                 alert(err.code);
             }
         });
     }
 
-    getUserInfo = function(uiId,accessToken, openId){
-        wx.getUserInfo({
-            accessToken: accessToken,
-            openId: openId
-        }, function(ret,err){
-            uiLoading.closeFlower ({id: uiId});
-            if(ret.status){
-                // alert(JSON.stringify(ret))
-                $api.ajax('POST', $api.host + 'accounts/binding',{
-                    openid: ret.openid,
-                    login_type: 'wechat',
-                },function(ret){
-                    api.toast({
-                        msg: ret.msg,
-                        duration: 2000,
-                        location: 'middle'
-                    });
-                    userinfo.account = ret.data;
-                    $api.setStorage('userinfo', userinfo);
-                    $api.text(wxBindDom, '解绑');
-                    $api.css(wxBindDom, 'color:#333;');
-                },{
-                    token: userinfo.token.token
-                })
-            }else{
-                alert(err.code);
+    bind = function(openId, type){
+        $api.ajax('POST', $api.host + 'accounts/binding',{
+            openid: openId,
+            login_type: type
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'middle'
+            });
+            userinfo.account = ret.data;
+            $api.setStorage('userinfo', userinfo);
+            if(type == 'qq'){
+                $api.text(qqBindDom, '解绑');
+                $api.css(qqBindDom, 'color:#333;');
+            }else if(type == 'wechat'){
+                $api.text(wxBindDom, '解绑');
+                $api.css(wxBindDom, 'color:#333;');
             }
-        });
+        },{
+            token: userinfo.token.token
+        })
     }
 
+    unbind = function(type){
+        $api.ajax('POST', $api.host + 'accounts/unbinding',{
+            login_type: type
+        },function(ret){
+            api.toast({
+                msg: ret.msg,
+                duration: 2000,
+                location: 'midlle'
+            });
+            userinfo.account = ret.data;
+            $api.setStorage('userinfo', userinfo);
+            if(type == 'qq'){
+                $api.text(qqBindDom, '未绑定');
+                $api.css(qqBindDom, 'color:#999;');
+            }else if(type == 'wechat'){
+                $api.text(wxBindDom, '未绑定');
+                $api.css(wxBindDom, 'color:#999;');
+            }
+        },{
+            token: userinfo.token.token
+        })
+    }
 
 </script>
 
