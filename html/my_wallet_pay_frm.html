@@ -72,12 +72,12 @@
              apiKey: 'wx5cd83565d0e1aea3',
              mchId: '1494132712',
              partnerKey: 'ltn9XtyOxAtm0k2qWwUB74dDJ3ojrPSH',
-             notifyUrl: 'http://api_v3.wx.wygoo.com/index.php/api/pay/wechat_return'
+             notifyUrl: $api.wechatNotifyUrl
         }, function(ret, err){
              if(ret.status){
                 wxPay.pay({
                      description: '钱包充值',
-                     totalFee: money * 100,
+                     totalFee: 1,//money * 100,
                      tradeNo: no,
                 },function(ret, err){
                      if(ret.status){

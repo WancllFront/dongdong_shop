@@ -632,8 +632,11 @@
     // u.host = 'http://192.168.1.111/index.php/api/';
     // u.host = 'http://PC-20170101XIAO/index.php/api/';
 
-    u.host = 'http://api_v3.wx.wygoo.com/index.php/api/'
-    u.imgPath = 'http://api_v3.wx.wygoo.com/public/static/'
+    // u.host = 'http://api_v3.wx.wygoo.com/index.php/api/'
+    // u.imgPath = 'http://api_v3.wx.wygoo.com/public/static/'
+    u.host = 'http://admin.suzhouxls.com/index.php/api/'
+    u.imgPath = 'http://admin.suzhouxls.com/public/static/'
+    u.wechatNotifyUrl = 'http://admin.suzhouxls.com/index.php/api/pay/wechat_return'
     u.auth = 'Basic_Ivj6eZRxMTx2yiyunZvnG8R65';
 
     u.ajax = function(method,url,values,fun,headers){
