@@ -77,7 +77,7 @@
              if(ret.status){
                 wxPay.pay({
                      description: '钱包充值',
-                     totalFee: 1,//money * 100,
+                     totalFee: money * 100,
                      tradeNo: no,
                 },function(ret, err){
                      if(ret.status){
