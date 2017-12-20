@@ -99,6 +99,10 @@
             app.page = 1;
             loadBanner();
             loadBusinessGoods();
+
+            api.sendEvent({
+                name: 'business_shop_win_fresh',
+            });
         });
     }
 

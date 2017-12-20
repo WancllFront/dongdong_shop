@@ -38,11 +38,12 @@
                 <div class="aui-searchbar-btn" tapmode>取消</div>
             </div>
         </div>
-        <a class="aui-pull-right aui-btn"  tapmode onclick="$api.goWindow('business_cate_list_win')">
+        <a class="aui-pull-right aui-btn"  tapmode onclick="$api.goWindow('business_cate_list_win', {cates: cates})">
             <!-- <div class="aui-dot"></div> -->
             <i class="aui-iconfont aui-icon-menu" style="color:#000!important;"></i>
         </a>
     </header>
+
     <footer class="aui-bar aui-bar-tab" id="footer" style="background-color: #f4f4f4;border-top: 1px solid #d0cece">
         <div class="aui-bar-tab-item " tapmode onclick="$api.goWindow('index',{},'none');">
             <img src="../image/footer1.png">
@@ -69,7 +70,10 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     var fnScanner;
+    var NVNavigationBar;
+    var cates = [];
     apiready = function() {
+        NVNavigationBar = api.require("NVNavigationBar");
         fnScanner = api.require("FNScanner");
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
@@ -79,19 +83,31 @@
         var footer = $api.byId('footer');
         $api.fixTabBar(footer);
         var footerH = $api.offset(footer).h;
-        var frameH = api.winHeight - headerH - footerH;
+        var frameH = api.winHeight - headerH - footerH - 40;
         api.openFrame({
             name: 'business_shop_frm',
             url: './business_shop_frm.html',
             bounces: true,
             rect: {
                 x: 0,
-                y: headerH,
+                y: headerH + 40,
                 w: 'auto',
                 h: frameH
             }
         });
+
+        loadCates(headerH);
+        addEventListener();
     };
+    addEventListener = function(){
+        api.addEventListener({
+            name: 'business_shop_win_fresh'
+        }, function(ret, err){
+            cates = [];
+            updateCates();
+        });
+
+    }
     //搜索处理
     var searchBar = document.querySelector(".aui-searchbar");
     var searchBarInput = document.querySelector(".aui-searchbar input");
@@ -152,7 +168,6 @@
                             }
                         });
                     }else if(ret.content.indexOf('pay://') != -1){
-                        console.log(ret.content.replace('pay://',''))
                         api.openWin({
                             name: 'pay_select_win',
                             url: './pay_select_win.html',
@@ -178,7 +193,99 @@
         });
     }
 
+    loadCates = function(headerH){
+        $api.ajax('POST',$api.host + 'goods_cates/lists',{
+            shop_id: 0
+        },function(ret){
+            cates = ret.data;
+            openNVNavigationBar(headerH)
+        },{
+            auth:$api.auth
+        })
+    }
+    updateCates = function(){
+        $api.ajax('POST',$api.host + 'goods_cates/lists',{
+            shop_id: 0
+        },function(ret){
+            cates = ret.data;
+            updateNVNavigationBar()
+        },{
+            auth:$api.auth
+        })
+    }
+    openNVNavigationBar = function(headerH){
+        var items = [{
+            title: '所有分类',
+            bg: '#FFFFFF',
+            bgSelected: '#ff00000'
+        }];
+        cates.forEach(function(item){
+            items.push({
+                title: item.name,
+                bg: '#FFFFFF',
+                bgSelected: '#ff00000'
+            })
+        })
+        NVNavigationBar.open({
+            rect: {
+                 x: 0,
+                 y: headerH,
+                 w: api.frameWidth,
+                 h: 40
+            },
+           styles: {
+                 orientation: 'horizontal',
+                 bg: '#6b6b6b',
+                 bgAlpha: 1,
+                 font: {
+                 size: 14,
+                 sizeSelected: 14,
+                 color: '#666666',
+                 colorSelected: '#666666',
+                 alpha: 1
+                 },
+                 itemSize: {
+                     w: 75,
+                     h: 40
+                 }
+           },
+           items: items,
+           id: 'first'
+        }, function(ret, err) {
+            if(ret.eventType == 'click'){
+                if(ret.index == 0){
+                    $api.goWindow('business_cate_list_win',{
+                        cates: cates
+                    })
+                }else{
+                    $api.goWindow('business_cate_list_win',{
+                        selectCateId: cates[ret.index - 1]['id'],
+                        cates: cates
+                    })
+                }
+            }
+        });
+    }
+    updateNVNavigationBar = function(){
+        var items = [{
+            title: '所有分类',
+            bg: '#FFFFFF',
+            bgSelected: '#ff00000'
+        }];
+        cates.forEach(function(item){
+            items.push({
+                title: item.name,
+                bg: '#FFFFFF',
+                bgSelected: '#ff00000'
+            })
+        })
+        NVNavigationBar.update({
+            id: 'first',
+            items: items
+        }, function(ret) {
 
+        });
+    }
 </script>
 
 </html>

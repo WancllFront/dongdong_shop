@@ -119,29 +119,35 @@
         loadCates(rect);
     };
     loadCates = function(rect){
-        $api.ajax('POST',$api.host + 'goods_cates/lists',{
-            shop_id: 0
-        },function(ret){
-            ret.data.forEach(function(item,index){
-                if(index == 0){
-                    item.isSelected = true;
-                    api.openFrame({
-                        name: 'business_cate_list_frm',
-                        url: './business_cate_list_frm.html',
-                        bounces: true,
-                        rect: rect,
-                        hScrollBarEnabled:false,
-                        pageParam:{
-                            subCates: item._child || []
-                        }
-                    });
-                }else{
-                    item.isSelected = false;
-                }
-                app.cates.push(item);
-            })
-        },{
-            auth:$api.auth
+        api.pageParam.cates.forEach(function(item, index){
+            if(!api.pageParam.selectCateId && index == 0){
+                item.isSelected = true;
+                api.openFrame({
+                    name: 'business_cate_list_frm',
+                    url: './business_cate_list_frm.html',
+                    bounces: true,
+                    rect: rect,
+                    hScrollBarEnabled:false,
+                    pageParam:{
+                        subCates: item._child || []
+                    }
+                });
+            }else if(api.pageParam.selectCateId == item.id){
+                item.isSelected = true;
+                api.openFrame({
+                    name: 'business_cate_list_frm',
+                    url: './business_cate_list_frm.html',
+                    bounces: true,
+                    rect: rect,
+                    hScrollBarEnabled:false,
+                    pageParam:{
+                        subCates: item._child || []
+                    }
+                });
+            }else{
+                item.isSelected = false;
+            }
+            app.cates.push(item)
         })
     }
     //搜索处理
