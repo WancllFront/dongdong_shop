@@ -104,22 +104,29 @@
     }
     third = function(type){
         if(type == 'wx'){
-            wx.auth({
-                apiKey: 'wx5cd83565d0e1aea3'
-            }, function(ret, err){
-                if(ret.status){
-                    var uiId = '';
-                    var code = ret.code;
-                    uiLoading.flower({
-                        size: 30,
-                        fixed: true
-                    }, function(ret){
-                        getToken(ret.id, code)
+            wx.isInstalled(function(ret, err){
+                if(ret.installed){
+                    wx.auth({
+                        apiKey: 'wx5cd83565d0e1aea3'
+                    }, function(ret, err){
+                        if(ret.status){
+                            var uiId = '';
+                            var code = ret.code;
+                            uiLoading.flower({
+                                size: 30,
+                                fixed: true
+                            }, function(ret){
+                                getToken(ret.id, code)
+                            });
+                        }else{
+                            alert(JSON.stringify(err))
+                        }
                     });
                 }else{
-                    alert(JSON.stringify(err))
+                    alert('当前设备未安装微信客户端');
                 }
             });
+
         }else if(type == 'qq'){
             qq.login({
                 apiKey: '1106492833'
