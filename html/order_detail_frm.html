@@ -146,6 +146,7 @@
                     <div class="text">
                         <div class="name" v-text="goods.name"></div>
                         <div class="desc" v-text="goods.intro"></div>
+                        <div class="desc" v-text="goods.mark"></div>
                     </div>
                     <div class="other">
                         <div class="price" v-text="'￥' + goods.price"></div>
@@ -274,6 +275,7 @@
     })
     apiready = function() {
         api.parseTapmode();
+        // $api.printLog(api.pageParam.order)
         app.order = api.pageParam.order;
     };
 

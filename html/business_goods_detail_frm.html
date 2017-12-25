@@ -56,6 +56,22 @@
             </div>
         </div>
         <div style="height:0.3rem;background-color:#f4f4f4;width:100%;margin-top:0.2rem;"></div>
+        <div class="aui-content">
+            <ul class="aui-list aui-list-in">
+                <li class="aui-list-item" v-for="(goods_attr,index) in goods.goods_attrs" :key="index">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-title" v-text="goods_attr.name" style="font-size: .8rem;"></div>
+                        <div class="aui-list-item-right">
+                            <select style="display:inline;color:#0056c6;font-size:0.7rem;text-align:right;" :id="'select' + goods_attr.attr_id">
+                                <option value="" v-text="'请选择' + goods_attr.name"></option>
+                                <option :value="attr" v-for="(attr,key) in goods_attr.values" :key="key" v-text="attr"></option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="height:0.3rem;background-color:#f4f4f4;width:100%;margin-top:0.2rem;"></div>
         <div class="nav">
             <div tapmode onclick="changeNav(0)"><span id="span0" class="active">详情</span></div>
             <div tapmode onclick="changeNav(1)"><span id="span1" >评价</span></div>
@@ -125,7 +141,9 @@
         data:{
             comments:[],
             page:1,
-            goods:{}
+            goods:{
+                goods_attrs: []
+            }
         },
         methods:{
             preview: function(imgs,index){
@@ -180,6 +198,14 @@
     loadGoods = function(){
         // console.log(api.pageParam.goodsId)
         $api.ajax('GET',$api.host + 'goods/' + api.pageParam.goodsId,{},function(ret){
+            // $api.printLog(ret)
+            ret.data.goods_attrs.forEach(function(item){
+                if(item.value != ''){
+                    item.values = item.value.split(',');
+                }else{
+                    item.values = []
+                }
+            })
             app.goods = ret.data;
             scollPicture = ret.data.imgs;
             loadScrollPicture();
@@ -226,10 +252,80 @@
         if(app.goods){
             var goodsList = [];
             app.goods.num  = 1;
-            goodsList.push(app.goods)
-            $api.goWindow('order_confirm_business_win',{
-                goodsList:goodsList
-            })
+            var attrs = '';
+            for(var i = 0; i < app.goods.goods_attrs.length; i++){
+                var val = $api.val($api.byId('select' + app.goods.goods_attrs[i].attr_id));
+                if(!val) {
+                    api.toast({
+                        msg: '请选择' + app.goods.goods_attrs[i].name,
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                    break;
+                }else {
+                    attrs += (val + ' ');
+                }
+            }
+            if(attrs != ''){
+                attrs = '( ' + attrs + ')';
+            }
+
+            if (app.goods.goods_attrs.every(function (item){
+                return $api.val($api.byId('select' + item.attr_id))
+            }) ){
+                app.goods.mark = attrs;
+                goodsList.push(app.goods)
+                $api.goWindow('order_confirm_business_win',{
+                    goodsList:goodsList
+                })
+            }
+        }else{
+            api.toast({
+                msg: '商品加载中,请稍后',
+                duration: 2000,
+                location: 'middle'
+            });
+        }
+    }
+    addCart = function(){
+        var userinfo = $api.getStorage('userinfo');
+        if(app.goods){
+            var attrs = '';
+            for(var i = 0; i < app.goods.goods_attrs.length; i++){
+                var val = $api.val($api.byId('select' + app.goods.goods_attrs[i].attr_id));
+                if(!val) {
+                    api.toast({
+                        msg: '请选择' + app.goods.goods_attrs[i].name,
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                    break;
+                }else {
+                    attrs += (val + ' ');
+                }
+            }
+            if(attrs != ''){
+                attrs = '( ' + attrs + ')';
+            }
+
+            if (app.goods.goods_attrs.every(function (item){
+                return $api.val($api.byId('select' + item.attr_id))
+            }) ){
+                $api.ajax('POST',$api.host + 'carts',{
+                    goods_id: api.pageParam.goodsId,
+                    type: 1,
+                    num: 1,
+                    mark: attrs
+                },function(ret){
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                },{
+                    token: userinfo.token.token
+                })
+            }
         }else{
             api.toast({
                 msg: '商品加载中,请稍后',

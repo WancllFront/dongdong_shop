@@ -70,6 +70,7 @@
         }
     };
     addCollection = function(){
+        userinfo = $api.getStorage('userinfo');
         if(!userinfo){
             api.toast({msg: '请先登录'})
             setTimeout(function(){
@@ -108,28 +109,6 @@
             }
         }
     }
-    addCart = function(){
-        if(!userinfo){
-            api.toast({msg: '请先登录'});
-            setTimeout(function(){
-                $api.goWindow('login_win')
-            },500)
-        }else{
-            $api.ajax('POST',$api.host + 'carts',{
-                goods_id: api.pageParam.goodsId,
-                type:1,
-                num:1
-            },function(ret){
-                api.toast({
-                    msg: ret.msg,
-                    duration: 2000,
-                    location: 'middle'
-                });
-            },{
-                token: userinfo.token.token
-            })
-        }
-    }
 
     isCollection = function(){
         $api.ajax('POST',$api.host + 'query/goods_is_collect',{
@@ -149,7 +128,23 @@
         })
     }
 
+    addCart = function(){
+        userinfo = $api.getStorage('userinfo');
+        if(!userinfo){
+            api.toast({msg: '请先登录'});
+            setTimeout(function(){
+                $api.goWindow('login_win')
+            },500)
+        }else{
+            api.execScript({
+                frameName: 'business_goods_detail_frm',
+                script: 'addCart();'
+            });
+        }
+    }
+
     buy = function(){
+        userinfo = $api.getStorage('userinfo');
         if(!userinfo){
             api.toast({msg: '请先登录'});
             setTimeout(function(){

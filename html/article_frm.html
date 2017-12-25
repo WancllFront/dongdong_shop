@@ -113,6 +113,7 @@
 
     }
     goAward = function(){
+        var userinfo = $api.getStorage('userinfo');
         if(!userinfo){
             api.toast({
                 msg: '请先登录',

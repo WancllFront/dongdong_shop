@@ -28,10 +28,13 @@
                         </div>
                         <div class="aui-list-item-inner" style="align-items:flex-start;">
                             <div class="aui-list-item-text" @click.stop="goDetail(cart)">
-                                <div class="aui-list-item-title aui-font-size-16" v-text="cart.goods_info.name"></div>
+                                <div class="aui-list-item-title aui-font-size-14" v-text="cart.goods_info.name"></div>
                             </div>
                             <div class="aui-list-item-text" @click.stop="goDetail(cart)">
                                 <div class="aui-list-item-title aui-font-size-12" style="color:#777;" v-text="cart.goods_info.intro"></div>
+                            </div>
+                            <div class="aui-list-item-text" @click.stop="goDetail(cart)">
+                                <div class="aui-list-item-title aui-font-size-12" style="color:#777;" v-text="cart.mark"></div>
                             </div>
                             <div class="aui-list-item-text" style="margin-top:0.5rem;">
                                 <span style="color:#f63030;font-size:0.8rem;" v-text="'￥' + cart.goods_info.price"></span>
@@ -176,7 +179,8 @@
             var goodsList = [];
             app.carts.forEach(function(item){
                 if(item.isSelected){
-                    item.goods_info.num = item.num;
+                    item.goods_info.num = item.num || 1;
+                    item.goods_info.mark = item.mark || '';
                     goodsList.push(item.goods_info);
                 }
             })

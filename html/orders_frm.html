@@ -81,6 +81,7 @@
                 <div class="text">
                     <div class="name" v-text="goods.name"></div>
                     <div class="desc" v-text="goods.intro"></div>
+                    <div class="desc" v-text="goods.mark"></div>
                 </div>
                 <div class="other">
                     <div class="price">￥<span v-text="goods.price"></span></div>
@@ -251,6 +252,7 @@
         $api.ajax('POST', $api.host + 'orders/lists', {
             status: api.pageParam.status
         },function(ret){
+            // $api.printLog(ret.data)
             if(ret.data.length != 0){
                 page ++;
                 ret.data.forEach(function(item){
