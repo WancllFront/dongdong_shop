@@ -128,7 +128,7 @@
         computed:{
             proCityCounty: function(){
                 var str = ''
-                this.cityInfo.forEach((item)=>{
+                this.cityInfo.forEach(function(item){
                     str += item.name+' '
                 });
                 return str;

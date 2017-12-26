@@ -136,7 +136,7 @@
             sortrule: 0
         }, function(ret, err) {
             if (ret.status) {
-                ret.pois.forEach((item)=>{
+                ret.pois.forEach(function(item){
                     app.pois.push(item)
                 })
                 if(ret.pois.length > 0){

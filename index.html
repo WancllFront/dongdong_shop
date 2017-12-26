@@ -98,6 +98,21 @@
                 h: frameH
             }
         });
+
+        //云修复重启应用
+        api.addEventListener({
+            name:'smartupdatefinish'
+        }, function(ret, err){
+            api.alert({
+                title: '云修复完成,点击重启',
+            }, function(ret, err){
+                if( ret ){
+                     api.rebootApp();
+                }else{
+                     alert( JSON.stringify( err ) );
+                }
+            });
+        });
     };
 
     goWindow = function(winName){

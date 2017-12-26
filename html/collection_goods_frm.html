@@ -15,8 +15,9 @@
         .goodslist .goods .left img{max-width: 100%;border: 1px solid #f4f4f4;}
         .goodslist .goods .right{display:inline-block;width:72%;margin-left:0.5rem;position:relative;}
         .goodslist .goods .right .title{font-weight:bold;}
-        .goodslist .goods .right .describe{color:#737373;font-size:0.8rem;}
-        .goodslist .goods .right .price{position:absolute;bottom:0px;right:0px;left:0px;}
+        .goodslist .goods .right .describe{color:#737373;font-size:0.8rem;margin-top: .2rem;}
+        .goodslist .goods .right .price{margin-top: .3rem;}
+        .goodslist .goods .right .price:after{display:block;content:"";clear:both;}
         .goodslist .goods .right .price div{display:inline-block;float:left}
         .goodslist .goods .right .price .jia{float:right;width:1.5rem;padding-right:0.5rem; transition: .1s opacity; opacity: 0.5}
         .goodslist .goods .right .price .jia:active{opacity: 1;}
@@ -31,8 +32,8 @@
             </div>
 
             <div style="" class="right">
-                <p class="single-paragraph title" v-text="collection.goods_info.name"></p>
-                <p class="single-paragraph describe" v-text="collection.goods_info.intro"></p>
+                <div class="title" v-text="collection.goods_info.name"></div>
+                <div class="describe" v-text="collection.goods_info.intro"></div>
                 <div class="price">
                     <div>
                         <span style="color:#ff2c2c" v-text="'￥' + collection.goods_info.price"></span>

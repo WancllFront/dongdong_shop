@@ -48,7 +48,10 @@
             </div>
             <div class="title">
                 <!-- <div class="aui-label aui-label-info">包邮</div> -->
-                <span v-text="goods.name"></span>
+                <span v-text="goods.name" style="font-size:.77rem;"></span>
+            </div>
+            <div class="other">
+                <span style="float:left;" v-text="goods.intro"></span>
             </div>
             <div class="other">
                 <span style="float:left;" v-text="'邮费:' + goods.freight_price"></span>
