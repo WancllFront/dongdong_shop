@@ -21,6 +21,9 @@
             <span class="aui-iconfont aui-icon-left" style="color:#fff;"></span>
         </a>
         <div class="aui-title">我的二维码</div>
+        <a class="aui-pull-right aui-btn" tapmode onclick="openSharebox()">
+            <i class="aui-iconfont" style="color:#fff!important;font-size:.8rem;">分享</i>
+        </a>
     </header>
     <img src="../image/yaoqing.png" style="width: 100%;">
     <div id="qrcode">
@@ -31,29 +34,85 @@
 <script type="text/javascript" src="../script/jquery.min.js"></script>
 <script type="text/javascript" src="../script/utf.js"></script>
 <script type="text/javascript" src="../script/qrcode.jquery.js"></script>
+<script type="text/javascript" src="../script/aui-sharebox.js" ></script>
 
+<script type="text/javascript" src="../script/fastclick.js"></script>
 <script type="text/javascript">
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
     var userinfo = $api.getStorage('userinfo');
-    // new QRCode(document.getElementById("qrcode"), 'register://' + userinfo.user.mobile);
-    $(document).ready(function() {
-        $("#qrcode").qrcode({
-            render : "canvas",    //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
-            text : 'register://' ,//+ userinfo.user.mobile,    //扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
-            width : "200",               //二维码的宽度
-            height : "200",              //二维码的高度
-            background : "#ffffff",       //二维码的后景色
-            foreground : "#000000",        //二维码的前景色
-            src: '../image/logo.png'             //二维码中间的图片
-        });
-    });
+    var shareData = '';
+    var wx;
+    var sharebox = new auiSharebox();
     apiready = function() {
+        wx = api.require("wx");
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
         var header = $api.byId('header');
         $api.fixStatusBar(header);
         var headerH = $api.offset(header).h;
         var frameH = api.winHeight - headerH;
+
+        $api.ajax('POST', $api.host + 'users/share',{}, function(resp){
+            shareData = resp.data;
+            $("#qrcode").qrcode({
+                render : "canvas",    //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+                text : shareData.url ,//+ userinfo.user.mobile,    //扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
+                width : "200",               //二维码的宽度
+                height : "200",              //二维码的高度
+                background : "#ffffff",       //二维码的后景色
+                foreground : "#000000",        //二维码的前景色
+                src: '../image/logo.png'             //二维码中间的图片
+            });
+        },{
+            token: userinfo.token.token
+        })
     };
+    function openSharebox(){
+        sharebox.init({
+            frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+            buttons:[{
+                image:'../image/share/wx.png',
+                text:'微信',
+                value:'wx'//可选
+            },{
+                image:'../image/share/wx-circle.png',
+                text:'朋友圈',
+                value:'wx-circle'
+            }],
+            col:5,
+            cancelTitle:'关闭'//可选,当然也可以采用下面的方式使用图标
+            // cancelTitle:'<i class="aui-iconfont aui-icon-close aui-font-size-16"></i>'//可选
+        },function(ret){
+            if(ret && shareData){
+                var buttonIndex = ret.buttonIndex;
+                wx.isInstalled(function(ret, err){
+                    if(ret.installed){
+                        wx.shareWebpage({
+                            apiKey: 'wx5cd83565d0e1aea3',
+                            scene: buttonIndex == 1 ? 'session' : 'timeline',
+                            title: shareData.title,
+                            description: shareData.content,
+                            thumb: 'widget://image/suzhou.png',
+                            contentUrl: shareData.url
+                        }, function(ret, err){
+                            if(ret.status){
+                                alert('分享成功');
+                            }else{
+                                // alert(err.code);
+                            }
+                        });
+                    }else{
+                        alert('当前设备未安装微信客户端,不可以分享到微信');
+                    }
+                });
+            }else{
+                alert('数据加载中,请稍后')
+            }
+        })
+    }
+
 </script>
 
 </html>
