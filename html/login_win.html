@@ -44,7 +44,7 @@
     <div class="icon">
         <!-- <img src="../image/sina.png" tapmode onclick="loginThird('weibo')"> -->
         <img src="../image/qq.png" tapmode onclick="third('qq')">
-        <img src="../image/wechat.png" tapmode onclick="third('wx')">
+        <img src="../image/wechat.png" tapmode onclick="third('wx')" id="wechat" style="display:none;">
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -66,6 +66,13 @@
         $api.fixStatusBar(header);
         var headerH = $api.offset(header).h;
         var frameH = api.winHeight - headerH;
+
+        wx.isInstalled(function(ret, err){
+            if(ret.installed){
+                $api.css($api.byId('wechat'), 'display:inline-block');
+            }else{
+            }
+        });
     };
     telephoneChange = function(value){
         value = value.replace(/[^\d]/g,'')
