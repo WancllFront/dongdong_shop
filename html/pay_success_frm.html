@@ -23,24 +23,14 @@
         <img src="../image/select_green.png">
         <div class="info">恭喜您,支付成功!</div>
         <!-- <div class="tips">商家正在赶忙准备商品， 请您耐心等待哦～</div> -->
-        <div tapmode onclick="returnHome()" class="button">返回个人中心</div>
+        <div tapmode onclick="$api.goWindow('home_win')" class="button">返回个人中心</div>
     </div>
-
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function() {
         api.parseTapmode();
     };
-    returnHome = function(){
-        api.closeToWin({
-            name: 'home_win',
-            animation:{
-                type:'push'
-            }
-        });
-
-    }
 </script>
 
 </html>

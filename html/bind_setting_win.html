@@ -22,26 +22,26 @@
     </header>
     <div class="aui-content aui-margin-b-15">
         <ul class="aui-list aui-list-in">
-            <li class="aui-list-item">
+            <li class="aui-list-item" tapmode onclick="bindWx()" >
                 <div class="aui-list-item-label-icon">
                     <img src="../image/wechat.png" style="width:1.5rem;">
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
                     <div class="aui-list-item-title">微信</div>
                     <div class="aui-list-item-right">
-                        <div style="font-size:0.7rem;" class="nobind" id="wxBind" tapmode onclick="bindWx()"></div>
+                        <div style="font-size:0.7rem;" class="nobind" id="wxBind" ></div>
                     </div>
                 </div>
             </li>
 
-            <li class="aui-list-item" tapmode onclick="">
+            <li class="aui-list-item" tapmode onclick="bindQQ()">
                 <div class="aui-list-item-label-icon">
                     <img src="../image/qq.png" style="width:1.5rem;">
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow">
                     <div class="aui-list-item-title">QQ</div>
                     <div class="aui-list-item-right">
-                        <div style="font-size:0.7rem;" id="qqBind" tapmode onclick="bindQQ()"></div>
+                        <div style="font-size:0.7rem;" id="qqBind" ></div>
                     </div>
                 </div>
             </li>
@@ -133,7 +133,7 @@
                         getToken(ret.id, code)
                     });
                 }else{
-                    alert(JSON.stringify(err))
+                    alert('网络错误,请稍后再试')
                 }
             });
         }else if(type == 'qq'){
@@ -160,7 +160,9 @@
             if(ret.status){
                 bind(ret.openId, 'wechat')
             }else{
-                alert(err.code);
+                if(err.code == 1)(
+                    alert('用户取消')
+                )
             }
         });
     }
