@@ -28,6 +28,7 @@
             <div class="title" v-text="good.name"></div>
             <div class="price">￥<span v-text="good.price"></span></div>
         </div>
+        <div v-if="goods.length == 0" style="color:#555;width: 100%;text-align:center;margin-top:4rem;font-size:1rem;">列表空空如也</div>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>

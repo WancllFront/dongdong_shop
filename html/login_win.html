@@ -87,9 +87,17 @@
         var telephone = $api.val($api.byId('telephone-novaricode'));
         var password = $api.val($api.byId('password'));
 
-        if(!telephone || !password){
+        if(!telephone){
             api.toast({
-                msg: '请填写完整的信息',
+                msg: '请输入账号',
+                duration: 2000,
+                location: 'middle'
+            });
+            return;
+        }
+        if(!password){
+            api.toast({
+                msg: '请输入密码',
                 duration: 2000,
                 location: 'middle'
             });

@@ -151,11 +151,11 @@
                     saveToPhotoAlbum: false
                 }, function(ret, err){
                     if(ret){
-                        updateAjax({
-                            avatar: ret.base64Data
-                        })
-                    }else{
-                         alert(JSON.stringify(err));
+                        if(ret.base64Data){
+                            updateAjax({
+                                avatar: ret.base64Data
+                            })
+                        }
                     }
                 });
             });

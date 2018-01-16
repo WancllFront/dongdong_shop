@@ -47,6 +47,14 @@
             });
             return;
         }
+        if(!shop.mobile){
+            api.toast({
+                msg: '商家暂未录入联系电话',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return;
+        }
         api.call({
             type: 'tel_prompt',
             number: shop.mobile
