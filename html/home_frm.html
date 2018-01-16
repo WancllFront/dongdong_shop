@@ -378,7 +378,9 @@
             targetWidth: 800
         }, function(ret, err){
             if(ret){
-                fun(ret);
+                if(ret.base64Data){
+                    fun(ret);
+                }
             }else{
                  //alert(JSON.stringify(err));
             }
