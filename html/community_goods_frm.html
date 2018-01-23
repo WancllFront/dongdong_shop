@@ -16,8 +16,8 @@
             .goodslist .goods .right .describe{color:#737373;font-size:0.8rem;}
             .goodslist .goods .right .price{position:absolute;bottom:0px;right:0px;left:0px;}
             .goodslist .goods .right .price div{display:inline-block;float:left}
-            .goodslist .goods .right .price .jia{float:right;width:1.5rem;padding-right:0.5rem; transition: .1s opacity; opacity: 0.5}
-            .goodslist .goods .right .price .jia:active{opacity: 1;}
+            .goodslist .goods .right .price .jia{float:right;width:1.75rem;padding-right:0.5rem; transition: .1s opacity; opacity: 0.5}
+            /*.goodslist .goods .right .price .jia:active{opacity: 1;}*/
 
             .aui-list .aui-list-item:active{background-color: #fff;}
 
@@ -26,7 +26,7 @@
 <body>
     <div class="goodslist" id="app">
         <div class="goods" v-for="(good,key) in goods" :key="key">
-            <img :src="good.thum" class="left">
+            <img :src="good.thum" class="left" @click.stop="preview(good)">
             <div style="" class="right">
                 <p class="single-paragraph title" v-text="good.name"></p>
                 <p class="single-paragraph describe" v-text="good.intro"></p>
@@ -35,7 +35,8 @@
                         <span style="color:#ff2c2c" v-text="'￥' + good.price"></span>
                         <span style="color:#737373">/份</span>
                     </div>
-                    <img src="../image/jia.png" class="jia" tapmode @click="addCart(good)">
+                    <img src="../image/jia.png" class="jia" tapmode @click.stop="addCart(good)" v-if="!good.inSelected">
+                    <img src="../image/jian_blue.png" class="jia" tapmode @click.stop="addCart(good)" v-else>
                 </div>
             </div>
         </div>
@@ -49,6 +50,7 @@
     window.addEventListener('load', function() {
       FastClick.attach(document.body);
     }, false);
+    var photoBrowser;
     var cateId = '';
     var keywords = '';
     var app = new Vue({
@@ -59,16 +61,31 @@
         },
         methods:{
             addCart: function(good){
-                api.toast({
-                    msg: '已加入购物车',
-                    duration: 2000,
-                    location: 'middle'
-                });
-
+                good.inSelected = !good.inSelected;
                 api.sendEvent({
                     name: 'community_goods_frm_add_cart',
                     extra: {
-                        good: good,
+                        good: good
+                    }
+                });
+            },
+            preview: function(goods){
+                if(!goods.thum){
+                    return;
+                }
+                var imgs = [];
+                imgs.push(goods.thum);
+                photoBrowser.open({
+                    images: imgs,
+                    bgColor: 'rgba(0,0,0,0.8)',
+                    activeIndex: 0
+                }, function(ret, err) {
+                    if (ret) {
+                        if(ret.eventType == 'click'){
+                            photoBrowser.close();
+                        }
+                    } else {
+                        alert(err.msg || '错误');
                     }
                 });
             }
@@ -76,6 +93,7 @@
     })
     apiready = function(){
         api.parseTapmode();
+        photoBrowser = api.require("photoBrowser");
 
         addEventListener();
         loadGoods();
@@ -126,6 +144,7 @@
             if(ret.data.length != 0){
                 app.page ++;
                 ret.data.forEach(function(item){
+                    item.inSelected = false;
                     app.goods.push(item)
                 });
             }

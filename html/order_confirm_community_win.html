@@ -74,6 +74,9 @@
             totalPrice += item.price * item.num;
             totalPrice += item.freight_price * 1;
         })
+        if(totalPrice < 58){
+            totalPrice += 4;
+        }
         $api.text($api.byId('totalPrice'), '￥' + totalPrice.toFixed(2));
     };
 

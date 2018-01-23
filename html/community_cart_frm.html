@@ -24,7 +24,7 @@
                             <img v-show="!good.isSelected" src="../image/circle.png" class="aui-img-round aui-list-img-sm">
                         </div>
                         <div class="aui-list-item-media" style="width: 5rem;align-items:center;">
-                            <img :src="good.thum" class="aui-list-img-sm" style="border:1px solid #f4f4f4;">
+                            <img :src="good.thum" class="aui-list-img-sm" style="border:1px solid #f4f4f4;" @click="preview(good)">
                         </div>
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-text">
@@ -59,6 +59,7 @@
     window.addEventListener('load', function() {
       FastClick.attach(document.body);
     }, false);
+    var photoBrowser;
     var app = new Vue({
         el: '#app',
         data:{
@@ -86,12 +87,33 @@
                         goods: this.goods
                     }
                 });
+            },
+            preview: function(goods){
+                if(!goods.thum){
+                    return;
+                }
+                var imgs = [];
+                imgs.push(goods.thum);
+                photoBrowser.open({
+                    images: imgs,
+                    bgColor: 'rgba(0,0,0,0.8)',
+                    activeIndex: 0
+                }, function(ret, err) {
+                    if (ret) {
+                        if(ret.eventType == 'click'){
+                            photoBrowser.close();
+                        }
+                    } else {
+                        alert(err.msg || '错误');
+                    }
+                });
             }
         }
     });
 
     apiready = function() {
         api.parseTapmode();
+        photoBrowser = api.require("photoBrowser");
         app.goods = api.pageParam.goods;
 
         addEventListener();
@@ -126,7 +148,7 @@
                 api.toast({
                     msg: '请先选择商品',
                     duration: 2000,
-                    location: 'bottom'
+                    location: 'middle'
                 });
             }else{
                 $api.goWindow('order_confirm_community_win',{
@@ -137,6 +159,38 @@
                 })
             }
         });
+    }
+    deleteCart = function(){
+        if(!app.goods.some(function(item){
+            return item.isSelected
+        })){
+            api.toast({
+                msg: '请先选择商品',
+                duration: 2000,
+                location: 'middle'
+            });
+        }else{
+            api.confirm({
+                title: '确定移除选中商品?',
+                buttons: ['确定', '取消']
+            }, function(ret, err){
+                if( ret ){
+                     if(ret.buttonIndex == 1){
+                         app.goods = app.goods.filter(function(item){
+                             return !item.isSelected;
+                         })
+                         api.sendEvent({
+                             name: 'cart_frm_change',
+                             extra: {
+                                 goods: app.goods
+                             }
+                         });
+                     }
+                }else{
+                     alert( JSON.stringify( err ) );
+                }
+            });
+        }
     }
 </script>
 

@@ -25,7 +25,7 @@
                 <span class="aui-iconfont aui-icon-left" style="color:#000;"></span>
             </a>
             <div class="aui-title" id="title">社区购物车</div>
-            <a class="aui-btn aui-pull-right" v-if="shopId == 0">
+            <a class="aui-btn aui-pull-right" tapmode onclick="deleteCart()">
                 <span class="aui-iconfont aui-icon-trash" style="color:#000;"></span>
             </a>
         </header>
@@ -126,13 +126,23 @@
             }
         });
         app.totalPrice = totalPrice.toFixed(2);
-        app.isSelectedAll = goods.every(function(item){
-            return item.isSelected;
-        })
+        if(goods.length == 0){
+            app.isSelectedAll = false;
+        }else {
+            app.isSelectedAll = goods.every(function(item){
+                return item.isSelected;
+            })
+        }
     }
     checkout = function(){
         api.sendEvent({
             name: 'cart_frm_checkout',
+        });
+    }
+    deleteCart = function(){
+        api.execScript({
+            frameName: 'community_cart_frm',
+            script: 'deleteCart();'
         });
     }
 </script>

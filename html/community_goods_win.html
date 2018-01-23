@@ -33,6 +33,16 @@
 
         .aui-list .aui-list-item .aui-list-item-inner .aui-list-item-title{padding-left: 0.75rem;}
         .aui-list .active .aui-list-item-inner .aui-list-item-title{border-left: 2px solid #4b8aee;}
+
+
+        .aui-btn-info{background-color: #267df0 !important;}
+        .aui-btn-info:active{background-color: #1270ed !important;}
+        .aui-bar-tab{display: flex;height: 2.5rem;border-top: 1px solid #f4f4f4;position: relative;background-color: #a0a0a0;}
+        .aui-bar-tab .selectall{display: inline-block;width: 25%;position: relative;text-align: left;}
+        .aui-bar-tab .selectall img{width: 2.8rem;position: absolute;top: -0.5rem;left:.8rem;}
+        .aui-bar-tab .price{width: 50%;text-align: left;display: inline-block;line-height: 2.5rem;padding-right: 0.5rem;font-size: 0.7rem}
+        .aui-bar-tab .submit{display: inline-block;width: 25%;background:linear-gradient(to bottom,#41c4da,#34a3e4,#2680ef);color:#fff;text-align: center;line-height: 2.5rem;}
+        .aui-bar-tab .submit:active{background-color: #1273f2}
     </style>
 </head>
 <body>
@@ -68,6 +78,17 @@
                 </li>
             </ul>
         </section>
+
+        <footer class="aui-bar aui-bar-tab" id="footer">
+            <div class="selectall" tapmode onclick="goCommunityCart()">
+                <img src="../image/gouwudai.png" alt="">
+                <div class="aui-badge" style="left:55%;top:-0.6rem;" v-text="cartNum || 0"></div>
+            </div>
+            <div class="price">
+                <span style="color:#fff;font-size:1rem;font-weight:bold;" v-text="'￥' + totalPrice"></span>
+            </div>
+            <div class="submit" tapmode onclick="goCommunityCart()">去购物车</div>
+        </footer>
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -104,20 +125,27 @@
         computed:{
             cartNum: function(){
                 return this.cartGoods.length
+            },
+            totalPrice: function(){
+                return this.cartGoods.reduce(function(total,next){
+                    return (total * 1 + next.price * 1).toFixed(2)
+                }, 0)
             }
         }
     })
     apiready = function(){
         api.parseTapmode();
         api.setStatusBarStyle({ style: 'dark' });
-        var header = $api.byId('aui-header');
-        var prevH = $api.offset(header).h
 
+        var header = $api.byId('aui-header');
         $api.fixStatusBar(header);
-        var headerPos = $api.offset(header);
-        var body_h = $api.offset($api.dom('body')).h;
+        var headerH = $api.offset(header).h;
+        var footer = $api.byId('footer');
+        $api.fixTabBar(footer);
+        var footerH = $api.offset(footer).h;
+
         var classifyListH = $api.offset($api.byId('classify-list')).w;
-        document.getElementById("classify-list").style.height = api.winHeight-headerPos.h+"px";
+        document.getElementById("classify-list").style.height = (api.winHeight - headerH - footerH) + "px";
 
         api.openFrame({
             name: 'community_goods_frm',
@@ -125,9 +153,9 @@
             bounces: true,
             rect: {
                 x: classifyListH,
-                y: headerPos.h,
+                y: headerH,
                 w: api.winWidth-classifyListH-5,
-                h: 'auto'
+                h: api.winHeight - headerH - footerH
             },
             hScrollBarEnabled:false,
             pageParam:{
@@ -143,6 +171,10 @@
                     return item.id == ret.value.good.id
                 })){
                     app.cartGoods.push(ret.value.good)
+                }else{
+                    app.cartGoods = app.cartGoods.filter(function(item){
+                        return item.id != ret.value.good.id
+                    })
                 }
             }else{
                  alert( JSON.stringify( err ) );

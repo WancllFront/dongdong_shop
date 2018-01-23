@@ -21,7 +21,7 @@
 
         .order .line:after{display:block;content:"";clear:both;}
         .order .line .left{float: left;display: inline-block;color: #777;font-size: 0.75rem;height: 2rem;line-height: 2rem;}
-        .order .line .right{float: right;color: #777;font-size: 0.75rem;height: 2rem;line-height: 2rem;}
+        .order .line .right{float: right;color: #777;font-size: 0.75rem;height: 2rem;line-height: 2rem;padding-right: .2rem;}
         .community-dispat-way .way{height: 2.5rem;display: flex;}
         .community-dispat-way .way div{display: inline-block;width: 50%;background-color: #c6c4c4;color: #fff;text-align: center;line-height: 2.5rem;}
         .community-dispat-way .way .active{background:linear-gradient(to bottom,#41c4da,#34a3e4,#2680ef);}
@@ -130,14 +130,14 @@
                     <img src="../image/jia_blue.png" style="width:1rem;display:inline-block;">
                 </div>
             </div> -->
-            <div class="line">
-                <div  class="left">配送费用:</div>
-                <div class="right" v-text="expressPrice"></div>
+            <div class="line" v-if="!isSelfPick">
+                <div  class="left">配送费用(满58免配送费):</div>
+                <div class="right" v-text="'￥' + expressPrice"></div>
             </div>
-            <!-- <div class="line">
-                <div class="left">新品优惠:</div>
-                <div class="right">-3.00</div>
-            </div> -->
+            <!-- <div class="line"> -->
+                <!-- <div class="left"></div> -->
+                <!-- <div class="right">-3.00</div> -->
+            <!-- </div> -->
             <div class="line">
                 <div  class="left">买家留言:</div>
                 <div class="right">
@@ -163,7 +163,7 @@
             isSelfPick:false,
             address: false,
             goodsList:[],
-            shop: {}
+            shop: {},
         },
         methods:{
             changePick : function(isSelfPick){
@@ -173,13 +173,13 @@
                 $api.goWindow('address_win',{shopId: api.pageParam.shop.id})
             }
         },
-        computed:{
+        computed: {
             expressPrice: function(){
-                var ePrice = 0
+                var totalPrice = 0;
                 this.goodsList.forEach(function(item){
-                    ePrice += item.freight_price * 1
+                    totalPrice += item.price * item.num;
                 })
-                return ePrice;
+                return (totalPrice >= 58)? 0 : 4;
             }
         }
     })
