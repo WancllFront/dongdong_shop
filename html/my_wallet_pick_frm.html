@@ -31,7 +31,7 @@
             </div>
             <div style="display:inline-block;padding-left:1.5rem;height:3rem;">
                 <div style="color:#2e76d7;font-size:0.7rem;line-height:1.5rem;height:1.5rem;" id="bank" tapmode onclick="selectBankCard()">请选择提现银行卡</div>
-                <div style="color:#838383;font-size:0.7rem;line-height:1.5rem;height:1.5rem;">提现手续费0.1%</div>
+                <!-- <div style="color:#838383;font-size:0.7rem;line-height:1.5rem;height:1.5rem;">提现手续费0.1%</div> -->
             </div>
         </div>
         <div class="money" style="border-bottom: 1px solid #bcbcbc;padding-top:1.5rem;">
@@ -40,7 +40,6 @@
                 <span>￥</span><input type="tel" style="text-align:center;letter-spacing: 0.05rem;font-size:1.5rem;" pattern="[0-9]*" id="money">
             </div>
         </div>
-        <p class="rest" id="rest"></p>
 
         <div class="paybutton">
             <button class="alipay" tapmode onclick="pick()">提现</button>
@@ -50,11 +49,8 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     var userinfo = $api.getStorage('userinfo');
-    var rest = 0;
     var card = '';
     apiready = function() {
-        rest = api.pageParam.rest;
-        $api.text($api.byId('rest'), '钱包余额￥' + rest);
 
         api.addEventListener({
             name: 'my_wallet_pick_frm_select_bank_card'
